@@ -1,0 +1,112 @@
+/*ETIQUETAS*/
+legend {
+	font-size: smaller;
+	font-style: italic;
+	font-weight: bold;
+}
+
+label {
+	font-weight: bold;
+}
+
+button {
+	font-size: smaller;
+	font-style: italic;
+}
+
+/*CLASES*/
+/*Cabecera*/
+.copaLeft {
+	float: left;
+}
+
+.copaRight {
+	float: right;
+}
+
+/*Pie*/
+.tropas {
+	width: 470px;
+}
+
+.tropa {
+	display: none;
+	height: 180px;
+}
+
+.tropapropia {
+	color: white;
+	height: 180px;
+	background-color: #000030;
+	border: 2px solid #E8E81A;
+}
+
+.infobasicatropa {
+	position: absolute;
+	width: 175px;
+}
+
+.infosituaciontropa {
+	top: 0px;
+	left: 190px;
+	width: 280px;
+}
+
+.tabla {
+	overflow-y: scroll;
+	height: 45px;
+	width: 455px;
+}
+
+.unidades * tr td {
+	height: 17px;
+	width: 30px;
+	text-align: center;
+}
+
+.unidades thead tr td {
+	color: white;
+	background-color: #E8E81A;
+}
+
+/*ELEMENTOS*/
+#tronco {
+	position: absolute;
+	width: 1024px;
+	height: 550px;
+	background-color: #000030;
+}
+
+#game {
+	top: 0px;
+	left: 0px;
+	color: white;
+	margin: 0px auto;
+	overflow: hidden;
+	height: 480px;
+	width: 800px;
+}
+
+#ventanainfo {
+	top: 60px;
+	width: 200px;
+}
+
+#ventanafase {
+	width: 200px;
+	top: 200px;
+}
+
+#ventanafase form {
+	width: auto;
+	margin: 5px;
+}
+
+#ventanafase input {
+	
+}
+
+#panelin {
+	width: 500px;
+	top: 450px;
+}

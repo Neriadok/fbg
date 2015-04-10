@@ -1,0 +1,61 @@
+@CHARSET "UTF-8";
+
+/**
+*#000030:Azul realmente -oscuro
+*#0C1D54:Azul Oscuro
+*#8FFFFF:Azul Enfático
+*#4057A3:Azul Cielo
+*#C1D0E3:Gris Nube
+*#F9FF45:Amarillo Brillante
+*#CBD126:Amarillo Oscuro
+*#AD661A:Marron Oscur
+*/
+
+/**FORMATO Y ASPECTO**/
+
+.noticiaRow {
+	text-shadow: 2px 2px 2px grey;
+	border-color: #F9FF45;
+	font-weight: bold;
+	font-size: larger;
+}
+
+.closeTopicRow {
+	background-color: grey;
+}
+
+.post {
+	width: auto;
+}
+
+.tnombre {
+	width: 40%;
+}
+
+.tvisitas {
+	width: 10%;
+	text-align: center;
+}
+
+.tmensajes {
+	width: 10%;
+	text-align: center;
+}
+
+.tautor {
+	width: 20%;
+}
+
+.tfecha {
+	width: 20%;
+	text-align: right;
+}
+
+.descforo{
+	height:auto;
+	margin:2%;
+	color:#C1D0E3;
+	background-color:#000030;
+	border: 1px solid #4057A3;
+	border-radius: 5px;
+}

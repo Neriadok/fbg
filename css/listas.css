@@ -1,0 +1,145 @@
+@CHARSET "UTF-8";
+
+/**
+*#000030:Azul realmente -oscuro
+*#0C1D54:Azul Oscuro
+*#8FFFFF:Azul Enfático
+*#4057A3:Azul Cielo
+*#C1D0E3:Gris Nube
+*#F9FF45:Amarillo Brillante
+*#CBD126:Amarillo Oscuro
+*#AD661A:Marron Oscur
+*/
+
+/**FORMATO Y ASPECTO**/
+
+.tablehead{
+	color:#000030;
+	background-color:#F9FF45;
+	border: 2px solid #000030;
+	text-align:center;
+	font-weight:bolder;
+	width:100%;
+}
+
+.col1{
+	width:12%;
+}
+
+.col2{
+	width:15%;
+}
+
+.col3{
+	width:35%;
+}
+
+.col4{
+	width:18%;
+}
+
+.col5{
+	width:10%;
+}
+
+.col6{
+	width:10%;
+}
+
+.atributos{
+	color:#0C1D54;
+	background-color:#C1D0E3;
+	text-align:center;
+	font-weight:bold;
+}
+
+.tropaTD{
+	padding:0%;
+	width:43%;
+	text-align:center;
+}
+
+.puntosTD{
+	padding:0%;
+	width:10%;
+	text-align:center;
+}
+
+.unidadesTD{
+	padding:0%;
+	width:7%;
+	text-align:center;
+}
+
+.tipoTD{
+	padding:0%;
+	width:35%;
+	text-align:center;
+}
+
+.detallesTD{
+	padding:0%;
+	width:15%;
+	text-align:center;
+}
+
+.tipoUTD{
+	padding:0%;
+	height:40px;
+	width:160px;
+	text-align:right;
+}
+
+.atributoMovTD{
+	padding:0%;
+	height:40px;
+	width:65px;
+	text-align:center;
+}
+
+.atributoTD{
+	padding:0%;
+	height:40px;
+	width:40px;
+	text-align:center;
+}
+
+.lNombre{
+	text-lign:right;
+	width:60%;
+}
+
+.lPuntos{
+	text-align:center;
+	width:25%;
+}
+
+.lNTropas{
+	text-align:center;
+	width:15%;
+}
+
+.listName{
+	width:100%;
+	color:#000030;
+	background-color:#F9FF45;
+	text-align:center;
+	font-weight:bolder;
+	font-size: x-large;
+}
+
+.listDetails{
+	width:100%;
+	margin:0%;
+	padding:0%;
+	color:#0C1D54;
+	text-align:center;
+	font-weight:bold;
+	text-align:center;
+	border:none;
+}
+
+.listDetails * td{
+	border: 1px solid #0C1D54;
+	background-color:#F9FF45;
+}

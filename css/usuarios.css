@@ -1,0 +1,89 @@
+@CHARSET "UTF-8";
+
+/**
+*#000030:Azul realmente -oscuro
+*#0C1D54:Azul Oscuro
+*#8FFFFF:Azul Enfático
+*#4057A3:Azul Cielo
+*#C1D0E3:Gris Nube
+*#F9FF45:Amarillo Brillante
+*#CBD126:Amarillo Oscuro
+*#AD661A:Marron Oscur
+*/
+
+/**FORMATO Y ASPECTO**/
+
+.rowadmin{
+	color:#F9FF45;
+	background-color:black;
+}
+
+.rowmod{
+	color:#F9FF45;
+	background-color:#4057A3;
+}
+
+.rowuser{
+	color:#0C1D54;
+	background-color:#C1D0E3;
+}
+
+.rowbanned{
+	color:#0C1D54;
+	background-color:grey;
+}
+
+.userNickname{
+	width:20%;
+	text-align:right;
+	font-weight:bold;
+}
+
+.userTipo{
+	width:10%;
+	text-align:center;
+}
+
+.userFaltas{
+	width:10%;
+	text-align:center;
+}
+
+.userFaltas select{
+	color:#0C1D54;
+	width: 100%;
+}
+
+.userTipo select{
+	color:#0C1D54;
+	width: 100%;
+}
+
+.userDetails{
+	width:20%;
+	text-align:center;
+}
+
+.userOptions{
+	width:20%;
+	text-align:center;
+}
+
+.adminCol1{
+	width:40%;
+	font-weight:bold;
+}
+
+.adminCol2 , .adminCol3 ,.adminCol4{
+	width:20%;
+}
+
+.adminCategory{
+	color:#000030;
+	background-color:#F9FF45;
+}
+
+.adminForo{
+	color:#0C1D54;
+	background-color:#C1D0E3;
+}

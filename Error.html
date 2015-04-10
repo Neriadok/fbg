@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='UTF8'>
+		<title>FBG - ERROR</title>
+		<link rel='shortcut icon' href='src/dragon.ico'/>
+		<link rel='stylesheet' type='text/css' href='css/default.css' />
+		<script type="text/JavaScript" src="jFBG/Yggdrasil.js"></script>
+		<script type="text/JavaScript" src="jFBG/ItemDesplegable.js"></script>
+		<script>
+        	function inicio(){
+				tratarElementos();
+
+                /**Funciones generadas al inicio**/
+
+            	function tratarElementos(){
+                	/**Generamos el objeto Yggdrasil, que nos ayudara a estructurar el arbol de contenidos en funcion del tamaño de la ventana**/
+            		arbol = new Yggdrasil(document.getElementById("yggdrasil") , document.getElementById("copa") , document.getElementById("tronco") , document.getElementById("raiz"));
+
+    				/**Generamos los items desplegables que forman parte de la cabecera.**/
+    				d1i = new ItemDesplegable(document.getElementById("desplegable1I"),"I",1);
+    				d2i = new ItemDesplegable(document.getElementById("desplegable2I"),"I",2);
+    				d3i = new ItemDesplegable(document.getElementById("desplegable3I"),"I",3);
+    				d1d = new ItemDesplegable(document.getElementById("desplegable1D"),"D",1);
+    				d2d = new ItemDesplegable(document.getElementById("desplegable2D"),"D",2);
+    				d3d = new ItemDesplegable(document.getElementById("desplegable3D"),"D",3);
+            	};
+        	}
+        </script>
+	</head>
+	<body onload="inicio();">
+		<div id='yggdrasil'>
+			<div id='copa'>
+				<div id='cristalLog'>
+					<img id='avatar' src='src/sol.gif' />
+				</div>
+				<a href='portal.php' id='desplegable1I' class='desplegable'>
+					<img src='src/icono1.png'/>PORTAL
+				</a>
+				<a href='foros.php' id='desplegable2I' class='desplegable'>
+					<img src='src/icono1.png'/>FOROS
+				</a>
+				<a href='buzon.php' id='desplegable3I' class='desplegable'>
+					<img src='src/icono1.png'/>BUZÓN
+				</a>
+				<a href='listas.php' id='desplegable1D' class='desplegable'>
+					LISTAS E.<img src='src/icono1.png'/>
+				</a>
+				<a href='partidas.php' id='desplegable2D' class='desplegable'>
+					PARTIDAS<img src='src/icono1.png'/>
+				</a>
+				<a href='usuarios.php' id='desplegable3D' class='desplegable'>
+					USUARIOS<img src='src/icono1.png'/>
+				</a>
+			</div>
+	
+			<div id='tronco'>
+				<div class='contenedor mid top box error'>
+					<h1>ERROR</h1>
+					<p>
+						Nuestros servidores están teniendo problemas,
+						<br/>lamentamos las molestias.
+						<br/><a href='portal.php' class='enfasis'>Volver al portal</a>
+					</p>
+				</div>
+			</div>
+			<div id='raiz'><a href='faq.php'>Preguntas Frecuentes</a></div>
+		</div>
+</body>
+</html>

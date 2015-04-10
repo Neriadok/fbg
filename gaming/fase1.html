@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF8">
+<title>No Muertos|Declaracion de Cargas</title>
+<link rel="stylesheet" type="text/css" href="../css/pagebattle.css" />
+<link rel="stylesheet" type="text/css" href="../css/defecto.css" />
+<script type="text/javascript" src="../jFBG/Unidad.js"></script>
+<script type="text/javascript" src="../jFBG/Tropa.js"></script>
+<script type="text/javascript" src="../jFBG/Partida.js"></script>
+<script type="text/javascript" src="../jFBG/Ventana.js"></script>
+<script>
+			function inicio(){
+				var partida = new Partida("batalla","terreno","panelin","panelout","panelfase");
+			}
+		</script>
+</head>
+<body onload="inicio();">
+	<div id="yggdrasil">
+		<div id="copa">
+			<p class="copaLeft">
+				<span id="ejercitopropio">No Muertos</span> | Turno: <span
+					id="turno">1</span> | Fase: <span id="fase">Declaracion de
+					Cargas</span>
+			</p>
+			<p class="copaRight">
+				<span id="zoom"></span> Posicion: <span id="cursorX">X: --</span> <span
+					id="cursorY">Y: --</span>
+			</p>
+		</div>
+
+		<div id="tronco">
+			<div id="game">
+				<canvas id="batalla">
+						No se pudo cargar el canvas de juego. Esto puede deberse a que tu navegador esté obsoleto o no lo tolere. Recomendamos el uso de Google Chrome o Mozilla Firefox.
+					</canvas>
+				<img id="terreno" src="../img/mapas/mapa.jpg" />
+			</div>
+
+			<div id="ventanainfo" class="ventana">
+				<div id="selectorventanainfo" class="selector">Panel de
+					Información</div>
+				<div id="panelout">Bienvenido</div>
+			</div>
+
+			<div id=ventanafase class="ventana">
+				<div id="selectorventanafase" class="selector">Panel de Fase</div>
+				<form id="panelfase" action="" method="post">
+					<span id="textoFase"></span>
+					<table id="tablaFase"></table>
+				</form>
+			</div>
+
+			<form id="panelin" action="" method="post" class="ventana">
+				<div id="selectorpanelin" class="selector">Panel de Control</div>
+				<fieldset id="secretFiles" class="oculto">
+					<a id="userorder">desafiado</a>
+				</fieldset>
+				<input id="finfase" type="submit" value="FinalizarFase"
+					class="botonpanelin" /> <select name="tropaseleccionada">
+					<option value="-1" selected="selected">Elige una opción</option>
+					<option id="tropapropia1selected" value="tropapropia1">Vampiro</option>
+					<option id="tropapropia2selected" value="tropapropia2">Esqueletos</option>
+				</select>
+				<fieldset id="tropas">
+					<legend>Tropas:</legend>
+					<div id="tropasPropias" class="tropas">
+						<div id="tropapropia1" class="tropa tropapropia">
+							<div class="infotropa">
+								<div id="tropapropia1infobasica" class="infobasicatropa">
+									<b><span id="tropapropia1nombre">Vampiro</span></b><br /> <label
+										for="tropapropia1miembros">Miembros: </label><span
+										id="tropapropia1miembros">1</span> <label
+										for="tropapropia1tipo">Tipo: </label><span
+										id="tropapropia1tipo">infanteria</span> <label
+										for="tropapropia1puntos">Puntos: </label><span
+										id="tropapropia1puntos">200</span><br /> <label
+										for="tropapropia1eliminada">Eliminada: </label><span
+										id="tropapropia1eliminada">no</span> <br />
+								</div>
+								<div id="tropapropia1infooculta" class="oculto">
+									<span id="tropapropia1user">si</span> <span
+										id="tropapropia1encampo">si</span> <span
+										id="tropapropia1tropaadoptivaid">-1</span> <span
+										id="tropapropia1tropabajoataqueid">-1</span>
+								</div>
+								<div id="tropapropia1infosituacion" class="infosituaciontropa">
+									<label for="tropapropia1tropaadoptiva">Tropa adoptiva:
+									</label><span id="tropapropia1tropaadoptiva">--</span><br /> <label
+										for="tropapropia1anchofila">Unidades por fila: </label><span
+										id="tropapropia1unidadesfila">5</span><br /> <label
+										for="tropapropia1latitud">Latitud: </label><span
+										id="tropapropia1latitud">2000</span> <label
+										for="tropapropia1altitud">Altitud: </label><span
+										id="tropapropia1altitud">1400</span> <label
+										for="tropapropia1orientacion">Orientacion: </label><span
+										id="tropapropia1orientacion">0</span><br /> <label
+										for="tropapropia1huyendo">Huyendo: </label><span
+										id="tropapropia1huyendo">no</span> <label
+										for="tropapropia1cargando">Cargando: </label><span
+										id="tropapropia1cargando">no</span><br /> <label
+										for="tropapropia1combatevanguardia">Combatiendo por
+										vanguardia: </label><span id="tropapropia1combatevanguardia">no</span><br />
+									<label for="tropapropia1combatesiniestra">Combatiendo a
+										siniestra: </label><span id="tropapropia1combatesiniestra">no</span><br />
+									<label for="tropapropia1combatediestra">Combatiendo a
+										diestra: </label><span id="tropapropia1combatediestra">no</span><br />
+									<label for="tropapropia1combateretaguardia">Combatiendo
+										por retaguardia: </label><span id="tropapropia1combateretaguardia">no</span><br />
+								</div>
+							</div>
+							<div class="tabla">
+								<table class="unidades">
+									<thead>
+										<tr>
+											<td scope="col">Rango</td>
+											<td scope="col">Movimiento</td>
+											<td scope="col">HA</td>
+											<td scope="col">HP</td>
+											<td scope="col">F</td>
+											<td scope="col">R</td>
+											<td scope="col">H</td>
+											<td scope="col">PS</td>
+											<td scope="col">I</td>
+											<td scope="col">A</td>
+											<td scope="col">L</td>
+											<td scope="col">Peana</td>
+											<td scope="col" class="oculto">Representada</td>
+										</tr>
+									</thead>
+									<tbody id=tropapropia1unidades>
+										<tr id="tropapropia1unidad1">
+											<td id="tropapropia1unidad1rango">6</td>
+											<td id="tropapropia1unidad1movimiento">30</td>
+											<td id="tropapropia1unidad1ha">5</td>
+											<td id="tropapropia1unidad1hp">4</td>
+											<td id="tropapropia1unidad1f">5</td>
+											<td id="tropapropia1unidad1r">4</td>
+											<td id="tropapropia1unidad1h">0</td>
+											<td id="tropapropia1unidad1ps">3</td>
+											<td id="tropapropia1unidad1i">5</td>
+											<td id="tropapropia1unidad1a">3</td>
+											<td id="tropapropia1unidad1l">10</td>
+											<td id="tropapropia1unidad1peana">50</td>
+											<td id="tropapropia1unidad1representada" class="oculto">si</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<div id="tropapropia2" class="tropa tropapropia">
+							<div class="infotropa">
+								<div id="tropapropia2infobasica" class="infobasicatropa">
+									<b><span id="tropapropia2nombre">Esqueletos</span></b><br /> <label
+										for="tropapropia2miembros">Miembros: </label><span
+										id="tropapropia2miembros">7</span> <label
+										for="tropapropia2tipo">Tipo: </label><span
+										id="tropapropia2tipo">infanteria</span> <label
+										for="tropapropia2puntos">Puntos: </label><span
+										id="tropapropia2puntos">200</span><br /> <label
+										for="tropapropia2eliminada">Eliminada: </label><span
+										id="tropapropia2eliminada">no</span> <br />
+								</div>
+								<div id="tropapropia2infooculta" class="oculto">
+									<span id=tropapropia2user>si</span> <span
+										id="tropapropia2encampo">si</span> <span
+										id="tropapropia2tropaadoptivaid">-1</span> <span
+										id="tropapropia2tropabajoataqueid">-1</span>
+								</div>
+								<div id="tropapropia2infosituacion" class="infosituaciontropa">
+									<label for="tropapropia2tropaadoptiva">Tropa adoptiva:
+									</label><span id="tropapropia2tropaadoptiva">--</span><br /> <label
+										for="tropapropia2anchofila">Unidades por fila: </label><span
+										id="tropapropia2unidadesfila">7</span><br /> <label
+										for="tropapropia2latitud">Latitud: </label><span
+										id="tropapropia2latitud">2000</span> <label
+										for="tropapropia2altitud">Altitud: </label><span
+										id="tropapropia2altitud">1300</span> <label
+										for="tropapropia2orientacion">Orientacion: </label><span
+										id="tropapropia2orientacion">0</span><br /> <label
+										for="tropapropia2huyendo">Huyendo: </label><span
+										id="tropapropia2huyendo">no</span> <label
+										for="tropapropia2cargando">Cargando: </label><span
+										id="tropapropia2cargando">no</span><br /> <label
+										for="tropapropia2combatevanguardia">Combatiendo por
+										vanguardia: </label><span id="tropapropia2combatevanguardia">no</span><br />
+									<label for="tropapropia2combatesiniestra">Combatiendo a
+										siniestra: </label><span id="tropapropia2combatesiniestra">no</span><br />
+									<label for="tropapropia2combatediestra">Combatiendo a
+										diestra: </label><span id="tropapropia2combatediestra">no</span><br />
+									<label for="tropapropia2combateretaguardia">Combatiendo
+										por retaguardia: </label><span id="tropapropia2combateretaguardia">no</span><br />
+								</div>
+							</div>
+							<div class="tabla">
+								<table class="unidades">
+									<thead>
+										<tr>
+											<td scope="col">Rango</td>
+											<td scope="col">Movimiento</td>
+											<td scope="col">HA</td>
+											<td scope="col">HP</td>
+											<td scope="col">F</td>
+											<td scope="col">R</td>
+											<td scope="col">H</td>
+											<td scope="col">PS</td>
+											<td scope="col">I</td>
+											<td scope="col">A</td>
+											<td scope="col">L</td>
+											<td scope="col">Peana</td>
+											<td scope="col" class="oculto">Representada</td>
+										</tr>
+									</thead>
+									<tbody id=tropapropia2unidades>
+										<tr id="tropapropia2unidad1">
+											<td id="tropapropia2unidad1rango">4</td>
+											<td id="tropapropia2unidad1movimiento">20</td>
+											<td id="tropapropia2unidad1ha">3</td>
+											<td id="tropapropia2unidad1hp">3</td>
+											<td id="tropapropia2unidad1f">3</td>
+											<td id="tropapropia2unidad1r">3</td>
+											<td id="tropapropia2unidad1h">0</td>
+											<td id="tropapropia2unidad1ps">1</td>
+											<td id="tropapropia2unidad1i">3</td>
+											<td id="tropapropia2unidad1a">2</td>
+											<td id="tropapropia2unidad1l">6</td>
+											<td id="tropapropia2unidad1peana">40</td>
+											<td id="tropapropia2unidad1representada" class="oculto">si</td>
+										</tr>
+										<tr id="tropapropia2unidad2">
+											<td id="tropapropia2unidad2rango">3</td>
+											<td id="tropapropia2unidad2movimiento">20</td>
+											<td id="tropapropia2unidad2ha">3</td>
+											<td id="tropapropia2unidad2hp">3</td>
+											<td id="tropapropia2unidad2f">3</td>
+											<td id="tropapropia2unidad2r">3</td>
+											<td id="tropapropia2unidad2h">0</td>
+											<td id="tropapropia2unidad2ps">1</td>
+											<td id="tropapropia2unidad2i">3</td>
+											<td id="tropapropia2unidad2a">1</td>
+											<td id="tropapropia2unidad2l">6</td>
+											<td id="tropapropia2unidad2peana">40</td>
+											<td id="tropapropia2unidad2representada" class="oculto">si</td>
+										</tr>
+										<tr id="tropapropia2unidad3">
+											<td id="tropapropia2unidad3rango">2</td>
+											<td id="tropapropia2unidad3movimiento">20</td>
+											<td id="tropapropia2unidad3ha">3</td>
+											<td id="tropapropia2unidad3hp">3</td>
+											<td id="tropapropia2unidad3f">3</td>
+											<td id="tropapropia2unidad3r">3</td>
+											<td id="tropapropia2unidad3h">0</td>
+											<td id="tropapropia2unidad3ps">1</td>
+											<td id="tropapropia2unidad3i">3</td>
+											<td id="tropapropia2unidad3a">1</td>
+											<td id="tropapropia2unidad3l">6</td>
+											<td id="tropapropia2unidad3peana">40</td>
+											<td id="tropapropia2unidad3representada" class="oculto">si</td>
+										</tr>
+										<tr id="tropapropia2unidad4">
+											<td id="tropapropia2unidad4rango">1</td>
+											<td id="tropapropia2unidad4movimiento">20</td>
+											<td id="tropapropia2unidad4ha">3</td>
+											<td id="tropapropia2unidad4hp">3</td>
+											<td id="tropapropia2unidad4f">3</td>
+											<td id="tropapropia2unidad4r">3</td>
+											<td id="tropapropia2unidad4h">0</td>
+											<td id="tropapropia2unidad4ps">1</td>
+											<td id="tropapropia2unidad4i">3</td>
+											<td id="tropapropia2unidad4a">1</td>
+											<td id="tropapropia2unidad4l">6</td>
+											<td id="tropapropia2unidad4peana">40</td>
+											<td id="tropapropia2unidad4representada" class="oculto">si</td>
+										</tr>
+										<tr id="tropapropia2unidad5">
+											<td id="tropapropia2unidad5rango">1</td>
+											<td id="tropapropia2unidad5movimiento">20</td>
+											<td id="tropapropia2unidad5ha">3</td>
+											<td id="tropapropia2unidad5hp">3</td>
+											<td id="tropapropia2unidad5f">3</td>
+											<td id="tropapropia2unidad5r">3</td>
+											<td id="tropapropia2unidad5h">0</td>
+											<td id="tropapropia2unidad5ps">1</td>
+											<td id="tropapropia2unidad5i">3</td>
+											<td id="tropapropia2unidad5a">1</td>
+											<td id="tropapropia2unidad5l">6</td>
+											<td id="tropapropia2unidad5peana">40</td>
+											<td id="tropapropia2unidad5representada" class="oculto">si</td>
+										</tr>
+										<tr id="tropapropia2unidad6">
+											<td id="tropapropia2unidad6rango">1</td>
+											<td id="tropapropia2unidad6movimiento">20</td>
+											<td id="tropapropia2unidad6ha">3</td>
+											<td id="tropapropia2unidad6hp">3</td>
+											<td id="tropapropia2unidad6f">3</td>
+											<td id="tropapropia2unidad6r">3</td>
+											<td id="tropapropia2unidad6h">0</td>
+											<td id="tropapropia2unidad6ps">1</td>
+											<td id="tropapropia2unidad6i">3</td>
+											<td id="tropapropia2unidad6a">1</td>
+											<td id="tropapropia2unidad6l">6</td>
+											<td id="tropapropia2unidad6peana">40</td>
+											<td id="tropapropia2unidad6representada" class="oculto">si</td>
+										</tr>
+										<tr id="tropapropia2unidad7">
+											<td id="tropapropia2unidad7rango">1</td>
+											<td id="tropapropia2unidad7movimiento">20</td>
+											<td id="tropapropia2unidad7ha">3</td>
+											<td id="tropapropia2unidad7hp">3</td>
+											<td id="tropapropia2unidad7f">3</td>
+											<td id="tropapropia2unidad7r">3</td>
+											<td id="tropapropia2unidad7h">0</td>
+											<td id="tropapropia2unidad7ps">1</td>
+											<td id="tropapropia2unidad7i">3</td>
+											<td id="tropapropia2unidad7a">1</td>
+											<td id="tropapropia2unidad7l">6</td>
+											<td id="tropapropia2unidad7peana">40</td>
+											<td id="tropapropia2unidad7representada" class="oculto">si</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+					<div id="tropasenemigas" class="tropas oculto">
+						<div id="tropaenemiga1" class="tropa tropaenemiga">
+							<div class="infotropa">
+								<div id="tropapropia1infobasica" class="infobasicatropa">
+									<input id="tropaenemiga1selected" type="radio"
+										name="tropaseleccionada" value="tropaenemiga1" /> <b><span
+										id="tropaenemiga1nombre">Señor del caos</span></b><br /> <label
+										for="tropaenemiga1miembros">Miembros: </label><span
+										id="tropaenemiga1miembros">1</span> <label
+										for="tropaenemiga1tipo">Tipo: </label><span
+										id="tropaenemiga1tipo">infanteria</span> <label
+										for="tropaenemiga1puntos">Puntos: </label><span
+										id="tropaenemiga1puntos">200</span><br /> <label
+										for="tropaenemiga1eliminada">Eliminada: </label><span
+										id="tropaenemiga1eliminada">no</span> <br />
+								</div>
+								<div id="tropaenemiga1infooculta" class="oculto">
+									<span id="tropaenemiga1user">no</span> <span
+										id="tropaenemiga1encampo">si</span> <span
+										id="tropaenemiga1tropaadoptivaid">-1</span> <span
+										id="tropaenemiga1tropabajoataqueid">-1</span>
+								</div>
+								<div id="tropaenemiga1infosituacion" class="infosituaciontropa">
+									<label for="tropaenemiga1tropaadoptiva">Tropa adoptiva:
+									</label><span id="tropaenemiga1tropaadoptiva">--</span><br /> <label
+										for="tropaenemiga1anchofila">Unidades por fila: </label><span
+										id="tropaenemiga1unidadesfila">5</span><br /> <label
+										for="tropaenemiga1latitud">Latitud: </label><span
+										id="tropaenemiga1latitud">2000</span> <label
+										for="tropaenemiga1altitud">Altitud: </label><span
+										id="tropaenemiga1altitud">1200</span> <label
+										for="tropaenemiga1orientacion">Orientacion: </label><span
+										id="tropaenemiga1orientacion">90</span><br /> <label
+										for="tropaenemiga1huyendo">Huyendo: </label><span
+										id="tropaenemiga1huyendo">no</span> <label
+										for="tropaenemiga1cargando">Cargando: </label><span
+										id="tropaenemiga1cargando">no</span><br /> <label
+										for="tropaenemiga1combatevanguardia">Combatiendo por
+										vanguardia: </label><span id="tropaenemiga1combatevanguardia">no</span><br />
+									<label for="tropaenemiga1combatesiniestra">Combatiendo
+										a siniestra: </label><span id="tropaenemiga1combatesiniestra">no</span><br />
+									<label for="tropaenemiga1combatediestra">Combatiendo a
+										diestra: </label><span id="tropaenemiga1combatediestra">no</span><br />
+									<label for="tropaenemiga1combateretaguardia">Combatiendo
+										por retaguardia: </label><span id="tropaenemiga1combateretaguardia">no</span><br />
+								</div>
+							</div>
+							<div>
+								<table class="unidades">
+									<thead>
+										<tr>
+											<td scope="col">Rango</td>
+											<td scope="col">Movimiento</td>
+											<td scope="col">HA</td>
+											<td scope="col">HP</td>
+											<td scope="col">F</td>
+											<td scope="col">R</td>
+											<td scope="col">H</td>
+											<td scope="col">PS</td>
+											<td scope="col">I</td>
+											<td scope="col">A</td>
+											<td scope="col">L</td>
+											<td scope="col">Peana</td>
+											<td scope="col" class="oculto">Representada</td>
+										</tr>
+									</thead>
+									<tbody id=tropaenemiga1unidades>
+										<tr id="tropaenemiga1unidad1">
+											<td id="tropaenemiga1unidad1rango">6</td>
+											<td id="tropaenemiga1unidad1movimiento">30</td>
+											<td id="tropaenemiga1unidad1ha">8</td>
+											<td id="tropaenemiga1unidad1hp">4</td>
+											<td id="tropaenemiga1unidad1f">5</td>
+											<td id="tropaenemiga1unidad1r">5</td>
+											<td id="tropaenemiga1unidad1h">0</td>
+											<td id="tropaenemiga1unidad1ps">3</td>
+											<td id="tropaenemiga1unidad1i">5</td>
+											<td id="tropaenemiga1unidad1a">3</td>
+											<td id="tropaenemiga1unidad1l">9</td>
+											<td id="tropaenemiga1unidad1peana">50</td>
+											<td id="tropaenemiga1unidad1representada" class="oculto">si</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

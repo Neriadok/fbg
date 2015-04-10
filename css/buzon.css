@@ -1,0 +1,43 @@
+@CHARSET "UTF-8";
+
+/**
+*#000030:Azul realmente -oscuro
+*#0C1D54:Azul Oscuro
+*#8FFFFF:Azul Enfático
+*#4057A3:Azul Cielo
+*#C1D0E3:Gris Nube
+*#F9FF45:Amarillo Brillante
+*#CBD126:Amarillo Oscuro
+*#AD661A:Marron Oscur
+*/
+
+/**FORMATO Y ASPECTO**/
+
+table.leerCorreo{
+	width:100%;
+}
+
+.cabecera{
+	background-color:#C1D0E3;
+	color:#000030;
+}
+
+#correo{
+	width:100%;
+}
+
+#correoContent{
+	padding:20px;
+	border:10px solid #000030;
+	background-color:#E3E086;
+	color:#000030;
+	font-weight:bolder;
+}
+
+.tituloCorreo{
+	font-weight:bolder;
+}
+
+.emisorCorreo, .fechaCorreo{
+	font-style:italic;
+}
