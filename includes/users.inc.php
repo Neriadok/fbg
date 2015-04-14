@@ -257,9 +257,37 @@
 		if(!($_SESSION['userId'] == $uid)){
 			//Si no son sus opciones, el usuario vera las opciones de desafiar y de enviar un mensaje
 			echo "
-				<form class='submit desafiarUser' id='desafiarU$uid'>
-					<img src='src/botones/desafiar.png'/>
-				</form>
+				<div id='opDes".$uid."Boton' class='botonVentana'><img src='src/botones/desafiar.png'/></div>
+				<div id='opDes".$uid."' class='ventana oculto'>
+					<h2 id='opDes".$uid."Selector' class='ventanaSelector'>Desafiar a $unickname</h2>
+					<div class='ventanaContent'>
+						<form id='desafiarU".$uid."Form'>
+							<table>
+								<tr>
+									<td class='alignLeft'>Puntos máximos:</td>
+									<td>
+										<select name='puntos'>
+											<option value='500'>500</option>
+											<option value='1000'>1000</option>
+											<option value='1500'>1500</option>
+											<option value='2000'>2000</option>
+											<option value='2500'>2500</option>
+											<option value='3000'>3000</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class='' colspan='2'>
+										<div class='desafiarUser submit' id='desafiarU".$uid."'>
+											<img src='src/botones/desafiar.png'/>
+											<input name='desafiarUser' value='$uid'/>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</form>
+					</div>
+				</div>
 				
 				<div id='opMsg".$uid."Boton' class='botonVentana'><img src='src/botones/msg.png'/></div>
 				<div id='opMsg".$uid."' class='ventana oculto'>

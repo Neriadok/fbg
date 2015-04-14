@@ -34,7 +34,9 @@ function Partida(batallaId, terrenoId, panelIn, panelOut, panelFase){
 	/**Posicion de la camara.*/
 	var camaraX = 0;
 	var camaraY = 0;
-	var zoom = 0.2;
+	var minZoom = 0.25;
+	var maxZoom = 1.5;
+	var zoom = minZoom;
 	
 	/**Elementos de juego.*/
 	var batalla = document.getElementById(batallaId);
@@ -74,7 +76,7 @@ function Partida(batallaId, terrenoId, panelIn, panelOut, panelFase){
 	document.onmousewheel = scrollRoll;
 	document.addEventListener('DOMMouseScroll', scrollRoll);
 	document.getElementById(panelIn).onchange = panelInActualizado;
-	document.getElementById("panelfase").onsubmit = accionFase;
+	document.getElementById(panelFase).onsubmit = accionFase;
 	
 	
 	/**METODOS DE MANTENIMIENTO Y CONSTRUCCI�N*/
@@ -357,13 +359,13 @@ function Partida(batallaId, terrenoId, panelIn, panelOut, panelFase){
 			}
 
 			/**Establecemos un m�ximo.*/
-			if(zoom<0.2){
-				zoom = 0.2;
+			if(zoom<minZoom){
+				zoom = minZoom;
 			}
 			
 			/**Establecemos un m�nimo.*/
-			if(zoom>1.5){
-				zoom = 1.5;
+			if(zoom>maxZoom){
+				zoom = maxZoom;
 				zoomTopLimit = true;
 			}
 			

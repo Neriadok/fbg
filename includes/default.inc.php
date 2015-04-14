@@ -60,8 +60,6 @@
 				echo "<a href='perfil.php'><img id='avatar' src='src/avatares/default.jpg'/></a>";
 			}
 			$sentencia -> close();
-			
-			
 		}
 		else {
 			echo "<img id='avatar' src='src/rayo.gif'/>";

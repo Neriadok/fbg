@@ -1,6 +1,13 @@
 <?php
+	include_once 'db_connect.php';
 	include_once 'functions.php';
 	sesion_segura();
+	
+	//Guardamos la hora del log out
+	$sentencia = $conexion -> prepare("CALL proceso_logout(?)");
+	$sentencia -> bind_param('i', $_SESSION['userId']);
+	$sentencia -> execute();
+	$sentencia -> close();
 	
 	// Desconfigura todos los valores de sesi�n.
 	$_SESSION = array();

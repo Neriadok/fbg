@@ -1,0 +1,56 @@
+@CHARSET "UTF-8";
+
+/**
+*#000030:Azul realmente -oscuro
+*#0C1D54:Azul Oscuro
+*#8FFFFF:Azul Enfático
+*#4057A3:Azul Cielo
+*#C1D0E3:Gris Nube
+*#F9FF45:Amarillo Brillante
+*#CBD126:Amarillo Oscuro
+*#AD661A:Marron Oscur
+*/
+
+/**FORMATO Y ASPECTO**/
+
+#columnaPrincipal {
+	position: absolute;
+	top:0px;
+	left:300px;
+}
+
+#columnaInfo {
+	position: absolute;
+	top:0px;
+	left:0px;
+	height:100%;
+	width:300px;
+}
+
+#contenidoPrincipal{
+	top: 0px;
+	margin: auto;
+	left: 0px;
+	color: white;
+	overflow: hidden;
+}
+
+#contenidoPrincipal *{
+	position:relative;
+	background-color: #000030;
+}
+
+#game{
+	margin: 0px auto;
+	top: 0px;
+	left: 0px;
+	color: white;
+	margin: 0px auto;
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+}
+
+#panelin {
+	background-color: #0C1D54;
+}

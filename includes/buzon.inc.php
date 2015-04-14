@@ -154,6 +154,7 @@
 						<td id='tipo$cid' class='Correo oculto'>$ctipo</td>
 						<td id='contenido$cid' class='Correo oculto'>$ccontenido</td>
 						<td id='contenidoDefecto$cid' class='Correo oculto'>$ccontenidoDefecto</td>
+						<td id='puntos$cid' class='Correo oculto'>$cpts</td>
 					</tr>
 				";
 			}
@@ -254,30 +255,30 @@
 			//En caso de no poder realizarse la operación mostramos un mensaje de error.
 			else{
 				echo "
-							<div class='contenedor mid top box error'>
-								<h2>ERROR</h2>
-								<p>
-									Ha ocurrido un error inesperado en la base de datos,
-									<br/>lamentamos las molestias.
-									<br/><a href='buzon.php' class='enfasis'>Volver al buzon</a>
-								</p>
-							</div>
-						";
+					<div class='contenedor mid top box error'>
+						<h2>ERROR</h2>
+						<p>
+							Ha ocurrido un error inesperado en la base de datos,
+							<br/>lamentamos las molestias.
+							<br/><a href='buzon.php' class='enfasis'>Volver al buzon</a>
+						</p>
+					</div>
+				";
 			}
 		}
 		
 		//En caso contrario mostramos un mensaje de error.
 		else{
 			echo "
-						<div class='contenedor mid top box error'>
-							<h2>ERROR</h2>
-							<p>
-								Ha ocurrido un error inesperado en la base de datos,
-								<br/>lamentamos las molestias.
-								<br/><a href='buzon.php' class='enfasis'>Volver al buzon</a>
-							</p>
-						</div>
-					";
+				<div class='contenedor mid top box error'>
+					<h2>ERROR</h2>
+					<p>
+						Ha ocurrido un error inesperado en la base de datos,
+						<br/>lamentamos las molestias.
+						<br/><a href='buzon.php' class='enfasis'>Volver al buzon</a>
+					</p>
+				</div>
+			";
 		}
 		$sentencia -> close();
 	}

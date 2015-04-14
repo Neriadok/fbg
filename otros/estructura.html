@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='UTF8'>
+		<title>FBG - </title>
+		<link rel='shortcut icon' href='src/dragon.ico'/>
+		<link rel='stylesheet' type='text/css' href='../css/default.css' />
+		<link rel='stylesheet' type='text/css' href='../css/partida.css' />
+		<script type="text/javascript" src="../jFBG/AsinCronos.js"></script>
+		<script type="text/javascript" src="../jFBG/Interfaz.js"></script>
+		<script type="text/javascript" src="../jFBG/Unidad.js"></script>
+		<script type="text/javascript" src="../jFBG/Tropa.js"></script>
+		<script type="text/javascript" src="../jFBG/Partida.js"></script>
+		<script type="text/javascript" src="../jFBG/Ventana.js"></script>
+		<script>
+        	function inicio(){
+            	var ca = new AsinCronos("contenidos/buzon.con.php");
+				tratarElementos();
+				
+            	setInterval(
+                    function(){
+                        if(ca.check())tratarElementos();
+                    }
+                  	,500
+                 );
+                
+
+                /**Funciones generadas al inicio**/
+
+            	function tratarElementos(){
+                	var interfaz = new Interfaz(
+                		document.getElementById("columnaInfo")
+                		,document.getElementById("columnaPrincipal")
+                		,document.getElementById("contenidoPrincipal")
+                		,document.getElementById("panelin")
+                	);
+                	
+    				var partida = new Partida("batalla","terreno","panelin","panelout","panelfase");
+            	};
+        	}
+        </script>
+	</head>
+	<body onload="inicio();">
+		<div id='interfaz'>
+			<table id='columnaInfo'>
+				<tr>
+					<td colspan='2'><a href='../portal.php'><img id='avatar' src='../src/avatares/default.jpg'/></a></td>
+				</tr>
+				
+				<tr>
+					<td colspan='2'>
+						<table>
+							<tr>
+								<td>Orden</td>
+								<td id='userorder'>1</td>
+							</tr>
+							<tr>
+								<td>Turno</td>
+								<td id='turno'>1</td>
+							</tr>
+							<tr>
+								<td>Fase</td>
+								<td id='fase'>Despliegue</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan='2' id='textofase'></td>
+				</tr>
+				
+				<tr>
+					<td colspan='2'>
+						<table>
+							<tr>
+								<td colspan='2'>CAMARA:</td>
+							</tr>
+							<tr>
+								<td id='zoom'></td>
+							</tr>
+							<tr>
+								<td id='cursorX'>X: --</td>
+							</tr>
+							<tr>
+								<td id='cursorY'>Y: --</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan='2' id='panelout'>Panel Out</td>
+				</tr>
+				
+				<tr>
+					<td colspan='2' id='panelfase'>Panel Fase</td>
+				</tr>
+			</table>
+	
+			<div id='columnaPrincipal'>
+				<div id='contenidoPrincipal'>
+					<div id="game">
+						<canvas id="batalla">
+							No se pudo cargar el canvas de juego. Esto puede deberse a que tu navegador esté obsoleto o no lo tolere. Recomendamos el uso de Google Chrome o Mozilla Firefox.
+						</canvas>
+						<img id="terreno" src="../src/mapas/mapa.jpg" />
+					</div>
+				</div>
+				<div id='panelin'>
+					PanelIn
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

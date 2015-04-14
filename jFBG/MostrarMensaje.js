@@ -104,7 +104,10 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 	};
 	
 	/**
+	 * Método usado para mostar como mensaje un correo dell buzón.
+	 * Anotación: Un correo es un tipo de mensaje.
 	 * 
+	 * @param elemento Element - Elemento que contiene el conjunto del correo.
 	 */
 	function mostrarCorreo(elemento){
 		document.getElementById("correoTitle").innerHTML = elemento.innerHTML;
@@ -118,7 +121,10 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 	};
 	
 	/**
+	 * Método que estructura el contenido de un Mensaje en función de su tipo.
 	 * 
+	 * @param elemento Element - Elemento que contiene el conjunto del mensaje.
+	 * @param tipo integer - Tipo de mensaje recibido.
 	 */
 	function contenido(elemento,tipo){
 		var contenido = "";
@@ -128,6 +134,22 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 				contenido += "<p>El usuario '";
 				contenido += document.getElementById("emisor"+elemento.id).innerHTML;
 				contenido += "' quiere añadirte a su lista de amigos.</p>";
+				break;
+			case "5":
+				contenido += "<p>'";
+				contenido += document.getElementById("emisor"+elemento.id).innerHTML;
+				contenido += "' te ha desafiado a una batalla de ";
+				contenido += document.getElementById("puntos"+elemento.id).innerHTML;
+				contenido += " puntos.";
+				if(document.getElementById("contenido"+elemento.id).innerHTML != ""){
+					contenido += "<br/>Su grito de guerra es: <span class='cursiva'>";
+					contenido += document.getElementById("contenido"+elemento.id).innerHTML;
+					contenido += "</span>";
+				}
+				contenido += "</p>";
+				contenido += "<p class='cursiva'>";
+				contenido += document.getElementById("contenidoDefecto"+elemento.id).innerHTML;
+				contenido += "</p>";
 				break;
 			default:
 				contenido += "<p class='cursiva'>";
@@ -142,7 +164,10 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 	};
 	
 	/**
+	 * Método que aporta a un mensaje las opciones que tiene. Estas dependen del tipo de mensaje.
 	 * 
+	 * @param elemento Element - Elemento al que añadimos las opciones.
+	 * @param tipo integer - Tipo de mensaje a fin de determinar que opciones aplicamos.
 	 */
 	function addOpciones(elemento,tipo){
 		var opciones = document.createElement("div");
@@ -160,12 +185,25 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 				contenido += "<img src='src/botones/aceptar.png'/>";
 				contenido += "<input type='hidden' name='aceptarAmistad' value='"+document.getElementById("emisorId"+elemento.id).innerHTML+"'/>";
 				contenido += "</form>";
-
+	
 				contenido += "<form class='submit enviar' id='denegarAmistad"+elemento.id+"'>";
 				contenido += "<img src='src/botones/eliminar.png'/>";
 				contenido += "<input type='hidden' name='denegarAmistad' value='"+document.getElementById("emisorId"+elemento.id).innerHTML+"'/>";
 				contenido += "</form>";
 				break;
+			
+			case "5":
+				contenido += "<form class='submit enviar' id='aceptarDesafio"+elemento.id+"'>";
+				contenido += "<img src='src/botones/aceptar.png'/>";
+				contenido += "<input type='hidden' name='aceptarDesafio' value='"+elemento.id+"'/>";
+				contenido += "</form>";
+	
+				contenido += "<form class='submit enviar' id='denegarDesafio"+elemento.id+"'>";
+				contenido += "<img src='src/botones/eliminar.png'/>";
+				contenido += "<input type='hidden' name='denegarDesafio' value='"+elemento.id+"'/>";
+				contenido += "</form>";
+				break;
+			
 			default:
 				console.log("Default options.")
 				contenido += "<form class='submit enviar' id='deleteCorreo"+elemento.id+"'>";
@@ -180,7 +218,10 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 	};
 	
 	/**
+	 * Método que activa las opciones de un mensaje.
 	 * 
+	 * @param elemento Element - Elemento al que pertenecen las opciones.
+	 * @param tipo integer - Tipo de mensaje al que pertenecen las opciones.
 	 */
 	function activarOpciones(elemento,tipo){
 		/*

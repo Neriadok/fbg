@@ -130,6 +130,15 @@
                     		delUsers[i] = new Submit(0, delUsers[i].id, document.getElementById(delUsers[i].id), ca);
     					}
                 	}
+                	
+                	/**Generamos los objetos Submit para eliminar un usuario.**/
+                	var desafiarUsers = document.getElementsByClassName("desafiarUser");
+
+                	if(desafiarUsers != null){
+                		for(var i=0;i<desafiarUsers.length;i++){
+                			desafiarUsers[i] = new Submit(0, desafiarUsers[i].id, document.getElementById(desafiarUsers[i].id+"Form"), ca);
+    					}
+                	}
 
                 	
 

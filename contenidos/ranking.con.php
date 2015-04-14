@@ -106,9 +106,22 @@
 			}
 		}
 		
+		//Desafiar un usuario.
+		else if(isset($datos['desafiarUser'])){
+			//Filtramos los datos
+			$uId = preg_replace("/[^0-9]+/", "", $datos['desafiarUser']);
+			$pts = preg_replace("/[^0-9]+/", "", $datos['puntos']);
+			
+			//Lanzamos el desafio
+			desafiarUser($conexion, $uId, $pts);
+			
+			//Volvemos al ranking
+			ranking($conexion, $_SESSION['userId']);
+		}
+		
 		//Por defecto
 		else{
-			ranking($conexion,$_SESSION['userId']);
+			ranking($conexion, $_SESSION['userId']);
 		}
 	}
 	

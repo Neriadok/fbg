@@ -1,5 +1,6 @@
 <?php
 	include_once "users.inc.php";
+	include_once 'partida.inc.php';
 	
 	/**
 	 * FUNCIÓN DE ESTRUCTURA
