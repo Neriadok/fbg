@@ -71,11 +71,7 @@
 					
 					$urle=esc_url($_SERVER['PHP_SELF']);
 					if (login_check($conexion)){
-		
-						echo "
-							<div class='contenedor mid top box'>Contenidos</div>
-						";
-	
+						partidas($conexion);
 					}
 					else {
 						defaultContent();

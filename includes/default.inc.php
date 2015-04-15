@@ -37,7 +37,7 @@
 
 	/**
 	 * FUNCIÓN DE CONTENIDO
-	 * Función que muestra el avatar del usuario logueado o en su defecto una imagen predefinida.
+	 * Función que muestra en un marco circular el avatar del usuario logueado o en su defecto una imagen predefinida.
 	 *
 	 * @param $conexion Mysqli - Conexion a Base de Datos
 	 */
@@ -64,6 +64,32 @@
 		else {
 			echo "<img id='avatar' src='src/rayo.gif'/>";
 		}
+	}
+
+	/**
+	 * FUNCIÓN DE CONTENIDO
+	 * Función que muestra en miniatura el avatar del usuario logueado o en su defecto una imagen predefinida.
+	 *
+	 * @param $conexion Mysqli - Conexion a Base de Datos
+	 */
+	function avatar($conexion){
+		$sentencia = $conexion -> prepare("CALL proceso_getAvatar(?)");
+		$sentencia -> bind_param('i', $_SESSION['userId']);
+		if($sentencia -> execute()){
+			$sentencia -> store_result();
+			$sentencia -> bind_result($avatar);
+			$sentencia -> fetch();
+			if($avatar != null){
+				return $avatar;
+			}
+			else{
+				return "src/avatares/default.jpg";
+			}
+		}
+		else{
+			return "src/avatares/default.jpg";
+		}
+		$sentencia -> close();
 	}
 	
 	/**

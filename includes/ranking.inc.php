@@ -1,6 +1,6 @@
 <?php
 	include_once "users.inc.php";
-	include_once 'partida.inc.php';
+	include_once 'partidas.inc.php';
 	
 	/**
 	 * FUNCIÓN DE ESTRUCTURA
@@ -26,15 +26,19 @@
 		
 		echo "
 			</div>
-			<div id='contenido' class='contenedor big column'>
+			<div id='contenido' class='contenedor mid column'>
 		";
 		
 		ranking_contenido($conexion);
 		
 		echo "
 			</div>
+			<div id='contenido' class='contenedor right column'>
 		";
-		
+		amigos($conexion,false);
+		echo "
+			</div>
+		";
 	}
 
 	/**

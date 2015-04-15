@@ -4,7 +4,7 @@
 	include_once '../includes/default.inc.php';
 	include_once '../includes/buzon.inc.php';
 	include_once '../includes/users.inc.php';
-	include_once '../includes/partida.inc.php';
+	include_once '../includes/partidas.inc.php';
 	 
 	sesion_segura();
 
@@ -45,21 +45,23 @@
 		}
 		
 		//Se acepta un desafio.
-		if(isset($datos['aceptarDesafio'])){
+		else if(isset($datos['aceptarDesafio'])){
 			//Filtramos los datos
 			$desafio = preg_replace("/[^0-9]+/", "", $datos['aceptarDesafio']);
 			
 			//Aceptamos el desafio
 			aceptarDesafio($conexion,$desafio);
+			buzon($conexion);
 		}
 		
 		//Se acepta un desafio.
-		if(isset($datos['denegarDesafio'])){
+		else if(isset($datos['denegarDesafio'])){
 			//Filtramos los datos
 			$desafio = preg_replace("/[^0-9]+/", "", $datos['denegarDesafio']);
 			
 			//Aceptamos el desafio
-			dengarDesafio($conexion,$desafio);
+			denegarDesafio($conexion,$desafio);
+			buzon($conexion);
 		}
 		
 		//Por defecto siempre mostraremos el contenido del buzón para evitar posibles "extraños" en el funcionamiento.

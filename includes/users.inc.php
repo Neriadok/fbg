@@ -925,4 +925,89 @@
 			$sentencia -> close();
 		}
 	}
+	
+	
+	/**
+	 * FUNCIÓN DE CONTENIDO
+	 * Función que muestra los amigos del usuario logueado. De forma opcional se pueden mostrar solo aquellos que esten conectados.
+	 * 
+	 * @param $conexion Mysqli - Conexion a base de datos.
+	 * @param $logged boolean - Si tiene valor true se buscaran solo aquellos que esten conectados.
+	 */
+	function amigos($conexion,$logged){
+		echo "
+			<p class='enfasis'>Amigos
+		";
+		
+		if($logged){
+			echo "Conectados";
+		}
+		
+		echo "
+			<div id='amigos' class='scrollingBox'>
+				<table id='amigosContent' class='scrollingBoxContent'>
+		";
+		$sentencia = $conexion -> prepare("CALL proceso_amigos(?)");
+		$sentencia -> bind_param('i', $_SESSION['userId']);
+		if($sentencia -> execute()){
+			$sentencia -> store_result();
+			$sentencia -> bind_result(
+				$usuarioId
+				,$amigoId
+				,$amigoNick
+				,$amigoRenombre
+				,$amigoAvatar
+				,$online
+			);
+			while($sentencia -> fetch()){
+				if(!$logged || ($logged && $online)){
+					echo "
+						<tr class='alignRight
+					";
+					echo "
+						'>
+							<td>
+					";
+					if($amigoAvatar != null){
+						echo "
+							<img class='microAvatar
+						";
+						if($online){
+							echo " borde";
+						}
+						echo "
+							' src='$amigoAvatar'/></a>
+						";
+					}
+					else{
+						echo "<img class='microAvatar
+						";
+						if($online){
+							echo " borde";
+						}
+						echo "
+							' src='src/avatares/default.jpg'/></a>";
+					}
+					echo "
+							</td>
+							<td class='alignLeft enfasis'>$amigoNick</td>
+							<td>Renombre:</td>
+							<td class='alignLeft'>$amigoRenombre</td>
+						</tr>
+					";
+				}
+			}
+		}
+		$sentencia -> close();
+		echo "
+				</table>
+			</div>
+			<div id='amigosMoving' class='scrollingBoxMoving'>
+				<div id='amigosMovingUp' class='scrollingBoxMovingUp'></div>
+				<div id='amigosMovingBar' class='scrollingBoxMovingBar'></div>
+				<div id='amigosMovingDown' class='scrollingBoxMovingDown'></div>
+			</div>
+			
+		";
+	}
 ?>

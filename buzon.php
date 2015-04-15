@@ -3,6 +3,8 @@
 	include_once 'includes/functions.php';
 	include_once 'includes/default.inc.php';
 	include_once 'includes/buzon.inc.php';
+	include_once 'includes/users.inc.php';
+	include_once 'includes/partidas.inc.php';
 	
 	sesion_segura();
 ?>
