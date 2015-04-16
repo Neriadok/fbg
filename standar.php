@@ -71,6 +71,9 @@
 					
 					$urle=esc_url($_SERVER['PHP_SELF']);
 					if (login_check($conexion)){
+						//Registramos que el usuario esta activo
+						actividad($conexion);
+		
 						echo "
 							<div id='contenido' class='contenedor mid top box'>Standar</div>
 						";

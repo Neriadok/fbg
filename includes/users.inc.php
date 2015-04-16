@@ -944,6 +944,7 @@
 		}
 		
 		echo "
+			</p>
 			<div id='amigos' class='scrollingBox'>
 				<table id='amigosContent' class='scrollingBoxContent'>
 		";
@@ -960,13 +961,11 @@
 				,$online
 			);
 			while($sentencia -> fetch()){
-				if(!$logged || ($logged && $online)){
+				if(!$logged || ($logged && $online!=null && $online)){
 					echo "
-						<tr class='alignRight
-					";
-					echo "
-						'>
-							<td>
+						<tr>
+							<td class='alignRight enfasis'>$amigoNick</td>
+							<td class='alignLeft'>
 					";
 					if($amigoAvatar != null){
 						echo "
@@ -990,8 +989,9 @@
 					}
 					echo "
 							</td>
-							<td class='alignLeft enfasis'>$amigoNick</td>
-							<td>Renombre:</td>
+						</tr>
+						<tr>
+							<td class='alignRight'>Renombre:</td>
 							<td class='alignLeft'>$amigoRenombre</td>
 						</tr>
 					";

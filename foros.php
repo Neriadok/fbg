@@ -193,6 +193,9 @@
 			<div id='tronco'>
 				<?php 
 					if (login_check($conexion)){
+						//Registramos que el usuario esta activo
+						actividad($conexion);
+		
 						foros($conexion);
 					}
 					else {

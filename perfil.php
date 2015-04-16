@@ -128,6 +128,9 @@
 					
 					$urle=esc_url($_SERVER['PHP_SELF']);
 					if (login_check($conexion)){
+						//Registramos que el usuario esta activo
+						actividad($conexion);
+		
 						perfil($conexion);
 					}
 					else {
