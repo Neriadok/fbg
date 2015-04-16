@@ -17,11 +17,12 @@
 		echo "</div>";
 		
 		echo "<div id='contenido' class='contenedor mid column'>";
-		echo "CONTENIDO PRINCIPAL<br/>Primero las partidas activas.<br/>Luego una partida seleccionada.";
+		echo "CONTENIDO PRINCIPAL";
 		echo "</div>";
 		
 		echo "<div id='contenido' class='contenedor right column'>";
-		echo "HISTORIAL DE PARTIDAS";
+		echo "<p class='enfasis'>HISTORIAL DE PARTIDAS</p>";
+		partidas_listado($conexion,false);
 		echo "</div>";
 	}
 	
@@ -49,8 +50,8 @@
 	 * @param $desafio integer - Id del desafio en el correo.
 	 */
 	function aceptarDesafio ($conexion,$desafio){
-		$sentencia = $conexion -> prepare("CALL proceso_nuevaPartida(?,?,?)");
-		$sentencia -> bind_param('iii', $_SESSION['userId'], $desafiador, $desafio);
+		$sentencia = $conexion -> prepare("CALL proceso_nuevaPartida(?,?)");
+		$sentencia -> bind_param('ii', $_SESSION['userId'], $desafio);
 		$sentencia -> execute();
 		$sentencia -> close();
 	}
@@ -77,16 +78,8 @@
 	 *  @param $conexion Mysqli - Conexion a base de datos.
 	 */
 	function partidas_listado($conexion,$activas){
-		echo "
-			<p class='enfasis'>Listado de Partidas
-		";
-		
-		if($logged){
-			echo "Activas";
-		}
 		
 		echo "
-			</p>
 			<div id='partidas' class='scrollingBox'>
 				<table id='partidasContent' class='scrollingBoxContent'>
 		";
@@ -95,9 +88,35 @@
 		if($sentencia -> execute()){
 			$sentencia -> store_result();
 			$sentencia -> bind_result(
+					$id
+					,$desafiadorNick
+					,$desafiadoNick
+					,$ejercitoNombre
+					,$pts
+					,$turnos
+					,$fase
+					,$fechaInicio
+					,$fechaFin
+					,$vencedor
 			);
 			while($sentencia -> fetch()){
-				if(!$activas || ($activas && $activa)){
+				if(!$activas || ($activas && $fechaFin == null)){
+					echo "
+						<tr>
+							<td>$desafiadorNick VS $desafiadoNick</td>
+							<td>$pts</td>
+							<td>
+					";
+					if($ejercitoNombre != null){
+						echo "$ejercitoNombre";
+					}
+					else{
+						echo "Elegir Ejercito";
+					}
+					echo "
+							</td>
+						</tr>
+					";
 				}
 			}
 			$sentencia -> close();

@@ -5,6 +5,7 @@
 	include_once 'includes/portal.inc.php';
 	include_once 'includes/buzon.inc.php';
 	include_once 'includes/users.inc.php';
+	include_once 'includes/partidas.inc.php';
 	
 	sesion_segura();
 ?>

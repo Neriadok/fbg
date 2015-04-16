@@ -53,9 +53,8 @@
 	 * @param $conexion Mysqli - Conexion a base de datos.
 	 */
 	function portal_contenidoPrincipal($conexion){
-		echo "
-			partidas activas
-		";
+		echo "<p class='enfasis'>Partidas Activas</p>";
+		partidas_listado($conexion,true);
 	}
 	
 	
