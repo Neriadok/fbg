@@ -18,6 +18,8 @@
 		<script type="text/JavaScript" src="jFBG/Submit.js"></script>
 		<script type="text/JavaScript" src="jFBG/Yggdrasil.js"></script>
 		<script type="text/JavaScript" src="jFBG/ItemDesplegable.js"></script>
+		<script type="text/JavaScript" src="jFBG/ventana.js"></script>
+		<script type="text/JavaScript" src="jFBG/Scrolling.js"></script>
 		<script>
         	function inicio(){
             	var ca = new AsinCronos("contenidos/buzon.con.php");
@@ -55,6 +57,26 @@
 					if(document.getElementById("loguear") != null){
 	            		var loguear = new Submit(1, "loguear", document.getElementById("logForm"), ca);
 					}
+    				
+
+    				/**Generamos los objetos ventana si los hubiese.**/
+                	var ventanas = document.getElementsByClassName("ventana");
+
+                	if(ventanas != null){
+                		for(var i=0;i<ventanas.length;i++){
+                			ventanas[i] = new Ventana(ventanas[i].id);
+    					}
+                	}
+                	
+
+    				/**Si existiesen elementos de clase scrollingBox, generariamos objetos Scrolling para un movimiento dinámico**/
+    				var scrollings = document.getElementsByClassName("scrollingBox");
+
+                	if(scrollings != null){
+                    	for(var i=0;i<scrollings.length;i++){
+                    		scrollings[i] = new Scrolling(scrollings[i]);
+                		}
+    				}
             	};
         	}
         </script>

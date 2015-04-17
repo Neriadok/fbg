@@ -89,6 +89,7 @@
 			$sentencia -> store_result();
 			$sentencia -> bind_result(
 					$id
+					,$partida
 					,$desafiadorNick
 					,$desafiadoNick
 					,$ejercitoNombre
@@ -102,7 +103,7 @@
 			while($sentencia -> fetch()){
 				if(!$activas || ($activas && $fechaFin == null)){
 					echo "
-						<tr>
+						<tr id='$id' class='partida'>
 							<td>$desafiadorNick VS $desafiadoNick</td>
 							<td>$pts</td>
 							<td>
@@ -114,6 +115,78 @@
 						echo "Elegir Ejercito";
 					}
 					echo "
+							</td>
+							<td>
+								<div id='infoPartida".$id."Boton' class='botonVentana'><img src='src/botones/info.png'/></div>
+								<div id='infoPartida".$id."' class='ventana oculto'>
+									<h2 id='infoPartida".$id."Selector' class='ventanaSelector'>
+										Partida $desafiadorNick VS $desafiadoNick
+									</h2>
+									<table class='ventanaContent'>
+					";
+					if($vencedor != null){
+						echo "
+							<tr>
+								<td class='alignCenter enfasis' colspan2>¡Victoria de $vencedor!</td>
+							</tr>
+						";
+					}
+					echo "
+										<tr class='enfasis'>
+											<td class='alignRight'>$pts</td>
+											<td class='alignLeft'> Puntos</td>
+										</tr>
+										<tr>
+											<td colpan='2'>
+												Partida empezada en el ".date("d/m/Y",$fechaInicio).
+												" a las ".date("H:i:s",$fechaInicio)."
+					";
+					if($fechaFin != null){
+						echo "
+							y terminada en el".date("d/m/Y",$fechaFin).
+							" a las ".date("H:i:s",$fechaFin)
+						;
+					}
+					echo ".
+							</td>
+						</tr>
+					";
+					if($ejercitoNombre != null){
+						echo "
+							<tr>
+								<td class='alignRight'>Ejercito: </td>
+								<td class='alignLeft'>$ejercitoNombre</td>
+							</tr>
+						";
+					}
+					if($turnos != null){
+						echo "
+							<tr>
+								<td class='alignRight'>Turno</td>
+								<td class='alignLeft'>$turnos</td>
+							</tr>
+						";
+					}
+					if($fase != null){
+						echo "
+							<tr>
+								<td>Fase</td>
+								<td>$fase</td>
+							</tr>
+						";
+					}
+					echo "
+										<tr class='oculto'>
+											<td colspan='2'>
+												<p id='partida$id'>$partida</p>
+												<p id='lista$id'>$ejercitoNombre</p>
+												<p id='turnos$id'>$turnos</p>
+												<p id='fase$id'>$fase</p>
+												<p id='fin$id'>$fechaFin</p>
+											</td>
+										</tr>
+									</table>
+								</div>
 							</td>
 						</tr>
 					";
