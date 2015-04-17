@@ -40,6 +40,7 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 	function mostrar(e){
 		switch(tipo){
 			case 1: mostrarCorreo(e.target); break;
+			case 2: mostrarPartida(e.target); break;
 			default:;
 		}
 	};
@@ -103,6 +104,7 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 		}
 	};
 	
+	
 	/**
 	 * Método usado para mostar como mensaje un correo dell buzón.
 	 * Anotación: Un correo es un tipo de mensaje.
@@ -119,6 +121,25 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 		expositor.appendChild(addOpciones(elemento,document.getElementById("tipo"+elemento.id).innerHTML));
 		activarOpciones(elemento,document.getElementById("tipo"+elemento.id).innerHTML);
 	};
+	
+	
+	/**
+	 * Método usado para mostar como mensaje un correo dell buzón.
+	 * Anotación: Un correo es un tipo de mensaje.
+	 * 
+	 * @param elemento Element - Elemento que contiene el conjunto del correo.
+	 */
+	function mostrarPartida(elemento){
+		var desafiador = document.getElementById("desafiador"+elemento.id).innerHTML;
+		var desafiado = document.getElementById("desafiado"+elemento.id).innerHTML;
+		var puntos = document.getElementById("puntos"+elemento.id).innerHTML;
+		
+		document.getElementById("tituloPartida").innerHTML = "Partida entre "+desafiador+" y "+desafiado+" a "+puntos+" puntos";
+		
+		/**Tratamos el contenido en función del tipo de correo*/
+		expositor.innerHTML = contenido(elemento,"partida");
+	};
+	
 	
 	/**
 	 * Método que estructura el contenido de un Mensaje en función de su tipo.
@@ -150,6 +171,15 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 				contenido += "<p class='cursiva'>";
 				contenido += document.getElementById("contenidoDefecto"+elemento.id).innerHTML;
 				contenido += "</p>";
+				break;
+			case "partida":
+				contenido += "<table>";
+				contenido += "<tr>";
+				contenido += "<td class='alignLeft'>";
+				contenido +=  document.getElementById("fechas"+elemento.id).innerHTML;
+				contenido += "</td>";
+				contenido += "</tr>";
+				contenido += "</table>";
 				break;
 			default:
 				contenido += "<p class='cursiva'>";

@@ -16,6 +16,7 @@
 		<title>FBG</title>
 		<link rel='shortcut icon' href='src/dragon.ico'/>
 		<link rel='stylesheet' type='text/css' href='css/default.css' />
+		<link rel='stylesheet' type='text/css' href='css/partidas.css' />
 		<script type="text/JavaScript" src="js/sha512.js"></script>
 		<script type="text/JavaScript" src="jFBG/AsinCronos.js"></script>
 		<script type="text/JavaScript" src="jFBG/Submit.js"></script>

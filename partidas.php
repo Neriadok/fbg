@@ -13,6 +13,7 @@
 		<title>FBG - Partidas</title>
 		<link rel='shortcut icon' href='src/dragon.ico'/>
 		<link rel='stylesheet' type='text/css' href='css/default.css' />
+		<link rel='stylesheet' type='text/css' href='css/partidas.css' />
 		<script type="text/JavaScript" src="js/sha512.js"></script>
 		<script type="text/JavaScript" src="jFBG/AsinCronos.js"></script>
 		<script type="text/JavaScript" src="jFBG/Submit.js"></script>
@@ -20,6 +21,7 @@
 		<script type="text/JavaScript" src="jFBG/ItemDesplegable.js"></script>
 		<script type="text/JavaScript" src="jFBG/ventana.js"></script>
 		<script type="text/JavaScript" src="jFBG/Scrolling.js"></script>
+		<script type="text/JavaScript" src="jFBG/MostrarMensaje.js"></script>
 		<script>
         	function inicio(){
             	var ca = new AsinCronos("contenidos/buzon.con.php");
@@ -77,6 +79,11 @@
                     		scrollings[i] = new Scrolling(scrollings[i]);
                 		}
     				}
+                	
+                	/**Generamos el objeto MostrarMensaje.js **/
+                	if(document.getElementById("expositor") != null){
+						var mostrar = new MostrarMensaje("partida", document.getElementById("expositor"),2,ca);
+                	}
             	};
         	}
         </script>

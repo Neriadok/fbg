@@ -17,7 +17,8 @@
 		echo "</div>";
 		
 		echo "<div id='contenido' class='contenedor mid column'>";
-		echo "CONTENIDO PRINCIPAL";
+		echo "<h2 id='tituloPartida'>Bienvenido a tu sección de partidas</h2>";
+		echo "<div id='expositor'></div>";
 		echo "</div>";
 		
 		echo "<div id='contenido' class='contenedor right column'>";
@@ -81,7 +82,7 @@
 		
 		echo "
 			<div id='partidas' class='scrollingBox'>
-				<table id='partidasContent' class='scrollingBoxContent'>
+				<div id='partidasContent' class='scrollingBoxContent'>
 		";
 		$sentencia = $conexion -> prepare("CALL proceso_listadoPartidas(?)");
 		$sentencia -> bind_param('i', $_SESSION['userId']);
@@ -90,6 +91,7 @@
 			$sentencia -> bind_result(
 					$id
 					,$partida
+					,$user
 					,$desafiadorNick
 					,$desafiadoNick
 					,$ejercitoNombre
@@ -100,101 +102,68 @@
 					,$fechaFin
 					,$vencedor
 			);
+			
+			$i = 0;
 			while($sentencia -> fetch()){
 				if(!$activas || ($activas && $fechaFin == null)){
+					$i++;
 					echo "
-						<tr id='$id' class='partida'>
-							<td>$desafiadorNick VS $desafiadoNick</td>
-							<td>$pts</td>
-							<td>
+						<div id='$id' class='partida
+					";
+					if($i%2 == 0){
+						echo "pairRow";
+					}
+					else{
+						echo "inpairRow";
+					}
+					echo "
+						'>$desafiadorNick VS $desafiadoNick a $pts Puntos<br/>
 					";
 					if($ejercitoNombre != null){
-						echo "$ejercitoNombre";
+						if($turnos == 0){
+							echo "Pendiente de empezar";
+						}
+						else{
+							echo "Turno $turnos, fase de $fase";
+						}
 					}
 					else{
 						echo "Elegir Ejercito";
 					}
 					echo "
-							</td>
-							<td>
-								<div id='infoPartida".$id."Boton' class='botonVentana'><img src='src/botones/info.png'/></div>
-								<div id='infoPartida".$id."' class='ventana oculto'>
-									<h2 id='infoPartida".$id."Selector' class='ventanaSelector'>
-										Partida $desafiadorNick VS $desafiadoNick
-									</h2>
-									<table class='ventanaContent'>
-					";
-					if($vencedor != null){
-						echo "
-							<tr>
-								<td class='alignCenter enfasis' colspan2>¡Victoria de $vencedor!</td>
-							</tr>
-						";
-					}
-					echo "
-										<tr class='enfasis'>
-											<td class='alignRight'>$pts</td>
-											<td class='alignLeft'> Puntos</td>
-										</tr>
-										<tr>
-											<td colpan='2'>
-												Partida empezada en el ".date("d/m/Y",$fechaInicio).
-												" a las ".date("H:i:s",$fechaInicio)."
-					";
+						<div class='oculto'>
+							<p id='desafiador$id'>$desafiadorNick</p>
+							<p id='desafiado$id'>$desafiadoNick</p>
+							<p id='puntos$id'>$pts Puntos</p>
+							<p id='partida$id'>$partida</p>
+							<p id='usuario$id'>$user</p>
+							<p id='lista$id'>$ejercitoNombre</p>
+							<p id='turnos$id'>$turnos</p>
+							<p id='fase$id'>$fase</p>
+							<p id='fin$id'>$fechaFin</p>
+							<p id='fechas$id'>
+								Esta partida comenzó  el ".date("d/m/Y",$fechaInicio)."<br/>
+								a las ".date("H:i:s",$fechaInicio)."<br/>
+								y 
+					";				
 					if($fechaFin != null){
-						echo "
-							y terminada en el".date("d/m/Y",$fechaFin).
-							" a las ".date("H:i:s",$fechaFin)
-						;
-					}
-					echo ".
-							</td>
-						</tr>
-					";
-					if($ejercitoNombre != null){
-						echo "
-							<tr>
-								<td class='alignRight'>Ejercito: </td>
-								<td class='alignLeft'>$ejercitoNombre</td>
-							</tr>
+						echo "$vencedor la ganó el ".date("d/m/Y",$fechaFin)."<br/>
+							a las ".date("H:i:s",$fechaFin).".
 						";
 					}
-					if($turnos != null){
-						echo "
-							<tr>
-								<td class='alignRight'>Turno</td>
-								<td class='alignLeft'>$turnos</td>
-							</tr>
-						";
-					}
-					if($fase != null){
-						echo "
-							<tr>
-								<td>Fase</td>
-								<td>$fase</td>
-							</tr>
-						";
+					else{
+						echo "actualmente sigue activa.";
 					}
 					echo "
-										<tr class='oculto'>
-											<td colspan='2'>
-												<p id='partida$id'>$partida</p>
-												<p id='lista$id'>$ejercitoNombre</p>
-												<p id='turnos$id'>$turnos</p>
-												<p id='fase$id'>$fase</p>
-												<p id='fin$id'>$fechaFin</p>
-											</td>
-										</tr>
-									</table>
-								</div>
-							</td>
-						</tr>
+								</p>
+							</div>
+						</div>
 					";
 				}
 			}
 			$sentencia -> close();
 			echo "
-				</table>
+					</div>
 				</div>
 				<div id='partidasMoving' class='scrollingBoxMoving'>
 					<div id='partidasMovingUp' class='scrollingBoxMovingUp'></div>
