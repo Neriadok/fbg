@@ -21,7 +21,7 @@
  * @author Daniel Martín Díaz
  * @version 1.5 (10/04/2015)
  */
-function Partida(batallaId, terrenoId, panelIn, panelOut, panelFase){
+function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, ca){
 	
 	/**** CONSTRUCTOR DEL OBJETO ****/
 	

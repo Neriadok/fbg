@@ -136,8 +136,10 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 		
 		document.getElementById("tituloPartida").innerHTML = "Partida entre "+desafiador+" y "+desafiado+" a "+puntos+" puntos";
 		
-		/**Tratamos el contenido en función del tipo de correo*/
+		/**Tratamos el contenido*/
 		expositor.innerHTML = contenido(elemento,"partida");
+		expositor.appendChild(addOpciones(elemento,"partida"));
+		activarOpciones(elemento,"partida");
 	};
 	
 	
@@ -174,11 +176,13 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 				break;
 			case "partida":
 				contenido += "<table>";
+				
 				contenido += "<tr>";
 				contenido += "<td class='alignLeft'>";
 				contenido +=  document.getElementById("fechas"+elemento.id).innerHTML;
 				contenido += "</td>";
 				contenido += "</tr>";
+				
 				contenido += "</table>";
 				break;
 			default:
@@ -233,6 +237,13 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 				contenido += "<input type='hidden' name='denegarDesafio' value='"+elemento.id+"'/>";
 				contenido += "</form>";
 				break;
+				
+			case "partida":
+				contenido += "<form class='submit' id='accederPartida'>";
+				contenido += "<img src='src/botones/desafiar.png'/>";
+				contenido += "<input type='hidden' id='accesoPartida' value='"+elemento.id+"'/>";
+				contenido += "</form>";
+				break;
 			
 			default:
 				console.log("Default options.")
@@ -260,6 +271,14 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 		 * y les asignamos a cada uno un objeto submit que actualiza el buzón
 		 */
 		switch(tipo){
+			case "partida":
+				var envio = document.getElementById("accederPartida");
+				
+				if(envio != null){
+					envio = new Submit(14, "accederPartida", envio, ca)
+				}
+				break;
+				
 			default:
 				var envios = document.getElementsByClassName("enviar");
 				

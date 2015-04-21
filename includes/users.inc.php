@@ -961,7 +961,7 @@
 				,$online
 			);
 			while($sentencia -> fetch()){
-				if(!$logged || ($logged && $online!=null && $online)){
+				if(!$logged || ($logged && $online)){
 					echo "
 						<tr>
 							<td class='alignRight enfasis'>$amigoNick</td>

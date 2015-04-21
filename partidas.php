@@ -24,7 +24,7 @@
 		<script type="text/JavaScript" src="jFBG/MostrarMensaje.js"></script>
 		<script>
         	function inicio(){
-            	var ca = new AsinCronos("contenidos/buzon.con.php");
+            	var ca = new AsinCronos("contenidos/partidas.con.php");
 				tratarElementos();
 				
             	setInterval(

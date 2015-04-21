@@ -16,10 +16,12 @@
 		echo "OPCIONES<br/>AVATAR<br/>NICK<br/>RENOMBRE<br/>PARTIDAS<br/>VICTORIAS<br/>DERROTAS";
 		echo "</div>";
 		
-		echo "<div id='contenido' class='contenedor mid column'>";
-		echo "<h2 id='tituloPartida'>Bienvenido a tu sección de partidas</h2>";
-		echo "<div id='expositor'></div>";
-		echo "</div>";
+		echo "
+			<div id='contenido' class='contenedor mid column'>
+				<h2 id='tituloPartida'>Bienvenido a tu sección de partidas</h2>
+				<div id='expositor'></div>
+			</div>
+		";
 		
 		echo "<div id='contenido' class='contenedor right column'>";
 		echo "<p class='enfasis'>HISTORIAL DE PARTIDAS</p>";

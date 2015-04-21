@@ -1,45 +1,101 @@
 <?php
-	
+
+
 	/**
-	 * FUNCIÓN DE EJECUCIÓN SETTER
-	 * Función que envia un desafio a un usuario.
-	 * 
-	 * @param $conexion Mysqli - Conexion a base de datos.
-	 * @param $destinatario integer - Id del usuario al que se desafia.
-	 * @param $pts integer - Cantidad de puntos que se podrían usar en la partida resultante del desafío.
+	 * FUNCIÓN DE ESTRUCTURA
+	 * Función que muestra un contenido u otro en función de la partida, el usuario logueado y el ejercito.
+	 * Para ello testea la URL en que nos encontramos llegando incluso a añadir faltas a un usuario
+	 * que intente acceder a una partida para la que no tiene permisos.
+	 *
+	 *  @param $conexion Mysqli - Conexion a base de datos.
 	 */
-	function desafiarUser ($conexion, $destinatario, $pts){
-		$sentencia = $conexion -> prepare("CALL proceso_desafiarUser(?,?,?)");
-		$sentencia -> bind_param('iii', $destinatario, $_SESSION['userId'], $pts);
-		$sentencia -> execute();
-		$sentencia -> close();
+	function partida($conexion){
+		partida_content($conexion);
 	}
 	
 	/**
-	 * FUNCIÓN DE EJECUCIÓN SETTER
-	 * Función que acepta un desafio y por lo tanto genera una partida en base de datos.
+	 * FUNCIÓN DE CONTENIDO
+	 * Función que muestra la interfaz de juego de FBG.
 	 * 
-	 * @param $conexion Mysqli - Conexion a base de datos.
-	 * @param $desafio integer - Id del desafio en el correo.
+	 *  @param $conexion Mysqli - Conexion a base de datos.
 	 */
-	function aceptarDesafio ($conexion,$desafio){
-		$sentencia = $conexion -> prepare("CALL proceso_nuevaPartida(?,?,?)");
-		$sentencia -> bind_param('iii', $_SESSION['userId'], $desafiador, $desafio);
-		$sentencia -> execute();
-		$sentencia -> close();
-	}
+	function partida_content($conexion){
+		echo "
+			<div id='interfaz'>
+				<table id='columnaInfo'>
+					<tr>
+						<td colspan='2'>
+							<a href='partidas.php'>
+								<img id='avatar' src='".avatar($conexion)."'/>
+							</a>
+						</td>
+					</tr>
 	
-	/**
-	 * FUNCIÓN DE EJECUCIÓN SETTER
-	 * Función que acepta un desafio y por lo tanto genera una partida en base de datos.
-	 * 
-	 * @param $conexion Mysqli - Conexion a base de datos.
-	 * @param $desafio integer - Id del desafio en el correo.
-	 */
-	function denegarDesafio ($conexion,$desafio){
-		$sentencia = $conexion -> prepare("CALL proceso_denegarDesafio(?)");
-		$sentencia -> bind_param('i',$desafio);
-		$sentencia -> execute();
-		$sentencia -> close();
+					<tr>
+						<td colspan='2'>
+							<table>
+								<tr>
+									<td>Orden</td>
+									<td id='userorder'>1</td>
+								</tr>
+								<tr>
+									<td>Turno</td>
+									<td id='turno'>1</td>
+								</tr>
+								<tr>
+									<td>Fase</td>
+									<td id='fase'>Despliegue</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+	
+					<tr>
+						<td colspan='2' id='textofase'></td>
+					</tr>
+	
+					<tr>
+						<td colspan='2'>
+							<table>
+								<tr>
+									<td colspan='2'>CAMARA:</td>
+								</tr>
+								<tr>
+									<td id='zoom'></td>
+								</tr>
+								<tr>
+									<td id='cursorX'>X: --</td>
+								</tr>
+								<tr>
+									<td id='cursorY'>Y: --</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+	
+					<tr>
+						<td colspan='2' id='panelout'>Panel Out</td>
+					</tr>
+	
+					<tr>
+						<td colspan='2' id='panelfase'>Panel Fase</td>
+					</tr>
+				</table>
+	
+				<div id='columnaPrincipal'>
+					<div id='contenidoPrincipal'>
+						<div id='game'>
+							<canvas id='batalla'>
+								No se pudo cargar el canvas de juego. Esto puede deberse a que tu navegador esté obsoleto o no lo tolere. Recomendamos el uso de Google Chrome o Mozilla Firefox.
+							</canvas>
+							<img id='terreno' src='src/mapas/mapa.jpg' />
+						</div>
+					</div>
+					<div id='panelin'>
+						PanelIn
+					</div>
+				</div>
+			</div>
+		";
 	}
 ?>

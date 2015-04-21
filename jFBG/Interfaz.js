@@ -101,9 +101,13 @@ function Interfaz(columnaInfo,columnaPrincipal,contenidoPrincipal,contenidoSecun
 	 * respetando así la ley de fitts
 	 */
 	function estructuraDinamica(){
+		columnaInfo.style.left = "0px";
+		columnaInfo.style.top = "0px";
 		columnaInfo.style.width = anchoInfo+'px';
 		columnaInfo.style.height = winH+'px'
-		
+
+		columnaPrincipal.style.left = anchoInfo+"px";
+		columnaPrincipal.style.top = "0px";
 		columnaPrincipal.style.width = (winW-anchoInfo)+'px';
 		columnaPrincipal.style.height = winH+'px'
 		

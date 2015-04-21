@@ -50,6 +50,7 @@ function Submit(tipo,elementoId,form,ca,sitioCarga){
 			case 11: saveEditLista(); break;
 			case 12: saveEditPerfil(); break;
 			case 13: sendMsg(); break;
+			case 14: accederPartida(); break;
 			
 			default: enviarTodoDato();
 		}
@@ -1107,5 +1108,20 @@ function Submit(tipo,elementoId,form,ca,sitioCarga){
 				correcto = false;
 			}
 		}
+	};
+	
+
+	/**
+	 * Función que nos abre en una nueva ventana una partida.
+	 * 
+	 * Para poder definir la partida añadimos un pseudo-parámetro a la url.
+	 * Este parámetro se testea y valida numerosas veces y luego se usa para generar el archivo de la función.
+	 * En caso de intentar acceder a una partida para la que no se tienen permisos,
+	 * se asignará una falta al usuario.
+	 */
+	function accederPartida(){
+		document.cookie = "partida="+document.getElementById("accesoPartida").value;
+		
+		window.open("partida.php");
 	};
 };
