@@ -22,66 +22,46 @@
 	function partida_content($conexion){
 		echo "
 			<div id='interfaz'>
-				<table id='columnaInfo'>
-					<tr>
-						<td colspan='2'>
-							<a href='partidas.php'>
-								<img id='avatar' src='".avatar($conexion)."'/>
-							</a>
-						</td>
-					</tr>
-	
-					<tr>
-						<td colspan='2'>
-							<table>
-								<tr>
-									<td>Orden</td>
-									<td id='userorder'>1</td>
-								</tr>
-								<tr>
-									<td>Turno</td>
-									<td id='turno'>1</td>
-								</tr>
-								<tr>
-									<td>Fase</td>
-									<td id='fase'>Despliegue</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-	
-					<tr>
-						<td colspan='2' id='textofase'></td>
-					</tr>
-	
-					<tr>
-						<td colspan='2'>
-							<table>
-								<tr>
-									<td colspan='2'>CAMARA:</td>
-								</tr>
-								<tr>
-									<td id='zoom'></td>
-								</tr>
-								<tr>
-									<td id='cursorX'>X: --</td>
-								</tr>
-								<tr>
-									<td id='cursorY'>Y: --</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-	
-					<tr>
-						<td colspan='2' id='panelout'>Panel Out</td>
-					</tr>
-	
-					<tr>
-						<td colspan='2' id='panelfase'>Panel Fase</td>
-					</tr>
-				</table>
-	
+				<div id='columnaInfo' class='alignCenter'>
+					<a href='partidas.php'>
+						<img id='matchAvatar' src='".avatar($conexion)."'/>
+					</a>
+								
+					<table id='datos'>
+						<tr>
+							<td>Orden</td>
+							<td id='userorder'></td>
+						</tr>
+						<tr>
+							<td>Turno</td>
+							<td id='turno'></td>
+						</tr>
+						<tr>
+							<td>Fase</td>
+							<td id='fase'></td>
+						</tr>
+					</table>
+								
+					<table>
+						<tr>
+							<td colspan='2'>CAMARA:</td>
+						</tr>
+						<tr>
+							<td colspan='2' id='zoom'></td>
+						</tr>
+						<tr>
+							<td colspan='2'>CURSOR</td>
+						</tr>
+						<tr>
+							<td id='cursorX'>X: --</td>
+							<td id='cursorY'>Y: --</td>
+						</tr>
+					</table>
+					
+					<div id='textofase'></div>
+					<div id='panelout'>Panel Out</div>
+					<div id='panelfase'>Panel Fase</div>
+				</div>
 				<div id='columnaPrincipal'>
 					<div id='contenidoPrincipal'>
 						<div id='game'>
@@ -96,6 +76,36 @@
 					</div>
 				</div>
 			</div>
+		";
+	}
+	
+	
+	/**
+	 * FUNCIÓN DE CONTENIDO
+	 * Función que muestra la columna de información.
+	 * 
+	 * @param $conexion Mysqli - Conexion a base de datos.
+	 */
+	function partida_infoCol($conexion,$datos){
+		echo "
+			<tr>
+				<td colspan='2'>
+					<table>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td colspan='2' id='textofase'></td>
+			</tr>
+
+			<tr>
+				<td colspan='2' id='panelout'>Panel Out</td>
+			</tr>
+
+			<tr>
+				<td colspan='2' id='panelfase'>Panel Fase</td>
+			</tr>
 		";
 	}
 ?>

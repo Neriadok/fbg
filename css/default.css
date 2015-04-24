@@ -114,6 +114,31 @@ legend{
 	border-radius: 5px;
 }
 
+
+/**ESTRUCTURA DE INTERFAZ DESPLEGABLE*/
+#columnaPrincipal {
+	position: absolute;
+	top:0px;
+	left:300px;
+}
+
+#columnaInfo {
+	position: absolute;
+	top:0px;
+	left:0px;
+	height:100%;
+	width:300px;
+	background-color: rgba(0,0,48,0.85);
+}
+
+#contenidoPrincipal{
+	top: 0px;
+	margin: auto;
+	left: 0px;
+	color: white;
+	overflow: hidden;
+}
+
 /**ELEMENTOS DE LA CABECERA**/
 #cristalLog {
 	position: relative;

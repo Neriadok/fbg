@@ -1120,7 +1120,7 @@ function Submit(tipo,elementoId,form,ca,sitioCarga){
 	 * se asignará una falta al usuario.
 	 */
 	function accederPartida(){
-		document.cookie = "partida="+document.getElementById("accesoPartida").value;
+		document.cookie = "FBGpartida="+document.getElementById("accesoPartida").value;
 		
 		window.open("partida.php");
 	};

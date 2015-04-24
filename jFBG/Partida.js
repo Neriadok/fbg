@@ -30,6 +30,8 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 	var CAMPO_ALTO = 2400;
 	var CAMPO_ANCHO = 4000;
 	var LONGITUD_CLICK = 500;
+	var pantallaWidth = document.getElementById("game").offsetWidth; 
+	var pantallaHeight = document.getElementById("game").offsetHeight; 
 	
 	/**Posicion de la camara.*/
 	var camaraX = 0;
@@ -52,8 +54,8 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 	var clickEnTropa = false;
 	
 	/**Variables de juego.*/
-	var userOrder = document.getElementById("userorder").innerHTML;
-	var fase = document.getElementById("fase").innerHTML;
+	var userOrder;
+	var fase;
 	var tropaSeleccionadaId = -1;
 	var tropaSeleccionadaPreviaId = -1;
 	var fichaTropa = document.getElementsByClassName("tropapropia");
@@ -81,15 +83,56 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 	
 	/**METODOS DE MANTENIMIENTO Y CONSTRUCCI�N*/
 	/**
+	 * Método que extráe de base de datos la ultima situación de la partida.
+	 * Una situación en base de datos son los ultimos registros de una serie de tablas.
+	 * Mostrados en una tabla.
+	 */
+	function obtenerSituacion(){
+		userOrder = document.getElementById("userorder").innerHTML;
+		fase = document.getElementById("fase").innerHTML;
+		tropaSeleccionadaId = -1;
+		tropaSeleccionadaPreviaId = -1;
+		fichaTropa = document.getElementsByClassName("tropapropia");
+		fichaTropaEnemiga = document.getElementsByClassName("tropaenemiga");
+		//Cargar Info
+		//Cargar Tropas
+	};
+	
+	
+	
+	/**
+	 * Método que verifica si se ha finalizado una nueva fase a la partida.
+	 * 
+	 * @return boolean - En caso de ser así retornará true.
+	 */
+	function verificarCambios(){
+		
+	};
+	
+	
+	
+	/**
+	 * Método que finaliza una fase y registra los cambios en la base de datos.
+	 */
+	function finalizarFase(){
+		
+	};
+	
+	
+	
+	/**
 	 * M�todo que inicializa las tropas de la batalla.
 	 * Para ello asocia a cada objeto tropa la informacion contenida a un elemento de clase tropa existente en el DOM.
 	 */
 	function tropasIniciar(){
-		for(var i=0;i<fichaTropa.length;i++){
-			tropa[i] = new  Tropa(fichaTropa[i].id,panelOut);
-		}
-		for(var i=fichaTropa.length;i<fichaTropa.length+fichaTropaEnemiga.length;i++){
-			tropa[i] = new  Tropa(fichaTropaEnemiga[i-fichaTropa.length].id,panelOut);
+		/** Verificamos que existen elementos tropa en el dom */
+		if(fichaTropa != null){
+			for(var i=0;i<fichaTropa.length;i++){
+				tropa[i] = new  Tropa(fichaTropa[i].id,panelOut);
+			}
+			for(var i=fichaTropa.length;i<fichaTropa.length+fichaTropaEnemiga.length;i++){
+				tropa[i] = new  Tropa(fichaTropaEnemiga[i-fichaTropa.length].id,panelOut);
+			}
 		}
 	};
 	
@@ -138,7 +181,7 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 		}
 	};
 	
-	
+	//////////////////////////////////////////////////////////////////////////USA APPEND CHILD////////////////////////////////////////////
 	/**
 	 * M�todo que establece el panel de la fase actual.
 	 * Los contenidos se incluyen mediante js, lo cual hace, para desgracia de los programadores, se formen estas mega lineas de c�digo.
@@ -187,6 +230,7 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 					document.getElementById("textofase").innerHTML = "<p>Por favor, elija una tropa en el panel de control.</p>";
 				}
 			break;
+			
 			case "Declaracion de Cargas":
 				if(tropaSeleccionadaId != -1 && tropaSeleccionadaPreviaId != -1){
 					/**Si la tropa seleccionada pertenece al usuario y la previa no:*/
@@ -250,8 +294,9 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 				else{
 					document.getElementById("textoFase").innerHTML = "Por favor, elija una tropa con que cargar o a la que cargar.";
 				}
-			break;
-			default: document.getElementById(panelOut).innerHTML = "Error, fase desconocida. Visite FAQ para mas informaci�n.";
+				break;
+			
+			default: document.getElementById(panelOut).innerHTML = "Fantasy Battle Games";
 		}
 	};
 
@@ -314,14 +359,14 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 		camaraX += x*zoom;
 		camaraY += y*zoom;
 		
-		if(camaraX < 800-batalla.width){
-			camaraX = 800-batalla.width;
+		if(camaraX < pantallaWidth-batalla.width){
+			camaraX = pantallaWidth-batalla.width;
 		}
 		if(camaraX > 0){
 			camaraX = 0;
 		}
-		if(camaraY < 480-batalla.height){
-			camaraY = 480-batalla.height;
+		if(camaraY < pantallaHeight-batalla.height){
+			camaraY = pantallaHeight-batalla.height;
 		}
 		if(camaraY > 0){
 			camaraY = 0;
@@ -459,21 +504,53 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 		for(var i=0;i<tropa.length;i++){
 			/**Si la tropa est� en campo, comparamos los puntos de ambas tropas.*/
 			if(tropa[i].getEnCampo() && i!=tropaBuscar(tropaId)){
-				if(tropa[i].colision(tropa[tropaBuscar(tropaId)].getVanguardiaSiniestra().x,tropa[tropaBuscar(tropaId)].getVanguardiaSiniestra().y)){
+				if(tropa[i].colision(
+						tropa[tropaBuscar(tropaId)].getVanguardiaSiniestra().x
+						,tropa[tropaBuscar(tropaId)].getVanguardiaSiniestra().y
+						)
+					){
 					colision=true;
-				}else if(tropa[i].colision(tropa[tropaBuscar(tropaId)].getVanguardiaDiestra().x,tropa[tropaBuscar(tropaId)].getVanguardiaDiestra().y)){
+				}else if(tropa[i].colision(
+						tropa[tropaBuscar(tropaId)].getVanguardiaDiestra().x
+						,tropa[tropaBuscar(tropaId)].getVanguardiaDiestra().y
+						)
+					){
 					colision=true;
-				}else if(tropa[i].colision(tropa[tropaBuscar(tropaId)].getRetaguardiaSiniestra().x,tropa[tropaBuscar(tropaId)].getRetaguardiaSiniestra().y)){
+				}else if(tropa[i].colision(
+						tropa[tropaBuscar(tropaId)].getRetaguardiaSiniestra().x
+						,tropa[tropaBuscar(tropaId)].getRetaguardiaSiniestra().y
+						)
+					){
 					colision=true;
-				}else if(tropa[i].colision(tropa[tropaBuscar(tropaId)].getRetaguardiaDiestra().x,tropa[tropaBuscar(tropaId)].getRetaguardiaDiestra().y)){
+				}else if(tropa[i].colision(
+						tropa[tropaBuscar(tropaId)].getRetaguardiaDiestra().x,
+						tropa[tropaBuscar(tropaId)].getRetaguardiaDiestra().y
+						)
+					){
 					colision=true;
-				}else if(tropa[tropaBuscar(tropaId)].colision(tropa[i].getVanguardiaSiniestra().x,tropa[i].getVanguardiaSiniestra().y)){
+				}else if(tropa[tropaBuscar(tropaId)].colision(
+						tropa[i].getVanguardiaSiniestra().x,
+						tropa[i].getVanguardiaSiniestra().y
+						)
+					){
 					colision=true;
-				}else if(tropa[tropaBuscar(tropaId)].colision(tropa[i].getVanguardiaDiestra().x,tropa[i].getVanguardiaDiestra().y)){
+				}else if(tropa[tropaBuscar(tropaId)].colision(
+						tropa[i].getVanguardiaDiestra().x
+						,tropa[i].getVanguardiaDiestra().y
+						)
+					){
 					colision=true;
-				}else if(tropa[tropaBuscar(tropaId)].colision(tropa[i].getRetaguardiaSiniestra().x,tropa[i].getRetaguardiaSiniestra().y)){
+				}else if(tropa[tropaBuscar(tropaId)].colision(
+						tropa[i].getRetaguardiaSiniestra().x
+						,tropa[i].getRetaguardiaSiniestra().y
+						)
+					){
 					colision=true;
-				}else if(tropa[tropaBuscar(tropaId)].colision(tropa[i].getRetaguardiaDiestra().x,tropa[i].getRetaguardiaDiestra().y)){
+				}else if(tropa[tropaBuscar(tropaId)].colision(
+						tropa[i].getRetaguardiaDiestra().x
+						,tropa[i].getRetaguardiaDiestra().y
+						)
+					){
 					colision=true;
 				}
 			}
@@ -638,14 +715,17 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 				if(verRS) return 2;
 				if(verVD) return 1;
 				break;
+				
 			case "vd":
 				if(verRD) return 3;
 				if(verVD) return 1;
 				break;
+				
 			case "rs":
 				if(verRD) return 4;
 				if(verVS) return 2;
 				break;
+				
 			case "rd":
 				if(verRS) return 4;
 				if(verVD) return 3;
@@ -865,9 +945,11 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 					}
 				}
 				break;
+				
 			case "Declaracion de Cargas":
 				break;
-			default: document.getElementById(panelOut).innerHTML = "Error, fase desconocida. Visite FAQ para mas informaci�n.";
+				
+			default: document.getElementById(panelOut).innerHTML = "Fantasy Battle Games";
 		}
 		showCursor(e);
 	};
@@ -899,6 +981,8 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 							}
 						}
 						break;
+						
+					default: document.getElementById(panelOut).innerHTML = "Fantasy Battle Games";
 				}
 			}
 			else{
@@ -914,6 +998,8 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 						}
 					}
 					break;
+					
+				default: document.getElementById(panelOut).innerHTML = "Fantasy Battle Games";
 			}
 		}
 	};
@@ -977,10 +1063,11 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 					}
 				}
 				break;
+				
 			case "Declaracion de Cargas":
 				break;
-			default:
-				document.getElementById(panelOut).innerHTML = "Error, fase desconocida. Visite FAQ para mas informaci�n.";
+				
+			default: document.getElementById(panelOut).innerHTML = "Fantasy Battle Games";
 		}
 		situacionConstruir();
 	};
@@ -1044,10 +1131,11 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 						}
 					}
 					break;
+					
 				case "Declaracion de Cargas":
 					break;
-				default: 
-					document.getElementById(panelOut).innerHTML = "Error, fase desconocida. Visite FAQ para mas informaci�n.";
+
+				default: document.getElementById(panelOut).innerHTML = "Fantasy Battle Games";
 			}
 		}
 		situacionConstruir();
@@ -1116,12 +1204,14 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 				/**contiene los elementos necesarios para el despliegue.*
 				 *Las unidades se desplegaran en funcion de lso datos aportados.*/
 				if(tropaSeleccionadaId != -1){
+					
 					if(tropa[tropaBuscar(tropaSeleccionadaId)].getUser()){
 						var x = document.getElementById("latitud").value;
 						var y = document.getElementById("altitud").value;
 						var angle = document.getElementById("orientacion").value;
 						var anchoFila = document.getElementById("anchofila").value;
 						var tropaPadre = -1;
+						
 						if (tropaSeleccionadaPreviaId != -1){
 							if(document.getElementById("combinar").checked){
 								tropaPadre=tropaSeleccionadaPreviaId;
@@ -1132,17 +1222,21 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 							x=0;
 							document.getElementById(panelOut).innerHTML = "Latitud erronea.";
 						}
+						
 						if(y*0 != 0){
 							y=0;
 							document.getElementById(panelOut).innerHTML = "Altitud erronea.";
 						}
+						
 						if(angle*0 != 0){
 							angle=0;
 							document.getElementById(panelOut).innerHTML = "Orientacion erronea.";
 						}
+						
 						while(angle>=360){
 							angle-=360;
 						}
+						
 						if(tropaPadre != -1){
 							if(tropa[tropaBuscar(tropaPadre)].getEnCampo()){
 								if(tropa[tropaBuscar(tropaSeleccionadaId)].getRangoBajo()>4){
@@ -1171,6 +1265,7 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 					}
 				}
 				break;
+				
 			case "Declaracion de Cargas":
 				if(tropaSeleccionadaId!=-1 && tropaSeleccionadaPreviaId!=-1){
 					/**Caso en que la tropa seleccionada pertenece al usuario*/
@@ -1191,8 +1286,8 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 					}
 				}
 				break;
-			default: 
-				document.getElementById(panelOut).innerHTML = "Error, fase desconocida. Visite FAQ para mas informaci�n.";
+				
+			default: document.getElementById(panelOut).innerHTML = "Fantasy Battle Games";
 		}
 		situacionConstruir();
 		panelFaseConstruir();

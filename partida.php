@@ -30,7 +30,7 @@
 
 				/** La variable partida es una cookie, la unica que usamos en el rpoyecto por temas de seguridad **/
 				//Localizamos la posicion de la cookie
-				var posicionCookie = document.cookie.search("partida=");
+				var posicionCookie = document.cookie.search("FBGpartida=");
 
 				//Si no existiese el resultado sería -1
 				if(posicionCookie != -1){
@@ -60,7 +60,8 @@
             	function tratarElementos(){
     				console.log("Partida "+partidaId);
                 	var interfaz = new Interfaz(
-                		document.getElementById("columnaInfo")
+                    	document.getElementById("interfaz")
+                		,document.getElementById("columnaInfo")
                 		,document.getElementById("columnaPrincipal")
                 		,document.getElementById("contenidoPrincipal")
                 		,document.getElementById("panelin")
