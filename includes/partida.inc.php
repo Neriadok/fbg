@@ -27,20 +27,11 @@
 						<img id='matchAvatar' src='".avatar($conexion)."'/>
 					</a>
 								
-					<table id='datos'>
-						<tr>
-							<td>Orden</td>
-							<td id='userorder'></td>
-						</tr>
-						<tr>
-							<td>Turno</td>
-							<td id='turno'></td>
-						</tr>
-						<tr>
-							<td>Fase</td>
-							<td id='fase'></td>
-						</tr>
-					</table>
+					<div id='datos'>
+		";
+		partida_datosPartida($conexion,null);
+		echo "
+					</div>
 								
 					<table>
 						<tr>
@@ -71,9 +62,13 @@
 							<img id='terreno' src='src/mapas/mapa.jpg' />
 						</div>
 					</div>
-					<div id='panelin'>
-						PanelIn
-					</div>
+					<table id='desplegable'>
+						<tr><td colspan='2' id='cabecera' class='alignCenter'>Detalles</td></tr>
+						<tr>
+							<td id='panelin'></td>
+							<td id='datosSeleccion'></td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		";
@@ -82,30 +77,177 @@
 	
 	/**
 	 * FUNCIÓN DE CONTENIDO
-	 * Función que muestra la columna de información.
-	 * 
-	 * @param $conexion Mysqli - Conexion a base de datos.
+	 * Función que muestra filas de tabla con los datos básicos de una partida.
 	 */
-	function partida_infoCol($conexion,$datos){
+	function partida_datosPartida($conexion,$ejercito){
+		echo "<table class='alignCenter'>";
+		if($ejercito != null){
+			
+			$sentencia = $conexion -> prepare("CALL proceso_datosPartida(?)");
+			$sentencia -> bind_param('i', $ejercito);
+			$sentencia -> execute();
+			$sentencia -> store_result();
+			if($sentencia -> num_rows == 1){
+				/** Si no existieran entradas con ese nickname devolvería false.*/
+				/** Establecemos las columnas del resultado en variables */
+				$sentencia -> bind_result(
+					$ejercitoId
+					,$usuario
+					,$partidaId
+					,$orden
+					,$nickEnemigo
+					,$ejercitoNombre
+					,$listaId
+					,$pts
+					,$turnos
+					,$fase
+					,$fechaInicio
+					,$faseFinalizada
+				);
+				$sentencia -> fetch();
+			}
+			else{
+				//En caso de error regresamos al listado de partidas
+				header("Location: partidas.php");
+			}
+			
+			/** Comprobamos que el usuario tiene permiso para acceder a estos datos**/
+			if($usuario == $_SESSION['userId']){
+				echo "
+					<tr>
+						<td colspan='2' class='enfasis' id='ejercitoNombre'>$ejercitoNombre</td>
+					</tr>
+					<tr>
+						<td colspan='2' class='enfasis subtitle'>Partida a $pts puntos</td>
+					</tr>
+					<tr>
+						<td colspan='2' class='enfasis subtitle'>contra $nickEnemigo</td>
+					</tr>
+					<tr>
+						<td>Orden</td>
+						<td id='userorder'>$orden</td>
+					</tr>
+					<tr>
+						<td>Turno</td>
+						<td id='turno'>$turnos</td>
+					</tr>
+					<tr>
+						<td>Fase</td>
+						<td id='fase'>
+				";
+				/**Si la ultima fase del usuario está terminada indicamos que es el turno del enemigo.*/
+				if($faseFinalizada){
+					echo "Fase del Enemigo.";
+				}
+				else{
+					echo $fase;
+				}
+				
+				echo "
+						</td>
+					</tr>
+						
+					<tr class='oculto'>
+						<td>
+							<input type='hidden' id='partidaId' value='$partidaId'/>
+							<input type='hidden' id='ejercitoId' value='$ejercitoId'/>
+							<input type='hidden' id='pts' value='$pts'/>
+						</td>
+					</tr>
+				";
+				$sentencia -> close();
+			}
+			
+			/**En caso de no tener permisos le añadimos 2 faltas**/
+			else{
+				$sentencia -> close();
+				addFaltaUser($conexion, $_SESSION['userId']);
+				addFaltaUser($conexion, $_SESSION['userId']);
+			}
+		}
+		
+		else{
+			echo "
+				<tr>
+					<td>Orden</td>
+					<td id='userorder'></td>
+				</tr>
+				<tr>
+					<td>Turno</td>
+					<td id='turno'></td>
+				</tr>
+				<tr>
+					<td>Fase</td>
+					<td id='fase'></td>
+				</tr>
+			";
+		}
+		echo "</table>";
+	}
+	
+	
+	/**
+	 * 
+	 */
+	function partida_elegirLista($conexion,$pts){
 		echo "
-			<tr>
-				<td colspan='2'>
-					<table>
-					</table>
-				</td>
-			</tr>
-
-			<tr>
-				<td colspan='2' id='textofase'></td>
-			</tr>
-
-			<tr>
-				<td colspan='2' id='panelout'>Panel Out</td>
-			</tr>
-
-			<tr>
-				<td colspan='2' id='panelfase'>Panel Fase</td>
-			</tr>
+			<p class='subtitle alignLeft'>
+				Elige una Lista para jugar la partida o crea una nueva:<br/>
+			</p>
+			<form method='POST' id='listas' class='scrollingBox'>
+				<table id='listasContent' class='scrollingBoxContent'>
+		";
+		
+		$sentencia = $conexion -> prepare("CALL proceso_listasUsuarioPts(?,?)");
+		$sentencia -> bind_param('ii', $_SESSION['userId'], $pts);
+		$sentencia -> execute();
+		$sentencia -> store_result();
+		if ($sentencia -> num_rows > 0) {
+			$sentencia -> bind_result($lId,$lNombre,$lPts,$lNumTropas);
+			$i=0;
+			while($sentencia -> fetch()){
+				echo "<tr class='lista";
+				if($i%2==0){
+					echo " pairRow";
+				}
+				else{
+					echo " inpairRow";
+				}
+			
+				echo "
+					'>
+						<td id='$lId' class='alignCenter'>
+							$lNombre<br/>
+							$lPts puntos - $lNumTropas tropas
+							<input id='nombreLista$lId' type='hidden' value='$lNombre'/>
+							<input id='ptsLista$lId' type='hidden' value='$lPts'/>
+							<input id='tropasLista$lId' type='hidden' value='$lNumTropas'/>
+						</td>
+					</tr>
+				";
+				$i++;
+			}
+		}
+		else{
+			echo "
+				<tr>
+					<td class='Enfasis'>
+						No tienes ninguna lista para la puntuación requerida.
+					</td>
+				</tr>
+			";
+		}
+		echo "
+				<tr>
+					<td><a href='listas.php'>Ir a la sección de listas.</a></td>
+				</tr>
+				</table>
+			</form>
+			<div id='listasMoving' class='scrollingBoxMoving'>
+				<div id='listasMovingUp' class='scrollingBoxMovingUp'></div>
+				<div id='listasMovingBar' class='scrollingBoxMovingBar'></div>
+				<div id='listasMovingDown' class='scrollingBoxMovingDown'></div>
+			</div>
 		";
 	}
 ?>

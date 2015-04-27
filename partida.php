@@ -2,8 +2,10 @@
 	include_once 'includes/db_connect.php';
 	include_once 'includes/functions.php';
 	include_once 'includes/default.inc.php';
+	include_once 'includes/users.inc.php';
 	include_once 'includes/partida.inc.php';
 	include_once 'includes/partidas.inc.php';
+	include_once 'includes/listas.inc.php';
 	
 	sesion_segura();
 ?>
@@ -12,7 +14,7 @@
 <html>
 	<head>
 		<meta charset='UTF8'>
-		<title>FBG - </title>
+		<title>FBG</title>
 		<link rel='shortcut icon' href='src/dragon.ico'/>
 		<link rel='stylesheet' type='text/css' href='css/default.css' />
 		<link rel='stylesheet' type='text/css' href='css/partida.css' />
@@ -21,7 +23,9 @@
 		<script type="text/javascript" src="jFBG/Unidad.js"></script>
 		<script type="text/javascript" src="jFBG/Tropa.js"></script>
 		<script type="text/javascript" src="jFBG/Partida.js"></script>
-		<script type="text/javascript" src="jFBG/Ventana.js"></script>
+		<script type="text/javascript" src="jFBG/Scrolling.js"></script>
+		<script type="text/javascript" src="jFBG/MostrarMensaje.js"></script>
+		<script type="text/javascript" src="jFBG/Submit.js"></script>
 		<script>
         	function inicio(){
 
@@ -64,11 +68,20 @@
                 		,document.getElementById("columnaInfo")
                 		,document.getElementById("columnaPrincipal")
                 		,document.getElementById("contenidoPrincipal")
-                		,document.getElementById("panelin")
+                		,document.getElementById("desplegable")
                 	);
 
                 	if(partidaId != null){
-                		var partida = new Partida(partidaId, "batalla","terreno","panelin","panelout","panelfase", ca);
+                    	//Creamos dos objetos asincronos exclusivos para la partida.
+                    	var caPartida = new AsinCronos("contenidos/partida.con.php");
+                    	var caPanel = new AsinCronos("contenidos/partida.con.php");
+
+                    	/**
+                    	 * El objeto partida necesita dos objetos asíncronos.
+                    	 * El primero actualiza la barra lateral con los datos básicos de la partida.
+                    	 * El segundo actualiza el panel de entrada situado en la parte inferior.
+                    	 */
+                		var partida = new Partida(partidaId, "batalla","terreno","panelin","panelout","panelfase", caPartida, caPanel);
                 	}
             	};
         	}

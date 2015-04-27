@@ -23,6 +23,11 @@
 
 #datos{
 	margin-top:20px;
+	width:100%;
+}
+
+#datos > *{
+	width:100%;
 }
 
 #game{
@@ -36,7 +41,8 @@
 	width: 100%;
 }
 
-#panelin {
+#desplegable {
+	padding:0%;
 	background-color: rgba(12,29,84,0.85);
 }
 
@@ -49,4 +55,23 @@
 	border-radius: 77px;
 	overflow: hidden;
 	z-index: 5;
+}
+
+#panelin{
+	width: 40%;
+	height: 220px;
+}
+
+#datosSeleccion{
+	width: 60%;
+	height: 220px;
+	text-align: center;
+}
+
+#cabecera{
+	height: 30px;
+}
+
+.posicionInherit{
+	margin-top:-100px;
 }

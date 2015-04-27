@@ -21,7 +21,7 @@
  * @author Daniel Martín Díaz
  * @version 1.5 (10/04/2015)
  */
-function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, ca){
+function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, caPartida, caPanel){
 	
 	/**** CONSTRUCTOR DEL OBJETO ****/
 	
@@ -63,6 +63,31 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 	var tropa = [];
 	
 	/**Metodos ejecutados al inicio:*/
+	//Creamos un ciclo de comprobación de 200 ms para verificar si la partida se ha cargado o no.
+	var cicloComprobar = setInterval(
+			//Función que se realiza
+			function (){
+				if(caPartida.check()){
+					console.log("Datos actualizados.");
+					/**
+					 * Una vez se ha actualizado los datos básicos de la partida tenemos que:
+					 * 1º actualizar la situación de la partida (con los datos nuevos).
+					 * 2º actualizar el panelin ya que habra que verificar los datos concretos de la situacion.
+					 */
+					actualizarSituacion();
+					actualizarPanelIn();
+				}
+				else if(caPanel.check()){
+					console.log("panelIn actualizado.");
+					actualizarElementos();
+					actualizarSituacion();
+				}
+			}
+			//Ciclo de repetición en milisegundos
+			,200
+	);
+	
+	obtenerSituacion();
 	tropasIniciar();
 	situacionConstruir();
 	panelFaseConstruir();
@@ -83,21 +108,116 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 	
 	/**METODOS DE MANTENIMIENTO Y CONSTRUCCI�N*/
 	/**
-	 * Método que extráe de base de datos la ultima situación de la partida.
-	 * Una situación en base de datos son los ultimos registros de una serie de tablas.
-	 * Mostrados en una tabla.
+	 * Método que actualiza los datos actuales de la partida.
+	 * Estos son necesarios para poder identificar las tablas
+	 * que en conjunto representan la situación de la partida.
 	 */
 	function obtenerSituacion(){
+		/**
+		 * Para obtener la situacióna ctual de la partida tenemos,
+		 * en primer lugar, que detectar cual es la ultima fase y algunos otros datos.
+		 * Para ello enviamos la variable Partida Id que en la base de datos representa el ejército,
+		 * es decir, la vision del usuario de la partida (Ya que esta no es igual para su adversario).
+		 */
+		var datosPartida = new Object();
+		
+		datosPartida.partida = partidaId;
+		
+		//Lo convertimos a texto
+		datosPartida = JSON.stringify(datosPartida);
+		console.log(datosPartida);
+		
+		//Actualizamos los contenidos mediante la conexion asíncrona en función de los datos obtenidos.
+		caPartida.actualizar(datosPartida,'datos');
+	};
+	
+
+	/**
+	 * Método que extráe de base de datos los datos necesarios para representar la situación
+	 * Estos se cargan en panelin, que es la entrada de datos para la situación.
+	 */
+	function actualizarPanelIn(){
+		/**
+		 * Para obtener la situacióna ctual de la partida tenemos,
+		 * En primer lugar, que detectar cual es la ultima fase y algunos otros datos;
+		 * En segundo lugar, obtenemos la situación de todas las tropas y unidades de la fase.
+		 */
+		var datosPartida = new Object();
+		
+		if(document.getElementById("ejercitoNombre").innerHTML == ""){
+			datosPartida.elegirListaPts = document.getElementById("pts").value;
+		}
+		
+		//Lo convertimos a texto
+		datosPartida = JSON.stringify(datosPartida);
+		console.log(datosPartida);
+		
+		//Actualizamos los contenidos mediante la conexion asíncrona en función de los datos obtenidos.
+		caPanel.actualizar(datosPartida,panelIn);
+	};
+	
+	
+	/**
+	 * Método que actualiza los elementos de la página tras alguna actualización asíncrona.
+	 * 
+	 */
+	function actualizarElementos(){
+		/**Generamos los objetos ventana si los hubiese.**/
+    	var ventanas = document.getElementsByClassName("ventana");
+
+    	if(ventanas != null){
+    		for(var i=0;i<ventanas.length;i++){
+    			ventanas[i] = new Ventana(ventanas[i].id);
+			}
+    	}
+    	
+
+		/**Si existiesen elementos de clase scrollingBox, generariamos objetos Scrolling para un movimiento dinámico**/
+		var scrollings = document.getElementsByClassName("scrollingBox");
+
+    	if(scrollings != null){
+        	for(var i=0;i<scrollings.length;i++){
+        		scrollings[i] = new Scrolling(scrollings[i]);
+    		}
+		}
+    	
+    	/**Si existiesen elementos de la clase lista, generariamos los objetos mostrarMensaje para seleccionarlas*/
+    	var listas = document.getElementsByClassName("lista");
+    	
+    	if(listas != null){
+    		MostrarMensaje("lista",document.getElementById("datosSeleccion"),3,caPartida);
+    	}
+	};
+	
+	
+	/**
+	 * Método que actualiza la situación.
+	 * 
+	 */
+	function actualizarSituacion(){
+		//Actualizar variables
 		userOrder = document.getElementById("userorder").innerHTML;
 		fase = document.getElementById("fase").innerHTML;
 		tropaSeleccionadaId = -1;
 		tropaSeleccionadaPreviaId = -1;
 		fichaTropa = document.getElementsByClassName("tropapropia");
 		fichaTropaEnemiga = document.getElementsByClassName("tropaenemiga");
-		//Cargar Info
-		//Cargar Tropas
 	};
 	
+	
+	/**
+	 * Método que actualiza la situación.
+	 * 
+	 */
+	function actualizarSituacion(){
+		//Actualizar variables
+		userOrder = document.getElementById("userorder").innerHTML;
+		fase = document.getElementById("fase").innerHTML;
+		tropaSeleccionadaId = -1;
+		tropaSeleccionadaPreviaId = -1;
+		fichaTropa = document.getElementsByClassName("tropapropia");
+		fichaTropaEnemiga = document.getElementsByClassName("tropaenemiga");
+	};
 	
 	
 	/**

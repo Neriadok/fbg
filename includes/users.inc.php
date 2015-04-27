@@ -40,7 +40,7 @@
 		echo "
 			<table class='tablaDatos'>
 				<tr>
-					<td colspan='8' class='alignCenter'>
+					<td colspan='4' class='alignCenter'>
 		";
 		
 		//Si no hay avatar mostramos el avatar por defecto.
@@ -55,7 +55,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan='8' class='perfilCell alignCenter
+					<td colspan='4' class='perfilCell alignCenter
 		";
 		
 		//Los colores cambian en función del tipo de usuario.
@@ -84,36 +84,34 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan='2' class='alignRight tdCabecera'>Renombre:</td>
-					<td colspan='6' class='alignLeft tdSimple'>$urenombre</td>
+					<td class='alignRight tdCabecera'>Renombre:</td>
+					<td colspan='3' class='alignLeft tdSimple'>$urenombre</td>
 				</tr>
 				<tr>
-					<td colspan='2' class='alignRight tdCabecera'>Fecha Alta:</td>
-					<td colspan='2' class='alignLeft tdSimple'>$uregdate</td>
-					<td colspan='2' class='alignRight tdCabecera'>Fecha Baja:</td>
-					<td colspan='2' class='alignLeft tdSimple'>$ubandate</td>
+					<td class='alignRight tdCabecera'>Fecha Alta:</td>
+					<td class='alignLeft tdSimple'>$uregdate</td>
+					<td class='alignRight tdCabecera'>Fecha Baja:</td>
+					<td class='alignLeft tdSimple'>$ubandate</td>
 				</tr>
 				<tr>
-					<td colspan='4' class='alignCenter tdCabecera'>Foros</td>
-					<td colspan='4' class='alignCenter tdCabecera'>Partidas</td>
+					<td colspan='2' class='alignCenter tdCabecera'>Foros</td>
+					<td colspan='2' class='alignCenter tdCabecera'>Partidas</td>
 				</tr>
 				<tr>
-					<td colspan='4' class='alignCenter tdSimple'>$ufirma</td>
-					<td colspan='4' class='alignCenter tdSimple'>$ugrito</td>
+					<td colspan='2' class='alignCenter tdSimple'>$ufirma</td>
+					<td colspan='2' class='alignCenter tdSimple'>$ugrito</td>
 				</tr>
 				<tr>
-					<td colspan='2' class='alignRight tdCabecera'>Mensajes:</td>
-					<td colspan='2' class='alignLeft tdSimple'>$umensajes</td>
+					<td class='alignRight tdCabecera'>Mensajes:</td>
+					<td class='alignLeft tdSimple'>$umensajes</td>
 					<td class='alignRight tdCabecera'>Partidas:</td>
-					<td colspan='3' class='alignLeft tdSimple'>$upartidas</td>
+					<td class='alignLeft tdSimple'>$upartidas</td>
 				</tr>
 				<tr>
-					<td colspan='2' class='alignRight tdCabecera'>Temas:</td>
-					<td colspan='2' class='alignLeft tdSimple'>$utemas</td>
+					<td class='alignRight tdCabecera'>Temas:</td>
+					<td class='alignLeft tdSimple'>$utemas</td>
 					<td class='alignRight tdCabecera'>Victorias:</td>
 					<td class='alignLeft tdSimple'>$uvictorias</td>
-					<td class='alignRight tdCabecera'>Derrotas:</td>
-					<td class='alignLeft tdSimple'>".($upartidas-$uvictorias)."</td>
 				</tr>
 			</table>	
 		";
@@ -476,16 +474,14 @@
 					echo "
 								</tr>
 								<tr>
-									<td class='alignRight esTDistica'>Renombre:</td>
-									<td class='alignLeft esTDistica enfasis'>$urenombre</td>
-									<td class='alignRight esTDistica'>Partidas:</td>
-									<td class='alignLeft esTDistica enfasis'>$upartidas</td>
+									<td class='alignRight esTDistica' colspan='2'>Renombre:</td>
+									<td class='alignLeft esTDistica enfasis' colspan='2'>$urenombre</td>
 								</tr>
 								<tr>
+									<td class='alignRight esTDistica'>Partidas:</td>
+									<td class='alignLeft esTDistica enfasis'>$upartidas</td>
 									<td class='alignRight esTDistica'>Victorias:</td>
 									<td class='alignLeft esTDistica enfasis'>$uvictorias</td>
-									<td class='alignRight esTDistica'>Derrotas:</td>
-									<td class='alignLeft esTDistica enfasis'>".($upartidas-$uvictorias)."</td>
 								</tr>
 							</table>
 						</div>

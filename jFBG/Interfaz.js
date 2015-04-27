@@ -26,6 +26,13 @@ function Interfaz(interfaz,columnaInfo,columnaPrincipal,contenidoPrincipal,conte
 	var minAltoSecundario = 30;
 	var maxAltoSecundario = 250;
 	var altoPag = 500;
+
+	/**
+	 * Otros elementos que pueden requerir de adaptación.
+	 */
+	var elementosScrolling = document.getElementsByClassName("scrollingBox");
+	var elementosTArea = document.getElementsByClassName("bigColumnTArea");
+	
 	
 	growUngrow(null);
 	
@@ -101,6 +108,34 @@ function Interfaz(interfaz,columnaInfo,columnaPrincipal,contenidoPrincipal,conte
 		contenidoSecundario.style.position = 'relative';
 		contenidoSecundario.style.width = winW+'px';
 		contenidoSecundario.style.height = 'auto';
+
+
+		/**Redimensionamos los elementos scrolling**/
+		for(var i=0;i<elementosScrolling.length;i++){
+			elementosScrolling[i].style.position = "relative";
+			elementosScrolling[i].style.height = "150px";
+			elementosScrolling[i].style.width = "100%";
+			//En caso de que el scrolling box incluya una barra de desplazamiento "Moving"
+			if(document.getElementById(elementosScrolling[i].id+"Moving") != null){
+				
+				//Dimensionamos y posicionamos la barra en función del propio scrolling.
+				var moving = document.getElementById(elementosScrolling[i].id+"Moving");
+				moving.style.height = elementosScrolling[i].offsetHeight+"px";
+				moving.style.top = "-"+elementosScrolling[i].offsetHeight+"px";
+				moving.style.left = (elementosScrolling[i].offsetWidth-15)+"px";
+				
+				//Redimensionamos el scrolling
+				elementosScrolling[i].style.width = (elementosScrolling[i].offsetWidth-15)+"px";
+				
+				//Declaramos y posicionamos los elementos del scrollingBoxMoving
+				
+				var bar = document.getElementById(elementosScrolling[i].id+"MovingBar");
+				bar.style.top = "15px";
+				
+				var down = document.getElementById(elementosScrolling[i].id+"MovingDown");
+				down.style.top = (elementosScrolling[i].offsetHeight-15)+"px";
+			}
+		}
 	};
 	
 	/**
@@ -138,6 +173,35 @@ function Interfaz(interfaz,columnaInfo,columnaPrincipal,contenidoPrincipal,conte
 			
 			contenidoSecundario.style.width = (winW-anchoInfo)+'px';
 			contenidoSecundario.style.height = minAltoSecundario + 'px';
+		}
+		
+
+
+		/**Redimensionamos los elementos scrolling**/
+		for(var i=0;i<elementosScrolling.length;i++){
+			elementosScrolling[i].style.position = "relative";
+			elementosScrolling[i].style.height = "150px";
+			elementosScrolling[i].style.width = "100%";
+			//En caso de que el scrolling box incluya una barra de desplazamiento "Moving"
+			if(document.getElementById(elementosScrolling[i].id+"Moving") != null){
+				
+				//Dimensionamos y posicionamos la barra en función del propio scrolling.
+				var moving = document.getElementById(elementosScrolling[i].id+"Moving");
+				moving.style.height = elementosScrolling[i].offsetHeight+"px";
+				moving.style.top = "-"+elementosScrolling[i].offsetHeight+"px";
+				moving.style.left = (elementosScrolling[i].offsetWidth-15)+"px";
+				
+				//Redimensionamos el scrolling
+				elementosScrolling[i].style.width = (elementosScrolling[i].offsetWidth-15)+"px";
+				
+				//Declaramos y posicionamos los elementos del scrollingBoxMoving
+				
+				var bar = document.getElementById(elementosScrolling[i].id+"MovingBar");
+				bar.style.top = "15px";
+				
+				var down = document.getElementById(elementosScrolling[i].id+"MovingDown");
+				down.style.top = (elementosScrolling[i].offsetHeight-15)+"px";
+			}
 		}
 	};
 	

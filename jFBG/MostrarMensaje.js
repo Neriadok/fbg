@@ -41,6 +41,7 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 		switch(tipo){
 			case 1: mostrarCorreo(e.target); break;
 			case 2: mostrarPartida(e.target); break;
+			case 3: mostrarLista(e.target); break;
 			default:;
 		}
 	};
@@ -124,7 +125,7 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 	
 	
 	/**
-	 * Método usado para mostar como mensaje un correo dell buzón.
+	 * Método usado para mostar como mensaje los datos de una partida.
 	 * Anotación: Un correo es un tipo de mensaje.
 	 * 
 	 * @param elemento Element - Elemento que contiene el conjunto del correo.
@@ -140,6 +141,19 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 		expositor.innerHTML = contenido(elemento,"partida");
 		expositor.appendChild(addOpciones(elemento,"partida"));
 		activarOpciones(elemento,"partida");
+	};
+	
+	
+	/**
+	 * Método usado para mostrar como mensaje un aviso de seleccion de una lista de ejercito para una partida.
+	 * 
+	 * @param elemento Element - Elemento que contiene el conjunto de la lista.
+	 */
+	function mostrarLista(elemento){
+		/**Tratamos el contenido*/
+		expositor.innerHTML = contenido(elemento,"lista");
+		expositor.appendChild(addOpciones(elemento,"lista"));
+		activarOpciones(elemento,"lista");
 	};
 	
 	
@@ -184,6 +198,17 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 				contenido += "</tr>";
 				
 				contenido += "</table>";
+				break;
+			case "lista":
+				contenido += "<p class='posicionInherit'>";
+				contenido += "La lista \"";
+				contenido += document.getElementById("nombreLista"+elemento.id).value;
+				contenido += "\" tiene ";
+				contenido += document.getElementById("tropasLista"+elemento.id).value;
+				contenido += " tropas que suman un total de ";
+				contenido += document.getElementById("ptsLista"+elemento.id).value;
+				contenido += " puntos.<br/>¿Quieres seleccionarla?";
+				contenido += "</p>";
 				break;
 			default:
 				contenido += "<p class='cursiva'>";
@@ -244,6 +269,14 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 				contenido += "<input type='hidden' id='accesoPartida' value='"+elemento.id+"'/>";
 				contenido += "</form>";
 				break;
+				
+			case "lista":
+				contenido += "<form class='submit' id='elegirLista'>";
+				contenido += "<img src='src/botones/aceptar.png'/>";
+				contenido += "<input type='hidden' name='partida' value='"+document.getElementById("ejercitoId").value+"'/>";
+				contenido += "<input type='hidden' name='elegirLista' value='"+elemento.id+"'/>";
+				contenido += "</form>";
+				break;
 			
 			default:
 				console.log("Default options.")
@@ -276,6 +309,14 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 				
 				if(envio != null){
 					envio = new Submit(14, "accederPartida", envio, ca)
+				}
+				break;
+				
+			case "lista":
+				var envio = document.getElementById("elegirLista");
+				
+				if(envio != null){
+					envio = new Submit(0, "elegirLista", envio, ca, 'datos');
 				}
 				break;
 				
