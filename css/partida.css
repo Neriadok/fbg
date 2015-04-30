@@ -57,21 +57,54 @@
 	z-index: 5;
 }
 
-#panelin{
-	width: 40%;
+#panel{
 	height: 220px;
+}
+
+#panelin{
+	position:relative;
+	padding-left: 1%;
+	padding-right: 1%;
+	height: 220px;
+	width: 28%;
 }
 
 #datosSeleccion{
-	width: 60%;
-	height: 220px;
+	position:relative;
+	padding-left: 1%;
+	padding-right: 1%;
+	height: 210px;
+	width: 38%;
+	margin-left: 30%;
+	margin-top: -220px;
 	text-align: center;
+	background-color: rgba(0,0,48,0.85);
+}
+
+#panelfase{
+	position:relative;
+	padding-left: 1%;
+	padding-right: 1%;
+	height: 220px;
+	width: 28%;
+	margin-left:70%;
+	margin-top: -210px;
+	text-align: left;
 }
 
 #cabecera{
+	width:100%;
 	height: 30px;
 }
 
-.posicionInherit{
-	margin-top:-100px;
+.tropa{
+	width: 100%;
+}
+
+.selectorTropa{
+	width:90%;
+}
+
+.columnaUnidades{
+	width: 10%;
 }

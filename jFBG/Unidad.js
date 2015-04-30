@@ -7,17 +7,16 @@
  * @author Daniel Mart�n D�az
  * @version 1.1 (23/07/2014)
  */
-function Unidad(unidadId){
+function Unidad(unidadReferencia,rango,indice){
 	/*VARIABLES*/
 	//Car�cter�sticas
-	var peana = document.getElementById(unidadId+"peana").innerHTML;
-	var representada = document.getElementById(unidadId+"representada").innerHTML;
-	var rango = document.getElementById(unidadId+"rango").innerHTML;
-		
+	var peana = 40;
 	
+	var representada = document.getElementById("representada"+unidadReferencia).innerHTML;
+	var rango = document.getElementById("rango"+unidadReferencia).innerHTML;
 	
 	//Atributos
-	var m = parseInt(document.getElementById(unidadId+"movimiento").innerHTML);
+	var m = parseInt(document.getElementById("movimiento"+unidadReferencia).innerHTML);
 	
 	
 	/*GETTERS*/
@@ -42,7 +41,6 @@ function Unidad(unidadId){
 		if(representada=="si") return m*20;
 		else return Number.MAX_VALUE;
 	};
-	
 	
 	/*M�TODOS INTERNOS*/
 	

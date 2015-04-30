@@ -28,7 +28,6 @@
 		<script type="text/javascript" src="jFBG/Submit.js"></script>
 		<script>
         	function inicio(){
-
 				/** Comprobamos en que partida nos encontramos actualmente **/
 				var partidaId = null;
 
@@ -47,16 +46,8 @@
 				}
 				console.log("Partida "+partidaId);
 
-				
-            	var ca = new AsinCronos("contenidos/partida.con.php");
+				//Tratamos los elementos de la página una única vez, de ahi en adelante es la propia partida la que los gestiona.
 				tratarElementos();
-				
-				setInterval(
-					function(){
-						if(ca.check())tratarElementos();
-					}
-					,500
-				);
 
 				
                 /** Funciones generadas al inicio **/

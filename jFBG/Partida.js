@@ -21,7 +21,7 @@
  * @author Daniel Martín Díaz
  * @version 1.5 (10/04/2015)
  */
-function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, caPartida, caPanel){
+function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase, caPartida, caPanel){
 	
 	/**** CONSTRUCTOR DEL OBJETO ****/
 	
@@ -58,8 +58,8 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 	var fase;
 	var tropaSeleccionadaId = -1;
 	var tropaSeleccionadaPreviaId = -1;
-	var fichaTropa = document.getElementsByClassName("tropapropia");
-	var fichaTropaEnemiga = document.getElementsByClassName("tropaenemiga");
+	var fichaTropa;
+	var fichaTropaEnemiga;
 	var tropa = [];
 	
 	/**Metodos ejecutados al inicio:*/
@@ -79,18 +79,18 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 				}
 				else if(caPanel.check()){
 					console.log("panelIn actualizado.");
-					actualizarElementos();
 					actualizarSituacion();
+					console.log("Situacion actualizada.");
+					actualizarElementos();
+					console.log("Elementos actualizados.");
 				}
 			}
 			//Ciclo de repetición en milisegundos
 			,200
 	);
-	
-	obtenerSituacion();
-	tropasIniciar();
+
 	situacionConstruir();
-	panelFaseConstruir();
+	obtenerSituacion();
 	
 		
 	/***ASIGNACIÓN DE EVENTOS***/
@@ -121,7 +121,7 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 		 */
 		var datosPartida = new Object();
 		
-		datosPartida.partida = partidaId;
+		datosPartida.ejercito = ejercitoId;
 		
 		//Lo convertimos a texto
 		datosPartida = JSON.stringify(datosPartida);
@@ -137,6 +137,9 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 	 * Estos se cargan en panelin, que es la entrada de datos para la situación.
 	 */
 	function actualizarPanelIn(){
+		/** Limpiamos el elemento que nos muestra datos de nuestra seleccion actual */
+		document.getElementById("datosSeleccion").innerHTML = "";
+		
 		/**
 		 * Para obtener la situacióna ctual de la partida tenemos,
 		 * En primer lugar, que detectar cual es la ultima fase y algunos otros datos;
@@ -144,8 +147,15 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 		 */
 		var datosPartida = new Object();
 		
+		//Comprobamos si el jugador ha elegido una lista de ejercito
 		if(document.getElementById("ejercitoNombre").innerHTML == ""){
 			datosPartida.elegirListaPts = document.getElementById("pts").value;
+		}
+		//Procedemos a obtener la situacion de la partida
+		else{
+			datosPartida.situacionPartida = document.getElementById("partidaId").value;
+			datosPartida.situacionEjercito = ejercitoId;
+			datosPartida.fase = document.getElementById("ordenFase").value;
 		}
 		
 		//Lo convertimos a texto
@@ -162,6 +172,12 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 	 * 
 	 */
 	function actualizarElementos(){
+		tropasIniciar();
+		situacionConstruir();
+		panelFaseConstruir();
+		
+		//console.log(JSON.stringify(fichaTropa));
+		
 		/**Generamos los objetos ventana si los hubiese.**/
     	var ventanas = document.getElementsByClassName("ventana");
 
@@ -176,7 +192,7 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 		var scrollings = document.getElementsByClassName("scrollingBox");
 
     	if(scrollings != null){
-        	for(var i=0;i<scrollings.length;i++){
+        	for(var i=0; i<scrollings.length; i++){
         		scrollings[i] = new Scrolling(scrollings[i]);
     		}
 		}
@@ -187,21 +203,45 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
     	if(listas != null){
     		MostrarMensaje("lista",document.getElementById("datosSeleccion"),3,caPartida);
     	}
-	};
-	
-	
-	/**
-	 * Método que actualiza la situación.
-	 * 
-	 */
-	function actualizarSituacion(){
-		//Actualizar variables
-		userOrder = document.getElementById("userorder").innerHTML;
-		fase = document.getElementById("fase").innerHTML;
-		tropaSeleccionadaId = -1;
-		tropaSeleccionadaPreviaId = -1;
-		fichaTropa = document.getElementsByClassName("tropapropia");
-		fichaTropaEnemiga = document.getElementsByClassName("tropaenemiga");
+    	
+    	if(fichaTropa != null){
+    		for(var i=0; i<fichaTropa.length; i++){
+    			/**Log de depuración de codigo*/
+    			console.log(i+" - "+fichaTropa[0].id);
+    			
+    			/**
+    			 * Cuando hagamos click en algun selector, se mostrará dicha tropa.
+    			 */
+    			document.getElementById("selector"+fichaTropa[0].id).onclick = seleccionarEnPanel;
+
+    			/**
+    			 * Metemos ocultas todas las fichas de tropa enemigas en los datos de selección.
+    			 * Cada vez que realizamos esta acción, la tropa en cuestion se reposiciona al final del array
+    			 * y la siguiente ocupara la posición 0, de modo que siempre tratamos la tropa 0.
+    			 */
+    			document.getElementById("datosSeleccion").appendChild(fichaTropa[0]);
+    		}
+    	}
+    	if(fichaTropaEnemiga != null){
+    		for(var i=0; i<fichaTropaEnemiga.length ; i++){
+        		for(var i=0; i<fichaTropa.length; i++){
+        			/**Log de depuración de codigo*/
+        			console.log(i+" - "+fichaTropaEnemiga[0].id);
+        			
+        			/**
+        			 * Cuando hagamos click en algun selector, se mostrará dicha tropa.
+        			 */
+        			document.getElementById("selector"+fichaTropaEnemiga[0].id).onclick = seleccionarEnPanel;
+
+        			/**
+        			 * Metemos ocultas todas las fichas de tropa enemigas en los datos de selección.
+        			 * Cada vez que realizamos esta acción, la tropa en cuestion se reposiciona al final del array
+        			 * y la siguiente ocupara la posición 0, de modo que siempre tratamos la tropa 0.
+        			 */
+        			document.getElementById("datosSeleccion").appendChildEnemiga(fichaTropa[0]);
+        		}
+    		}
+    	}
 	};
 	
 	
@@ -247,11 +287,11 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 	function tropasIniciar(){
 		/** Verificamos que existen elementos tropa en el dom */
 		if(fichaTropa != null){
-			for(var i=0;i<fichaTropa.length;i++){
-				tropa[i] = new  Tropa(fichaTropa[i].id,panelOut);
+			for(var i=0; i<fichaTropa.length; i++){
+				tropa[i] = new  Tropa(fichaTropa[i].id, panelOut);
 			}
-			for(var i=fichaTropa.length;i<fichaTropa.length+fichaTropaEnemiga.length;i++){
-				tropa[i] = new  Tropa(fichaTropaEnemiga[i-fichaTropa.length].id,panelOut);
+			for(var i=fichaTropa.length; i<fichaTropa.length+fichaTropaEnemiga.length; i++){
+				tropa[i] = new  Tropa(fichaTropaEnemiga[i-fichaTropa.length].id, panelOut);
 			}
 		}
 	};
@@ -607,7 +647,6 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 		tropa[tropaBuscar(tropaId)].seleccionar();
 		
 		/**Actualizamos panelFase y panelIn*/
-		document.getElementById(tropaId+"selected").selected="selected";
 		document.getElementById(tropaId).style.display="block";
 		panelFaseConstruir();
 	};
@@ -1289,6 +1328,15 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 		}
 	};
 	
+	
+	/**
+	 * 
+	 */
+	function seleccionarEnPanel(e){
+		e.preventDefault();
+		console.log(e.target.id);
+		tropaSeleccionar(e.target.id.substr(8))
+	};
 		
 	
 	/**
@@ -1300,10 +1348,6 @@ function Partida(partidaId, batallaId, terrenoId, panelIn, panelOut, panelFase, 
 	 function panelInActualizado(e){
 		/**Prevenimos los efectos por defecto del evento.*/
 		e.preventDefault();
-		
-		if(e.target.name = "tropaseleccionada"){
-			tropaSeleccionar(e.target.value);
-		}
 		situacionConstruir();
 		panelFaseConstruir();
 	};

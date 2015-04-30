@@ -112,25 +112,37 @@
 					echo "
 						<div id='$id' class='partida
 					";
-					if($i%2 == 0){
-						echo "pairRow";
+					//Elegimos el color de la fila
+					if($fechaFin == null){
+						if($i%2 == 0){
+							echo "pairRow";
+						}
+						else{
+							echo "inpairRow";
+						}
 					}
 					else{
-						echo "inpairRow";
+						echo "greyRow";
 					}
+					
 					echo "
 						'>$desafiadorNick VS $desafiadoNick a $pts Puntos<br/>
 					";
-					if($ejercitoNombre != null){
-						if($turnos == 0){
-							echo "Pendiente de empezar";
+					if($fechaFin == null){
+						if($ejercitoNombre != null){
+							if($turnos == 0){
+								echo "Pendiente de empezar";
+							}
+							else{
+								echo "Turno $turnos, fase de $fase";
+							}
 						}
 						else{
-							echo "Turno $turnos, fase de $fase";
+							echo "Elegir Ejercito";
 						}
 					}
 					else{
-						echo "Elegir Ejercito";
+						echo "Finalizada";
 					}
 					echo "
 						<div class='oculto'>
@@ -175,5 +187,19 @@
 			
 			";
 		}
+	}
+	
+	/**
+	 * FUNCIÓN DE EJECUCIÓN SETTER
+	 * Función que otorga la victoria al enemigo.
+	 * 
+	 * @param $conexion Mysqli - Conexion a base de datos.
+	 * @param $ejercito integer - Id del ejercito que se rinde.
+	 */
+	function rendirse($conexion, $ejercito){
+		$sentencia = $conexion -> prepare("CALL proceso_rendirse(?)");
+		$sentencia -> bind_param('i', $ejercito);
+		$sentencia -> execute();
+		$sentencia -> close();
 	}
 ?>

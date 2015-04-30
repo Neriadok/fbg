@@ -286,10 +286,6 @@ legend{
 	text-align: center;
 }
 
-.subtitle {
-	font-size: smaller;
-}
-
 .contenedor > .tablaDatos{
 	width:450px;
 }
@@ -304,6 +300,12 @@ legend{
 	color: white;
 }
 
+.greyRow {
+	background-color: grey;
+	color: white;
+	font-size: smaller;
+}
+
 .enfasis {
 	color: #F9FF45;
 	font-size: larger;
@@ -311,7 +313,17 @@ legend{
 	margin: 2px;
 }
 
+.subtitle {
+	font-size: smaller;
+}
+
 .cursiva {
+	font-style:italic;	
+}
+
+.white {
+	color: white;
+	font-weight: bold;
 	font-style:italic;	
 }
 

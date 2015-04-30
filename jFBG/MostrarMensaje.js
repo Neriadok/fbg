@@ -139,8 +139,11 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 		
 		/**Tratamos el contenido*/
 		expositor.innerHTML = contenido(elemento,"partida");
-		expositor.appendChild(addOpciones(elemento,"partida"));
-		activarOpciones(elemento,"partida");
+		
+		if(document.getElementById("fin"+elemento.id).innerHTML == ""){
+			expositor.appendChild(addOpciones(elemento,"partida"));
+			activarOpciones(elemento,"partida");
+		}
 	};
 	
 	
@@ -200,7 +203,7 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 				contenido += "</table>";
 				break;
 			case "lista":
-				contenido += "<p class='posicionInherit'>";
+				contenido += "<p>";
 				contenido += "La lista \"";
 				contenido += document.getElementById("nombreLista"+elemento.id).value;
 				contenido += "\" tiene ";
@@ -268,12 +271,18 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 				contenido += "<img src='src/botones/desafiar.png'/>";
 				contenido += "<input type='hidden' id='accesoPartida' value='"+elemento.id+"'/>";
 				contenido += "</form>";
+				
+				contenido += "<form class='submit' id='surrender'>";
+				contenido += "<img src='src/botones/eliminar.png'/>";
+				contenido += "<input type='hidden' name='surrender' value='"+elemento.id+"'/>";
+				contenido += "</form>";
 				break;
 				
 			case "lista":
 				contenido += "<form class='submit' id='elegirLista'>";
 				contenido += "<img src='src/botones/aceptar.png'/>";
-				contenido += "<input type='hidden' name='partida' value='"+document.getElementById("ejercitoId").value+"'/>";
+				contenido += "<input type='hidden' name='ejercito' value='"+document.getElementById("ejercitoId").value+"'/>";
+				contenido += "<input type='hidden' name='partida' value='"+document.getElementById("partidaId").value+"'/>";
 				contenido += "<input type='hidden' name='elegirLista' value='"+elemento.id+"'/>";
 				contenido += "</form>";
 				break;
@@ -305,18 +314,24 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 		 */
 		switch(tipo){
 			case "partida":
-				var envio = document.getElementById("accederPartida");
+				var acceder = document.getElementById("accederPartida");
 				
-				if(envio != null){
-					envio = new Submit(14, "accederPartida", envio, ca)
+				if(acceder != null){
+					acceder = new Submit(14, "accederPartida", acceder, ca)
+				}
+				
+				var rendir = document.getElementById("surrender");
+				
+				if(rendir != null){
+					rendir = new Submit(0, "surrender", rendir, ca)
 				}
 				break;
 				
 			case "lista":
-				var envio = document.getElementById("elegirLista");
+				var lista = document.getElementById("elegirLista");
 				
-				if(envio != null){
-					envio = new Submit(0, "elegirLista", envio, ca, 'datos');
+				if(lista != null){
+					lista = new Submit(0, "elegirLista", lista, ca, 'datos');
 				}
 				break;
 				

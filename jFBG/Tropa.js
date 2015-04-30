@@ -11,32 +11,28 @@ function Tropa(tropaId,panelOut){
 	/*VARIABLES*/
 	//Car�cter�sticas
 	var id = tropaId;
-	var nombre = document.getElementById(tropaId+"nombre").innerHTML;
-	var miembros = parseInt(document.getElementById(tropaId+"miembros").innerHTML);
-	var tipo = document.getElementById(tropaId+"tipo").innerHTML;
-	var user = document.getElementById(tropaId+"nombre").innerHTML;
+	var nombre = document.getElementById("nombre"+tropaId).innerHTML;
+	var miembros = parseInt(document.getElementById("miembros"+tropaId).innerHTML);
+	var tipo = document.getElementById("tipo"+tropaId).innerHTML;
 	
 	//Situacion
 	var selected = false;
-	var eliminada = document.getElementById(tropaId+"eliminada").innerHTML;
-	var enCampo = document.getElementById(tropaId+"encampo").innerHTML;
-	var cargando = document.getElementById(tropaId+"cargando").innerHTML;
-	var latitud = parseInt(document.getElementById(tropaId+"latitud").innerHTML);
-	var altitud = parseInt(document.getElementById(tropaId+"altitud").innerHTML);
-	var orientacion = parseInt(document.getElementById(tropaId+"orientacion").innerHTML)*Math.PI/180;
-	var unidadesFila = document.getElementById(tropaId+"unidadesfila").innerHTML;
-	var tropaAdoptivaId = document.getElementById(tropaId+"tropaadoptivaid").innerHTML;
-	var tropaBajoAtaque = document.getElementById(tropaId+"tropabajoataqueid").innerHTML;
-	var combateVanguardia = document.getElementById(tropaId+"combatevanguardia").innerHTML;
-	var combateSiniestra = document.getElementById(tropaId+"combatesiniestra").innerHTML;
-	var combateDiestra = document.getElementById(tropaId+"combatediestra").innerHTML;
-	var combateRetaguardia = document.getElementById(tropaId+"combateretaguardia").innerHTML;
+	var eliminada = document.getElementById("eliminada"+tropaId).innerHTML;
+	var enCampo = document.getElementById("encampo"+tropaId).innerHTML;
+	var estado = document.getElementById("estado"+tropaId).innerHTML;
+	var latitud = parseInt(document.getElementById("latitud"+tropaId).innerHTML);
+	var altitud = parseInt(document.getElementById("altitud"+tropaId).innerHTML);
+	var orientacion = parseInt(document.getElementById("orientacion"+tropaId).innerHTML)*Math.PI/180;
+	var unidadesFila = document.getElementById("unidadesfila"+tropaId).innerHTML;
+	var tropaAdoptivaId = document.getElementById("tropaadoptivaid"+tropaId).innerHTML;
+	var tropaBajoAtaqueId = document.getElementById("tropabajoataqueid"+tropaId).innerHTML;
+	var tropaBajoAtaqueFlanco = document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML;
 	
 	//Miembros
 	var unidad = [];
 	var tropaAdoptadaId = [];
 	
-	iniciarUnidades();
+	//iniciarUnidades();
 	
 	
 	
@@ -78,13 +74,12 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo get del atributo cargando.
+	 * M�todo get del atributo estado.
 	 * 
 	 * @return true si enCampo == "si".
 	 */
 	this.getCargando = function(){
-		if(cargando == "si") return true;
-		else return false;
+		return estado;
 	};
 	
 	/**
@@ -228,7 +223,7 @@ function Tropa(tropaId,panelOut){
 	 * @return true si pertenece al usuario.
 	 */
 	this.getUser = function(){
-		if(document.getElementById(tropaId+"user").innerHTML == "si") return true;
+		if(document.getElementById("user"+tropaId).value == "si") return true;
 		else return false;
 	};
 	
@@ -240,16 +235,16 @@ function Tropa(tropaId,panelOut){
 	 * actualiza los atributos de la tropa.
 	 */
 	function actualizar(){
-		eliminada = document.getElementById(tropaId+"eliminada").innerHTML;
-		enCampo = document.getElementById(tropaId+"encampo").innerHTML;
-		cargando = document.getElementById(tropaId+"cargando").innerHTML;
-		latitud = parseInt(document.getElementById(tropaId+"latitud").innerHTML);
-		altitud = parseInt(document.getElementById(tropaId+"altitud").innerHTML);
-		orientacion = parseInt(document.getElementById(tropaId+"orientacion").innerHTML)*Math.PI/180;
-		unidadesFila = document.getElementById(tropaId+"unidadesfila").innerHTML;
-		tropaAdoptivaId = document.getElementById(tropaId+"tropaadoptivaid").innerHTML;
-		tropaBajoAtaque = document.getElementById(tropaId+"tropabajoataqueid").innerHTML;
-		iniciarUnidades();
+		eliminada = document.getElementById("eliminada"+tropaId).innerHTML;
+		enCampo = document.getElementById("encampo"+tropaId).innerHTML;
+		estado = document.getElementById("estado"+tropaId).innerHTML;
+		latitud = parseInt(document.getElementById("latitud"+tropaId).innerHTML);
+		altitud = parseInt(document.getElementById("altitud"+tropaId).innerHTML);
+		orientacion = parseInt(document.getElementById("orientacion"+tropaId).innerHTML)*Math.PI/180;
+		unidadesFila = document.getElementById("unidadesfila"+tropaId).innerHTML;
+		tropaAdoptivaId = document.getElementById("tropaadoptivaid"+tropaId).innerHTML;
+		tropaBajoAtaque = document.getElementById("tropabajoataqueid"+tropaId).innerHTML;
+		//iniciarUnidades();
 	};
 	
 	/**
@@ -261,11 +256,11 @@ function Tropa(tropaId,panelOut){
 		var nUnidad = 0;
 		//Iniciamos las unidades propias
 		for(;nUnidad<miembros;nUnidad++){
-			unidad[nUnidad] = new  Unidad(tropaId+"unidad"+(nUnidad+1),selected);
+			unidad[nUnidad] = new  Unidad("unidad"+(nUnidad+1),selected);
 		}
 		//Iniciamos las unidades adoptadas
 		for(var i=0;i<tropaAdoptadaId.length;i++){
-			for(var j=0;j<document.getElementById(tropaAdoptadaId[i]+"miembros").innerHTML;j++,nUnidad++){
+			for(var j=0;j<document.getElementById("miembros"+tropaAdoptadaId[i]).innerHTML;j++,nUnidad++){
 				unidad[nUnidad] = new  Unidad(tropaAdoptadaId[i]+"unidad"+(j+1),selected);
 			}
 		}
@@ -540,12 +535,12 @@ function Tropa(tropaId,panelOut){
 				ancho=unidad.length;
 			}
 			
-			document.getElementById(tropaId+"latitud").innerHTML = x;
-			document.getElementById(tropaId+"altitud").innerHTML = y;
-			document.getElementById(tropaId+"orientacion").innerHTML = angle;
-			document.getElementById(tropaId+"encampo").innerHTML = "si";
-			document.getElementById(tropaId+"unidadesfila").innerHTML = ancho;
-			document.getElementById(tropaId+"tropaadoptivaid").innerHTML = "-1";
+			document.getElementById("latitud"+tropaId).innerHTML = x;
+			document.getElementById("altitud"+tropaId).innerHTML = y;
+			document.getElementById("orientacion"+tropaId).innerHTML = angle;
+			document.getElementById("encampo"+tropaId).innerHTML = "si";
+			document.getElementById("unidadesfila"+tropaId).innerHTML = ancho;
+			document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "-1";
 			actualizar();
 			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" desplegada en "+latitud+"x "+altitud+"y.<br/>Orientacion: "+parseInt(orientacion*180/Math.PI);
 		}
@@ -579,10 +574,10 @@ function Tropa(tropaId,panelOut){
 				}
 			}
 
-			document.getElementById(tropaId+"latitud").innerHTML = x;
-			document.getElementById(tropaId+"altitud").innerHTML = y;
-			document.getElementById(tropaId+"encampo").innerHTML = "si";
-			document.getElementById(tropaId+"tropaadoptivaid").innerHTML = "-1";
+			document.getElementById("latitud"+tropaId).innerHTML = x;
+			document.getElementById("altitud"+tropaId).innerHTML = y;
+			document.getElementById("encampo"+tropaId).innerHTML = "si";
+			document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "-1";
 			actualizar();
 			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" movida a "+latitud+"x "+altitud+"y.";
 		}
@@ -641,12 +636,12 @@ function Tropa(tropaId,panelOut){
 	 * @param id de la tropa a que se incorpora.
 	 */
 	this.incorporar = function(tropaPadre){
-		document.getElementById(tropaId+"latitud").innerHTML = "--";
-		document.getElementById(tropaId+"altitud").innerHTML = "--";
-		document.getElementById(tropaId+"orientacion").innerHTML = "--";
-		document.getElementById(tropaId+"encampo").innerHTML = "si";
-		document.getElementById(tropaId+"unidadesfila").innerHTML = "--";
-		document.getElementById(tropaId+"tropaadoptivaid").innerHTML = tropaPadre;
+		document.getElementById("latitud"+tropaId).innerHTML = "--";
+		document.getElementById("altitud"+tropaId).innerHTML = "--";
+		document.getElementById("orientacion"+tropaId).innerHTML = "--";
+		document.getElementById("encampo"+tropaId).innerHTML = "si";
+		document.getElementById("unidadesfila"+tropaId).innerHTML = "--";
+		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = tropaPadre;
 		actualizar();
 		document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" incorporada exitosamente.";
 	};
@@ -736,12 +731,12 @@ function Tropa(tropaId,panelOut){
 	 * M�todo para retirar una tropa del campo de batalla.
 	 */
 	this.retirar = function(){
-		document.getElementById(tropaId+"latitud").innerHTML = "--";
-		document.getElementById(tropaId+"altitud").innerHTML = "--";
-		document.getElementById(tropaId+"orientacion").innerHTML = "--";
-		document.getElementById(tropaId+"encampo").innerHTML = "no";
-		document.getElementById(tropaId+"unidadesfila").innerHTML = "--";
-		document.getElementById(tropaId+"tropaadoptivaid").innerHTML = "-1";
+		document.getElementById("latitud"+tropaId).innerHTML = "--";
+		document.getElementById("altitud"+tropaId).innerHTML = "--";
+		document.getElementById("orientacion"+tropaId).innerHTML = "--";
+		document.getElementById("encampo"+tropaId).innerHTML = "no";
+		document.getElementById("unidadesfila"+tropaId).innerHTML = "--";
+		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "-1";
 		actualizar();
 		document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" retirada del campo.";
 	};
@@ -984,34 +979,34 @@ function Tropa(tropaId,panelOut){
 	 * @param frente frente por el enemigo que recibe la carga.
 	 */
 	this.cargar = function(objetivo,frente){
-		document.getElementById(tropaId+"combatevanguardia").innerHTML = "si";
-		document.getElementById(tropaId+"tropabajoataqueid").innerHTML = objetivo.getId;
+		document.getElementById("combatevanguardia"+tropaId).innerHTML = "si";
+		document.getElementById("tropabajoataqueid"+tropaId).innerHTML = objetivo.getId;
 		
 		document.getElementById(panelOut).innerHTML = nombre+" carga contra "+objetivo.getNombre();
 		switch(frente){
 			case 1: 
 				document.getElementById(panelOut).innerHTML += " de frente.";
-				document.getElementById(tropaId+"latitud").innerHTML = objetivo.getVanguardiaDiestra().x;
-				document.getElementById(tropaId+"altitud").innerHTML = objetivo.getVanguardiaDiestra().y;
-				document.getElementById(tropaId+"orientacion").innerHTML = ""+(parseInt(180)+objetivo.getOrientacion());
+				document.getElementById("latitud"+tropaId).innerHTML = objetivo.getVanguardiaDiestra().x;
+				document.getElementById("altitud"+tropaId).innerHTML = objetivo.getVanguardiaDiestra().y;
+				document.getElementById("orientacion"+tropaId).innerHTML = ""+(parseInt(180)+objetivo.getOrientacion());
 			break;
 			case 2: 
 				document.getElementById(panelOut).innerHTML += " por el flanco izquierdo.";
-				document.getElementById(tropaId+"latitud").innerHTML = objetivo.getVanguardiaSiniestra().x;
-				document.getElementById(tropaId+"altitud").innerHTML = objetivo.getVanguardiaSiniestra().y;
-				document.getElementById(tropaId+"orientacion").innerHTML = ""+(parseInt(90)+objetivo.getOrientacion());
+				document.getElementById("latitud"+tropaId).innerHTML = objetivo.getVanguardiaSiniestra().x;
+				document.getElementById("altitud"+tropaId).innerHTML = objetivo.getVanguardiaSiniestra().y;
+				document.getElementById("orientacion"+tropaId).innerHTML = ""+(parseInt(90)+objetivo.getOrientacion());
 			break;
 			case 3: 
 				document.getElementById(panelOut).innerHTML += " por el flanco derecho.";
-				document.getElementById(tropaId+"latitud").innerHTML = objetivo.getRetaguardiaDiestra().x;
-				document.getElementById(tropaId+"altitud").innerHTML = objetivo.getRetaguardiaDiestra().y;
-				document.getElementById(tropaId+"orientacion").innerHTML = ""+(parseInt(270)+objetivo.getOrientacion());
+				document.getElementById("latitud"+tropaId).innerHTML = objetivo.getRetaguardiaDiestra().x;
+				document.getElementById("altitud"+tropaId).innerHTML = objetivo.getRetaguardiaDiestra().y;
+				document.getElementById("orientacion"+tropaId).innerHTML = ""+(parseInt(270)+objetivo.getOrientacion());
 			break;
 			case 4: 
 				document.getElementById(panelOut).innerHTML += " por la retaguardia.";
-				document.getElementById(tropaId+"latitud").innerHTML = objetivo.getRetaguardiaSiniestra().x;
-				document.getElementById(tropaId+"altitud").innerHTML = objetivo.getRetaguardiaSiniestra().y;
-				document.getElementById(tropaId+"orientacion").innerHTML = ""+objetivo.getOrientacion();
+				document.getElementById("latitud"+tropaId).innerHTML = objetivo.getRetaguardiaSiniestra().x;
+				document.getElementById("altitud"+tropaId).innerHTML = objetivo.getRetaguardiaSiniestra().y;
+				document.getElementById("orientacion"+tropaId).innerHTML = ""+objetivo.getOrientacion();
 			break;
 		}
 		actualizar();
@@ -1025,16 +1020,16 @@ function Tropa(tropaId,panelOut){
 		alert(2);
 		switch(frente){
 		case 1:
-			document.getElementById(tropaId+"combatevanguardia").innerHTML="si";
+			document.getElementById("combatevanguardia"+tropaId).innerHTML="si";
 		break;
 		case 2:
-			document.getElementById(tropaId+"combatesiniestra").innerHTML="si";
+			document.getElementById("combatesiniestra"+tropaId).innerHTML="si";
 		break;
 		case 3:
-			document.getElementById(tropaId+"combatediestra").innerHTML="si";
+			document.getElementById("combatediestra"+tropaId).innerHTML="si";
 		break;
 		case 4:
-			document.getElementById(tropaId+"combateretaguardia").innerHTML="si";
+			document.getElementById("combateretaguardia"+tropaId).innerHTML="si";
 		break;
 		}
 		actualizar();

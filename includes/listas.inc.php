@@ -1410,7 +1410,8 @@
 						$procedure .= ",true";
 					}
 					else $procedure .= ",false";
-	
+					
+					//Verificamos si es el estandarte de batalla
 					if($rangoPer == 8){
 						$procedure .= ",true";
 					}
