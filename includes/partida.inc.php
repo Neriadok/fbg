@@ -500,110 +500,53 @@
 				}
 				echo "
 					'>
-						<table>
-							<tr><td><h1 id='nombretropa$tropaId'>$tropa</h1></td></tr>
-							<tr>
-								<td id='ptstropa$tropaId'>$tropaPts[$tropaId]</td>
-								<td id='eliminadatropa$tropaId'>no</td>
-								<td id='gentropa$tropaId'>$tropaGen[$tropaId]</td>
-								<td id='besttropa$tropaId'>$tropaBEst[$tropaId]</td>
-								<td id='champtropa$tropaId'>$tropaChamp[$tropaId]</td>
-								<td id='musicotropa$tropaId'>$tropaMusico[$tropaId]</td>
-								<td id='esttropa$tropaId'>$tropaEst[$tropaId]</td>
-								<td id='tipotropa$tropaId'>$tropaTipo[$tropaId]</td>
-								<td id='rangotropa$tropaId'>$tropaRango[$tropaId]</td>
-								<td id='miembrostropa$tropaId'>$tropaUnidades[$tropaId]</td>
-								<td id='heridastropa$tropaId'>$tropaHeridas[$tropaId]</td>
-								<td id='estadotropa$tropaId'>$tropaEstado[$tropaId]</td>
-								<td id='latitudtropa$tropaId'>$tropaLatitud[$tropaId]</td>
-								<td id='altitudtropa$tropaId'>$tropaAltitud[$tropaId]</td>
-								<td id='orientaciontropa$tropaId'>$tropaOrientacion[$tropaId]</td>
-								<td id='unidadesfilatropa$tropaId'>$tropaUnidadesFila[$tropaId]</td>
-								<td id='tropaadoptivaidtropa$tropaId'>$tropaTropaAdoptivaId[$tropaId]</td>
-								<td id='tropabajoataqueidtropa$tropaId'>$tropaTropaBajoAtaqueId[$tropaId]</td>
-								<td id='tropabajoataqueflancotropa$tropaId'>$tropaTropaBajoAtaqueFlanco[$tropaId]</td>
-								<td class='oculto'>
-				";
-				//Comprobamos si la tropa pertenece al usuario
-				if($tropaEjercito[$tropaId]){
-					echo "<input type='hidden' id='usertropa$tropaId' value='si'/>";
-				}
-				else{
-					echo "<input type='hidden' id='usertropa$tropaId' value='no'/>";
-				}
-				
-				//Comprobamos si la tropa esta en el campo de batalla
-				if($tropaEnCampo[$tropaId]){
-					echo "<input type='hidden' id='encampotropa$tropaId' value='si'/>";
-				}
-				else{
-					echo "<input type='hidden' id='encampotropa$tropaId' value='no'/>";
-				}
-				echo "
-								</td>
-							</tr>
+						<div id='tropaDatos$tropaId' class='scrollingBox'>
+							<div id='tropaDatos".$tropaId."Content' class='scrollingBoxContent'>
+								<h3 id='nombretropa$tropaId' class='enfasis tropaContent'>$tropa</h3>
+								<table class='tropaContent'>
+									<tr>
 				";
 				
-				$sentencia = $conexion -> prepare("CALL proceso_unidadesTropaEjercito(?)");
-				$sentencia -> bind_param('i', $tropaId);
-				$sentencia -> execute();
-				$sentencia -> store_result();
-				$sentencia -> bind_result(
-					$tipoRango
-					,$rango
-					,$representada
-					,$montura
-					,$dotacion
-					,$maquinaria
-					,$movimiento
-					,$ha
-					,$hp
-					,$f
-					,$r
-					,$ps
-					,$i
-					,$a
-					,$l
+				partida_datosGeneralesTropa(
+						$tropaId
+						, $tropaTipo[$tropaId]
+						, $tropaUnidades[$tropaId]
+						, $tropaPts[$tropaId]
+						, $tropaRango[$tropaId]
+						, $tropaGen[$tropaId]
+						, $tropaBEst[$tropaId]
+						, $tropaChamp[$tropaId]
+						, $tropaEst[$tropaId]
+						, $tropaMusico[$tropaId]
+						, $tropaEjercito[$tropaId]
+						, $tropaEnCampo[$tropaId]
 				);
-						
-				$j=0;
-				while($sentencia -> fetch()){
-					echo "<tr id='unidad".$tipoRango."tropa$tropaId' class='unidad";
-					if($j%2==0){
-						echo " pairRow";
-					}
-					else{
-						echo " inpairRow";
-					}
-		
-					echo "
-						'>
-							<td id='tipounidad".$tipoRango."tropa$tropaId' class='enfasis'>$tipoRango</td>
-							<td id='movimientounidad".$tipoRango."tropa$tropaId' class='enfasis'>$movimiento</td>
-							<td id='haunidad".$tipoRango."tropa$tropaId' class='enfasis'>$ha</td>
-							<td id='hpunidad".$tipoRango."tropa$tropaId' class='enfasis'>$hp</td>
-							<td id='funidad".$tipoRango."tropa$tropaId' class='enfasis'>$f</td>
-							<td id='runidad".$tipoRango."tropa$tropaId' class='enfasis'>$r</td>
-							<td id='psunidad".$tipoRango."tropa$tropaId' class='enfasis'>$ps</td>
-							<td id='iunidad".$tipoRango."tropa$tropaId' class='enfasis'>$i</td>
-							<td id='aunidad".$tipoRango."tropa$tropaId' class='enfasis'>$a</td>
-							<td id='lunidad".$tipoRango."tropa$tropaId' class='enfasis'>$l</td>
-							<td class='oculto'>
-								<input type='hidden' id='rangounidad".$tipoRango."tropa$tropaId' value='rango'/>
-								<input type='hidden' id='representadaunidad".$tipoRango."tropa$tropaId' value='representada'/>
-								<input type='hidden' id='monturaunidad".$tipoRango."tropa$tropaId' value='montura'/>
-								<input type='hidden' id='dotacionunidad".$tipoRango."tropa$tropaId' value='dotacion'/>
-								<input type='hidden' id='maquinariaunidad".$tipoRango."tropa$tropaId' value='maquinaria'/>
-							</td>
-						</tr>
-					";
-	
-					$j++;
-				}
-				$sentencia -> close();
 				
+				partida_datosConcretosTropa(
+						$tropaId
+						, $tropaHeridas[$tropaId]
+						, $tropaEstado[$tropaId]
+						, $tropaLatitud[$tropaId]
+						, $tropaAltitud[$tropaId]
+						, $tropaOrientacion[$tropaId]
+						, $tropaUnidadesFila[$tropaId]
+						, $tropaTropaAdoptivaId[$tropaId]
+						, $tropaTropaBajoAtaqueId[$tropaId]
+						, $tropaTropaBajoAtaqueFlanco[$tropaId]
+				);
 				echo "
-								</table>
+							</tr>
+						</table>
+				";
+				partida_unidadesTropa($conexion, $tropaId);
+				echo "
+									</div>
+								</div>
+								<div id='tropaDatos".$tropaId."Moving' class='scrollingBoxMoving'>
+									<div id='tropaDatos".$tropaId."MovingUp' class='scrollingBoxMovingUp'></div>
+									<div id='tropaDatos".$tropaId."MovingBar' class='scrollingBoxMovingBar'></div>
+									<div id='tropaDatos".$tropaId."MovingDown' class='scrollingBoxMovingDown'></div>
+								</div>
 							</div>
 						</td>
 					</tr>
@@ -618,6 +561,317 @@
 				<div id='listadoTropasMovingBar' class='scrollingBoxMovingBar'></div>
 				<div id='listadoTropasMovingDown' class='scrollingBoxMovingDown'></div>
 			</div>
+		";
+	}
+	
+	
+	/**
+	 * FUNCIÓN DE CONTENIDO
+	 * Función que muestra los diferentes tipos de unidad de una tropa así como sus atributos 
+	 * y en un td oculto otros datos de interes.
+	 * 
+	 * @param $tropaId integer - Tropa a la que pertenecen las unidades.
+	 * @param $conexion Mysqli - Conexion a base de datos.
+	 */
+	function partida_unidadesTropa($conexion,$tropaId){
+		echo "
+			<table class='tropaContent'>
+				<tr>
+					<td class='enfasis'></td>
+					<td class='enfasis'>M</td>
+					<td class='enfasis'>HA</td>
+					<td class='enfasis'>HP</td>
+					<td class='enfasis'>F</td>
+					<td class='enfasis'>R</td>
+					<td class='enfasis'>PS</td>
+					<td class='enfasis'>I</td>
+					<td class='enfasis'>A</td>
+					<td class='enfasis'>L</td>
+				</tr>
+		";
+		
+		$sentencia = $conexion -> prepare("CALL proceso_unidadesTropaEjercito(?)");
+		$sentencia -> bind_param('i', $tropaId);
+		$sentencia -> execute();
+		$sentencia -> store_result();
+		$sentencia -> bind_result(
+				$tipoRango
+				,$rango
+				,$representada
+				,$montura
+				,$dotacion
+				,$maquinaria
+				,$movimiento
+				,$ha
+				,$hp
+				,$f
+				,$r
+				,$ps
+				,$i
+				,$a
+				,$l
+		);
+		
+		$j=0;
+		while($sentencia -> fetch()){
+			echo "<tr id='componente".$tipoRango."tropa$tropaId' class='componente";
+			if($j%2==0){
+				echo " pairRow";
+			}
+			else{
+				echo " inpairRow";
+			}
+		
+			echo "
+				'>
+					<td id='tipocomponente".$tipoRango."tropa$tropaId' class='enfasis'>$tipoRango</td>
+					<td id='movimientocomponente".$tipoRango."tropa$tropaId' class='enfasis'>$movimiento</td>
+					<td id='hacomponente".$tipoRango."tropa$tropaId' class='enfasis'>$ha</td>
+					<td id='hpcomponente".$tipoRango."tropa$tropaId' class='enfasis'>$hp</td>
+					<td id='fcomponente".$tipoRango."tropa$tropaId' class='enfasis'>$f</td>
+					<td id='rcomponente".$tipoRango."tropa$tropaId' class='enfasis'>$r</td>
+					<td id='pscomponente".$tipoRango."tropa$tropaId' class='enfasis'>$ps</td>
+					<td id='icomponente".$tipoRango."tropa$tropaId' class='enfasis'>$i</td>
+					<td id='acomponente".$tipoRango."tropa$tropaId' class='enfasis'>$a</td>
+					<td id='lcomponente".$tipoRango."tropa$tropaId' class='enfasis'>$l</td>
+					<td class='oculto'>
+						<p class='fichatropa$tropaId'>$tipoRango</p>
+						<p id='rangocomponente".$tipoRango."tropa$tropaId'>$rango</p>
+			";
+			
+			//Solo las componentes representadas se muestran.
+			if($representada){
+				echo "
+					<p id='representadacomponente".$tipoRango."tropa$tropaId'>si</p>
+				";
+			}
+			else{
+				echo "
+					<p id='representadacomponente".$tipoRango."tropa$tropaId'>no</p>
+				";
+			}
+			echo "
+					</td>
+				</tr>
+			";
+		
+			$j++;
+		}
+		$sentencia -> close();
+		
+		echo "
+			</table>
+		";
+	}
+	
+	
+	/**
+	 * FUNCIÓN DE CONTENIDO
+	 * Función que muestra los datos generales de una tropa.
+	 * 
+	 * 
+	 * @param tropaId integer - id de la tropa en cuestion.
+	 * @param $tropaTipo String - tipo de tropa de que se trata 
+	 * @param $tropaUnidades integer - número de unidades que conforman la tropa.
+	 * @param $tropaPts integer - puntos que cuesta la tropa.
+	 * @param $tropaRango integer - mayor rango existente en la tropa (sin contar miembros del grupo de mando)
+	 * @param $tropaGen boolean - Será true si la tropa es el general del ejercito.
+	 * @param $tropaBEs boolean - Será true si la tropa es el portaestandarte de batalla.
+	 * @param $tropaChamp boolean - Será true si la tropa incluye un campeón.
+	 * @param $tropaEst boolean - Será true si la tropa incluye un portaestandarte.
+	 * @param $tropaMusico boolean - Será true si la tropa incluye un músico.
+	 * @param $tropaEjercito boolean - Será true si la tropa pertenece al ejercito del usuario.
+	 * @param $tropaEnCampo boolean - Será true si la tropa está desplegada.
+	 */
+	function partida_datosGeneralesTropa(
+			$tropaId
+			, $tropaTipo
+			, $tropaUnidades
+			, $tropaPts
+			, $tropaRango
+			, $tropaGen
+			, $tropaBEst
+			, $tropaChamp
+			, $tropaEst
+			, $tropaMusico
+			, $tropaEjercito
+			, $tropaEnCampo
+		){
+		echo "
+			<td class='halfWidth'>
+		";
+		
+		//Comprobamos si se trata del general del ejercito
+		if($tropaRango == 9){
+			echo "
+				<p>
+					<span class='subtitle white'>Esta tropa es el General del ejercito.</span>
+					<span class='oculto' id='gentropa$tropaId'>si</span>
+				</p>
+			";
+		}
+		else{
+			echo "<p class='oculto' id='gentropa$tropaId'>no</p>";
+		}
+		
+		//Comprobamos si se trata del portaestandarte de batalla
+		if($tropaRango == 8){
+			echo "
+				<p>
+					<span class='subtitle white'>Esta tropa es el portaestandarte de batalla.</span>
+					<span class='oculto' id='besttropa$tropaId'>si</span>
+				</p>
+			";
+		}
+		else{
+			echo "<p class='oculto' id='besttropa$tropaId'>no</p>";
+		}
+		
+		//Comprobamos si la tropa incluye campeon
+		if($tropaChamp){
+			echo "
+				<p>
+					<span class='subtitle white'>Esta tropa incluye un campeón.</span>
+					<span class='oculto' id='champtropa$tropaId'>si</span>
+				</p>
+			";
+		}
+		else{
+			echo "<p class='oculto' id='champtropa$tropaId'>no</p>";
+		}
+		
+		//Comprobamos si la tropa incluye un portaestandarte
+		if($tropaEst){
+			echo "
+				<p>
+					<span class='subtitle white'>Esta tropa incluye un portaestandarte.</span>
+					<span class='oculto' id='esttropa$tropaId'>si</span>
+				</p>
+			";
+		}
+		else{
+			echo "<p class='oculto' id='esttropa$tropaId'>no</p>";
+		}
+		
+		//Comprobamos si la tropa incluye un músico
+		if($tropaMusico){
+			echo "
+				<p>
+					<span class='subtitle white'>Esta tropa incluye un músico.</span>
+					<span class='oculto' id='musicotropa$tropaId'>si</span>
+				</p>
+			";
+		}
+		else{
+			echo "<p class='oculto' id='musicotropa$tropaId'>no</p>";
+		}
+		
+		echo "
+				<p>
+					<span class='subtitle'>Tipo de Tropa: </span>
+					<span class='white' id='tipotropa$tropaId'>$tropaTipo</span>
+				</p>
+				<p>
+					<span class='subtitle'>Unidades: </span>
+					<span class='white' id='miembrostropa$tropaId'>$tropaUnidades</span>
+				</p>
+				<p>
+					<span class='subtitle'>Puntos: </span>
+					<span class='white' id='ptstropa$tropaId'>$tropaPts</span>
+				</p>
+				<p>
+					<span class='subtitle'>Rango: </span>
+					<span class='white' id='rangotropa$tropaId'>$tropaRango</span>
+				</p>
+		";
+		
+		
+		echo"
+				<form class='oculto'>
+		";
+		//Comprobamos si la tropa pertenece al usuario
+		if($tropaEjercito){
+			echo "<input type='hidden' id='usertropa$tropaId' value='si'/>";
+		}
+		else{
+			echo "<input type='hidden' id='usertropa$tropaId' value='no'/>";
+		}
+		
+		//Comprobamos si la tropa esta en el campo de batalla
+		if($tropaEnCampo){
+			echo "<input type='hidden' id='encampotropa$tropaId' value='si'/>";
+		}
+		else{
+			echo "<input type='hidden' id='encampotropa$tropaId' value='no'/>";
+		}
+		echo "
+				</form>
+			</td>
+		";
+	}
+	
+	
+	/**
+	 * 
+	 */
+	function partida_datosConcretosTropa(
+			$tropaId
+			, $tropaHeridas
+			, $tropaEstado
+			, $tropaLatitud
+			, $tropaAltitud
+			, $tropaOrientacion
+			, $tropaUnidadesFila
+			, $tropaTropaAdoptivaId
+			, $tropaTropaBajoAtaqueId
+			, $tropaTropaBajoAtaqueFlanco
+		){
+		echo "
+			<td class='halfWidth'>
+				<p>
+					<span class='subtitle'>Eliminada: </span>
+					<span class='white' id='eliminadatropa$tropaId'>no</span>
+				</p>
+				<p>
+					<span class='subtitle'>Heridas: </span>
+					<span class='white' id='heridastropa$tropaId'>$tropaHeridas</span>
+				</p>
+				<p>
+					<span class='subtitle'>Estado: </span>
+					<span class='white' id='estadotropa$tropaId'>$tropaEstado</span>
+				</p>
+				<p>
+					<span class='subtitle'>Latitud: </span>
+					<span class='white' id='latitudtropa$tropaId'>$tropaLatitud</span>
+				</p>
+				<p>
+					<span class='subtitle'>Altitud: </span>
+					<span class='white' id='altitudtropa$tropaId'>$tropaAltitud</span>
+				</p>
+				<p>
+					<span class='subtitle'>Orientacion: </span>
+					<span class='white' id='orientaciontropa$tropaId'>$tropaOrientacion</span>
+				</p>
+				<p>
+					<span class='subtitle'>Unidades por fila: </span>
+					<span class='white' id='unidadesfilatropa$tropaId'>$tropaUnidadesFila</span>
+				</p>
+				<p>
+					<span class='subtitle'>Tropa Adoptiva: </span>
+					<span class='white' id='tropaadoptivatropa$tropaId'>--</span>
+				</p>
+				<p>
+					<span class='subtitle'>Tropa Bajo ataque: (pendiente)</span>
+				</p>
+				<p>
+					<span class='subtitle'>Flanco Atacado: (pendiente)</span>
+				</p>
+				<p class='oculto'>
+					<span id='tropaadoptivaidtropa$tropaId'>$tropaTropaAdoptivaId</span>
+					<span class='white' id='tropabajoataqueidtropa$tropaId'>$tropaTropaBajoAtaqueId</span>
+					<span class='white' id='tropabajoataqueflancotropa$tropaId'>$tropaTropaBajoAtaqueFlanco</span>
+				</p>
+			</td>
 		";
 	}
 ?>

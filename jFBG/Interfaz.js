@@ -113,7 +113,7 @@ function Interfaz(interfaz,columnaInfo,columnaPrincipal,contenidoPrincipal,conte
 		/**Redimensionamos los elementos scrolling**/
 		for(var i=0;i<elementosScrolling.length;i++){
 			elementosScrolling[i].style.position = "relative";
-			elementosScrolling[i].style.height = "150px";
+			elementosScrolling[i].style.height = "120px";
 			elementosScrolling[i].style.width = "100%";
 			//En caso de que el scrolling box incluya una barra de desplazamiento "Moving"
 			if(document.getElementById(elementosScrolling[i].id+"Moving") != null){
@@ -180,7 +180,7 @@ function Interfaz(interfaz,columnaInfo,columnaPrincipal,contenidoPrincipal,conte
 		/**Redimensionamos los elementos scrolling**/
 		for(var i=0;i<elementosScrolling.length;i++){
 			elementosScrolling[i].style.position = "relative";
-			elementosScrolling[i].style.height = "150px";
+			elementosScrolling[i].style.height = "180px";
 			elementosScrolling[i].style.width = "100%";
 			//En caso de que el scrolling box incluya una barra de desplazamiento "Moving"
 			if(document.getElementById(elementosScrolling[i].id+"Moving") != null){

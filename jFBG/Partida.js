@@ -172,7 +172,6 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	 * 
 	 */
 	function actualizarElementos(){
-		tropasIniciar();
 		situacionConstruir();
 		panelFaseConstruir();
 		
@@ -242,6 +241,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
         		}
     		}
     	}
+		tropasIniciar();
 	};
 	
 	
@@ -252,7 +252,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	function actualizarSituacion(){
 		//Actualizar variables
 		userOrder = document.getElementById("userorder").innerHTML;
-		fase = document.getElementById("fase").innerHTML;
+		fase = document.getElementById("ordenFase").value;
 		tropaSeleccionadaId = -1;
 		tropaSeleccionadaPreviaId = -1;
 		fichaTropa = document.getElementsByClassName("tropapropia");
@@ -307,7 +307,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		/**Establecemos la batalla.*/
 		batalla.width = Math.round(CAMPO_ANCHO*zoom);
 		batalla.height = Math.round(CAMPO_ALTO*zoom);
-		batalla.style.zIndex = "2";
+		batalla.style.zIndex = "4";
 		batalla.style.backgroundColor = "transparent";
 		batalla.style.cursor = "pointer";
 		
@@ -315,7 +315,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		terreno.width = Math.round(CAMPO_ANCHO*zoom);
 		terreno.height = Math.round(CAMPO_ALTO*zoom);
 		terreno.style.position = "absolute";
-		terreno.style.zIndex = "1";
+		terreno.style.zIndex = "3";
 		
 		/**Establecemos la situacion*/
 		situacion.fillStyle = "black";
@@ -350,44 +350,183 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	 * con lo que todo el contenido que fueramos a meter dentro aparecer� fuera y habr� una etiqueta de cierre adicional. 
 	 */
 	function panelFaseConstruir(){
+		console.log("fase:  "+fase);
+		document.getElementById(panelFase).innerHTML = "";
+		var elemento = document.createElement("div");
+		var contenido = "";
+		
 		switch(fase){
-			case "Despliegue":
+			case "0":
 				if(tropaSeleccionadaId != -1){
 					if(tropa[tropaBuscar(tropaSeleccionadaId)].getUser()){
 						if(tropaSeleccionadaPreviaId != -1 && tropaSeleccionadaPreviaId != tropaSeleccionadaId ){
 							if(tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser()){
-								document.getElementById("textofase").innerHTML = "<b id=\"seleccionActual\">"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b>";
-								document.getElementById("tablafase").innerHTML = "<tr><td><label for=\"combinar\">Combinar con "+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+" </label></td><td><input id=\"combinar\" name=\"combinar\" type=\"checkbox\" value=\"si\"/></td></tr>";
-								document.getElementById("tablafase").innerHTML += "<tr><td><label for=\"latitud\">Latitud: </label></td><td><input id=\"latitud\" name=\"latitud\" type=\"text\" value=\"\" size=\"4\" maxlength=\"4\"/></td></tr>";
-								document.getElementById("tablafase").innerHTML += "<tr><td><label for=\"altitud\">Altitud: </label></td><td><input id=\"altitud\" name=\"altitud\" type=\"text\" value=\"\" size=\"4\" maxlength=\"4\"/></td></tr>";
-								document.getElementById("tablafase").innerHTML += "<tr><td><label for=\"orientacion\">Orientacion: </label></td><td><input id=\"orientacion\" name=\"orientacion\" type=\"text\" value=\"\" size=\"4\" maxlength=\"3\"/></td></tr>";
-								document.getElementById("tablafase").innerHTML += "<tr><td><label for=\"anchofila\">Unidades por fila</label></td><td><select id=\"anchofila\" name=\"anchofila\"><option value=\"5\" select=\"selected\">5</option><option value=\"6\">6</option><option value=\"7\">7</option><option value=\"8\">8</option><option value=\"9\">9</option><option value=\"10\">10</option></select></td></tr>";
-								document.getElementById("textofase").innerHTML += "&nbsp; &nbsp; <input id=\"desplegar\" type=\"submit\" value=\"Desplegar\"/>";
+								contenido += "<input id='desplegar' type='submit' value='Desplegar'/>";
+								contenido += "<table>";
+								
+								contenido += "<tr>";
+								contenido += "<td>";
+								contenido += "<label for='combinar'>";
+								contenido += "Combinar con ";
+								contenido += tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre();
+								contenido += "</label>";
+								contenido += "</td>";
+								contenido += "<td>";
+								contenido += "<input id='combinar' name='combinar' type='checkbox' value='si'/>";
+								contenido += "</td>";
+								contenido += "</tr>";
+								
+								contenido += "<tr>";
+								contenido += "<td>";
+								contenido += "<label for='latitud'>Latitud: </label>";
+								contenido += "</td>";
+								contenido += "<td>";
+								contenido += "<input id='latitud' name='latitud' type='text' value='' size='4' maxlength='4'/>";
+								contenido += "</td>";
+								contenido += "</tr>";
+								
+								contenido += "<tr>";
+								contenido += "<td>";
+								contenido += "<label for='altitud'>Altitud: </label>";
+								contenido += "</td>";
+								contenido += "<td>";
+								contenido += "<input id='altitud' name='altitud' type='text' value='' size='4' maxlength='4'/>";
+								contenido += "</td>";
+								contenido += "</tr>";
+								
+								contenido += "<tr>";
+								contenido += "<td>";
+								contenido += "<label for='orientacion'>Orientacion: </label>";
+								contenido += "</td>";
+								contenido += "<td>";
+								contenido += "<input id='orientacion' name='orientacion' type='text' value='' size='4' maxlength='3'/>";
+								contenido += "</td>";
+								contenido += "</tr>";
+								
+								contenido += "<tr>";
+								contenido += "<td>";
+								contenido += "<label for='anchofila'>Unidades por fila</label>";
+								contenido += "</td>";
+								contenido += "<td>";
+								contenido += "<select id='anchofila' name='anchofila'>";
+								contenido += "<option value='5' select='selected'>5</option>";
+								contenido += "<option value='6'>6</option>";
+								contenido += "<option value='7'>7</option>";
+								contenido += "<option value='8'>8</option>";
+								contenido += "<option value='9'>9</option>";
+								contenido += "<option value='10'>10</option>";
+								contenido += "</select>";
+								contenido += "</td>";
+								contenido += "</tr>";
+								
+								contenido += "</table>";
 							}
 							else{
-								document.getElementById("textofase").innerHTML = "<b id=\"seleccionActual\">"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b>";
-								document.getElementById("tablafase").innerHTML == "<tr><td><label for=\"latitud\">Latitud: </label></td><td><input id=\"latitud\" name=\"latitud\" type=\"text\" value=\"\" size=\"4\" maxlength=\"4\"/></td></tr>";
-								document.getElementById("tablafase").innerHTML += "<tr><td><label for=\"altitud\">Altitud: </label></td><td><input id=\"altitud\" name=\"altitud\" type=\"text\" value=\"\" size=\"4\" maxlength=\"4\"/></td></tr>";
-								document.getElementById("tablafase").innerHTML += "<tr><td><label for=\"orientacion\">Orientacion: </label></td><td><input id=\"orientacion\" name=\"orientacion\" type=\"text\" value=\"\" size=\"4\" maxlength=\"3\"/></td></tr>";
-								document.getElementById("tablafase").innerHTML += "<tr><td><label for=\"anchofila\">Unidades por fila</label></td><td><select id=\"anchofila\" name=\"anchofila\"><option value=\"5\" select=\"selected\">5</option><option value=\"6\">6</option><option value=\"7\">7</option><option value=\"8\">8</option><option value=\"9\">9</option><option value=\"10\">10</option></select></td></tr>";
-								document.getElementById("textofase").innerHTML += "&nbsp; &nbsp; <input id=\"desplegar\" type=\"submit\" value=\"Desplegar\"/>";
+								contenido += "<input id='desplegar' type='submit' value='Desplegar'/>";
+								contenido += "<table>";
+								
+								contenido += "<tr>";
+								contenido += "<td>";
+								contenido += "<label for='latitud'>Latitud: </label>";
+								contenido += "</td>";
+								contenido += "<td>";
+								contenido += "<input id='latitud' name='latitud' type='text' value='' size='4' maxlength='4'/>";
+								contenido += "</td>";
+								contenido += "</tr>";
+								
+								contenido += "<tr>";
+								contenido += "<td>";
+								contenido += "<label for='altitud'>Altitud: </label>";
+								contenido += "</td>";
+								contenido += "<td>";
+								contenido += "<input id='altitud' name='altitud' type='text' value='' size='4' maxlength='4'/>";
+								contenido += "</td>";
+								contenido += "</tr>";
+								
+								contenido += "<tr>";
+								contenido += "<td>";
+								contenido += "<label for='orientacion'>Orientacion: </label>";
+								contenido += "</td>";
+								contenido += "<td>";
+								contenido += "<input id='orientacion' name='orientacion' type='text' value='' size='4' maxlength='3'/>";
+								contenido += "</td>";
+								contenido += "</tr>";
+								
+								contenido += "<tr>";
+								contenido += "<td>";
+								contenido += "<label for='anchofila'>Unidades por fila</label>";
+								contenido += "</td>";
+								contenido += "<td>";
+								contenido += "<select id='anchofila' name='anchofila'>";
+								contenido += "<option value='5' select='selected'>5</option>";
+								contenido += "<option value='6'>6</option>";
+								contenido += "<option value='7'>7</option>";
+								contenido += "<option value='8'>8</option>";
+								contenido += "<option value='9'>9</option>";
+								contenido += "<option value='10'>10</option>";
+								contenido += "</select>";
+								contenido += "</td>";
+								contenido += "</tr>";
+								
+								contenido += "</table>";
 							}
 						}
 						else{
-							document.getElementById("textofase").innerHTML = "<b id=\"seleccionActual\">"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b>";
-							document.getElementById("tablafase").innerHTML = "<tr><td><label for=\"latitud\">Latitud: </label></td><td><input id=\"latitud\" name=\"latitud\" type=\"text\" value=\"\" size=\"4\" maxlength=\"4\"/></td></tr>";
-							document.getElementById("tablafase").innerHTML += "<tr><td><label for=\"altitud\">Altitud: </label></td><td><input id=\"altitud\" name=\"altitud\" type=\"text\" value=\"\" size=\"4\" maxlength=\"4\"/></td></tr>";
-							document.getElementById("tablafase").innerHTML += "<tr><td><label for=\"orientacion\">Orientacion: </label></td><td><input id=\"orientacion\" name=\"orientacion\" type=\"text\" value=\"\" size=\"4\" maxlength=\"3\"/></td></tr>";
-							document.getElementById("tablafase").innerHTML += "<tr><td><label for=\"anchofila\">Unidades por fila</label></td><td><select id=\"anchofila\" name=\"anchofila\"><option value=\"5\" select=\"selected\">5</option><option value=\"6\">6</option><option value=\"7\">7</option><option value=\"8\">8</option><option value=\"9\">9</option><option value=\"10\">10</option></select></td></tr>";
-							document.getElementById("textofase").innerHTML += "&nbsp; &nbsp; <input id=\"desplegar\" type=\"submit\" value=\"Desplegar\"/>";
+							contenido += "<input id='desplegar' type='submit' value='Desplegar'/>";
+							contenido += "<table>";
+							
+							contenido += "<tr>";
+							contenido += "<td>";
+							contenido += "<label for='latitud'>Latitud: </label>";
+							contenido += "</td>";
+							contenido += "<td>";
+							contenido += "<input id='latitud' name='latitud' type='text' value='' size='4' maxlength='4'/>";
+							contenido += "</td>";
+							contenido += "</tr>";
+							
+							contenido += "<tr>";
+							contenido += "<td>";
+							contenido += "<label for='altitud'>Altitud: </label>";
+							contenido += "</td>";
+							contenido += "<td>";
+							contenido += "<input id='altitud' name='altitud' type='text' value='' size='4' maxlength='4'/>";
+							contenido += "</td>";
+							contenido += "</tr>";
+							
+							contenido += "<tr>";
+							contenido += "<td>";
+							contenido += "<label for='orientacion'>Orientacion: </label>";
+							contenido += "</td>";
+							contenido += "<td>";
+							contenido += "<input id='orientacion' name='orientacion' type='text' value='' size='4' maxlength='3'/>";
+							contenido += "</td>";
+							contenido += "</tr>";
+							
+							contenido += "<tr>";
+							contenido += "<td>";
+							contenido += "<label for='anchofila'>Unidades por fila</label>";
+							contenido += "</td>";
+							contenido += "<td>";
+							contenido += "<select id='anchofila' name='anchofila'>";
+							contenido += "<option value='5' select='selected'>5</option>";
+							contenido += "<option value='6'>6</option>";
+							contenido += "<option value='7'>7</option>";
+							contenido += "<option value='8'>8</option>";
+							contenido += "<option value='9'>9</option>";
+							contenido += "<option value='10'>10</option>";
+							contenido += "</select>";
+							contenido += "</td>";
+							contenido += "</tr>";
+							
+							contenido += "<table>";
 						}
 					}
 					else{
-						document.getElementById("textofase").innerHTML = "<p>Por favor, elija una tropa en el panel de control.</p>";
+						contenido += "<p>Por favor, elija una tropa.</p>";
 					}
 				}
 				else{
-					document.getElementById("textofase").innerHTML = "<p>Por favor, elija una tropa en el panel de control.</p>";
+					contenido += "<p>Por favor, elija una tropa.</p>";
 				}
 			break;
 			
@@ -401,19 +540,19 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 								break;
 							case 1:
 								document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> ve a la tropa enmiga <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> de frente.<br/>";
-								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id=\"cargar\" type=\"submit\" value=\"Cargar\"/>";
+								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
 								break;
 							case 2:
 								document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> ve el flanco izquierdo de la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b>.<br/>";
-								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id=\"cargar\" type=\"submit\" value=\"Cargar\"/>";
+								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
 								break;
 							case 3:
 								document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> ve el flanco derecho de la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b>.<br/>";
-								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id=\"cargar\" type=\"submit\" value=\"Cargar\"/>";
+								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
 								break;
 							case 4:
 								document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> ve la retauardia de la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b>.<br/>";
-								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id=\"cargar\" type=\"submit\" value=\"Cargar\"/>";
+								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
 								break;
 							default:
 								document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> no puede ver a la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b>.";
@@ -427,19 +566,19 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 							break;
 							case 1:
 								document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> ve a la tropa enmiga <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> de frente.<br/>";
-								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id=\"cargar\" type=\"submit\" value=\"Cargar\"/>";
+								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
 								break;
 							case 2:
 								document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> ve el flanco izquierdo de la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b>.<br/>";
-								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id=\"cargar\" type=\"submit\" value=\"Cargar\"/>";
+								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
 								break;
 							case 3:
 								document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> ve el flanco derecho de la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b>.<br/>";
-								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id=\"cargar\" type=\"submit\" value=\"Cargar\"/>";
+								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
 								break;
 							case 4:
 								document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> ve la retauardia de la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b>.<br/>";
-								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id=\"cargar\" type=\"submit\" value=\"Cargar\"/>";
+								document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
 								break;
 							default:
 								document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> no puede ver a la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b>.";
@@ -458,6 +597,9 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			
 			default: document.getElementById(panelOut).innerHTML = "Fantasy Battle Games";
 		}
+		
+		elemento.innerHTML = contenido;
+		document.getElementById(panelFase).appendChild(elemento);
 	};
 
 		
@@ -1096,7 +1238,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		cursorPulsado = false;
 		clickEnTropa = false;
 		switch(fase){
-			case "Despliegue":
+			case "0":
 				if(tropaSeleccionadaId != -1){
 					if(tropaColision(tropaSeleccionadaId)){
 						tropa[tropaBuscar(tropaSeleccionadaId)].retirar();
@@ -1129,11 +1271,11 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		if(cursorPulsado){
 			if(clickEnTropa){
 				switch(fase){
-					case "Despliegue":
+					case "0":
 						if(tropaSeleccionadaId != -1){
 							if(tropa[tropaBuscar(tropaSeleccionadaId)].getUser()){
-								if(document.getElementById(tropaSeleccionadaId+"tropaadoptivaid").innerHTML != "-1"){
-									tropa[tropaBuscar(document.getElementById(tropaSeleccionadaId+"tropaadoptivaid").innerHTML)].sacar(tropaSeleccionadaId);
+								if(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML != ""){
+									tropa[tropaBuscar(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML)].sacar(tropaSeleccionadaId);
 								}
 								tropa[tropaBuscar(tropaSeleccionadaId)].arrastrar(posicionCursor(e).x,posicionCursor(e).y,CAMPO_ANCHO,CAMPO_ALTO,userOrder);
 								situacionConstruir();
@@ -1214,7 +1356,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		clickEnTropa = false;
 		
 		switch(fase){
-			case "Despliegue":
+			case "0":
 				if(tropaSeleccionadaId != -1){
 					if(tropaColision(tropaSeleccionadaId)){
 						tropa[tropaBuscar(tropaSeleccionadaId)].retirar();
@@ -1272,16 +1414,16 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		}
 		else{
 			switch(fase){
-				case "Despliegue": /**En la fase de despliegue, al hacer doble click:*/
+				case "0": /**En la fase de despliegue, al hacer doble click:*/
 					if(tropaSeleccionadaId != -1){
 						if(tropa[tropaBuscar(tropaSeleccionadaId)].getUser()){
 							/**Sacamos las unidades de la unidad adoptiva en caso de que se encontraran en una.*/
-							if(document.getElementById(tropaSeleccionadaId+"tropaadoptivaid").innerHTML != "-1"){
-								tropa[tropaBuscar(document.getElementById(tropaSeleccionadaId+"tropaadoptivaid").innerHTML)].sacar(tropaSeleccionadaId);
+							if(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML != ""){
+								tropa[tropaBuscar(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML)].sacar(tropaSeleccionadaId);
 							}
 							/**Y la desplegamos en la posicion del dobleclick.*/
 							tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(posicionCursor(e).x,posicionCursor(e).y,0,5,CAMPO_ANCHO,CAMPO_ALTO,userOrder);
-							document.getElementById(tropaSeleccionadaId+"tropaadoptiva").innerHTML = "--";
+							document.getElementById("tropaadoptiva"+tropaSeleccionadaId).innerHTML = "--";
 							/**Si la tropa choca con otra, la retiramos.*/
 							if(tropaColision(tropaSeleccionadaId)){
 								tropa[tropaBuscar(tropaSeleccionadaId)].retirar();
@@ -1334,7 +1476,6 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	 */
 	function seleccionarEnPanel(e){
 		e.preventDefault();
-		console.log(e.target.id);
 		tropaSeleccionar(e.target.id.substr(8))
 	};
 		
@@ -1364,9 +1505,12 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		/**Prevenimos los efectos por defecto del evento.*/
 		e.preventDefault();
 		switch(fase){
-			case "Despliegue": /**El panel de fase "Despliegue" */
-				/**contiene los elementos necesarios para el despliegue.*
-				 *Las unidades se desplegaran en funcion de lso datos aportados.*/
+			case "0": 
+				/**
+				 * El panel de fase "Despliegue"
+				 * contiene los elementos necesarios para el despliegue.
+				 * Las unidades se desplegaran en funcion de lso datos aportados.
+				 */
 				if(tropaSeleccionadaId != -1){
 					
 					if(tropa[tropaBuscar(tropaSeleccionadaId)].getUser()){
@@ -1406,7 +1550,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 								if(tropa[tropaBuscar(tropaSeleccionadaId)].getRangoBajo()>4){
 									tropa[tropaBuscar(tropaPadre)].adoptar(tropaSeleccionadaId);
 									tropa[tropaBuscar(tropaSeleccionadaId)].incorporar(tropaPadre);
-									document.getElementById(tropaSeleccionadaId+"tropaadoptiva").innerHTML = tropa[tropaBuscar(tropaPadre)].getNombre();
+									document.getElementById("tropaadoptiva"+tropaSeleccionadaId).innerHTML = tropa[tropaBuscar(tropaPadre)].getNombre();
 								}
 								else{
 									document.getElementById(panelOut).innerHTML = "Tropa no desplegada. Solo los personajes se pueden unir a otras tropas.";
@@ -1417,8 +1561,8 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 							}
 						}
 						else{
-							if(document.getElementById(tropaSeleccionadaId+"tropaadoptivaid").innerHTML != "-1"){
-								tropa[tropaBuscar(document.getElementById(tropaSeleccionadaId+"tropaadoptivaid").innerHTML)].sacar(tropaSeleccionadaId);
+							if(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML != ""){
+								tropa[tropaBuscar(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML)].sacar(tropaSeleccionadaId);
 							}
 							tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(x,y,angle,anchoFila,CAMPO_ANCHO,CAMPO_ALTO,userOrder);
 							if(tropaColision(tropaSeleccionadaId)){

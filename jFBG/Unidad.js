@@ -7,23 +7,25 @@
  * @author Daniel Mart�n D�az
  * @version 1.1 (23/07/2014)
  */
-function Unidad(unidadReferencia,rango,indice){
+function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 	/*VARIABLES*/
 	//Car�cter�sticas
-	var peana = 40;
+	var fichasComponentes = document.getElementsByClassName(classNameFichas);
+	var componente = [];
 	
-	var representada = document.getElementById("representada"+unidadReferencia).innerHTML;
-	var rango = document.getElementById("rango"+unidadReferencia).innerHTML;
-	
-	//Atributos
-	var m = parseInt(document.getElementById("movimiento"+unidadReferencia).innerHTML);
-	
+	iniciarComponentes();
 	
 	/*GETTERS*/
 	/**
 	 * 
 	 */
 	this.getPeana = function(){
+		var peana = 0;
+		for(var i=0; i<componente.length; i++){
+			if(componente[i].getRepresentada()){
+				peana += componente[i].getPeana();
+			}
+		}
 		return parseInt(peana);
 	};
 	
@@ -31,19 +33,48 @@ function Unidad(unidadReferencia,rango,indice){
 	 * 
 	 */
 	this.getRango = function(){
-		return parseInt(rango);
+		var rango = 0;
+		for(var i=0; i<componente.length; i++){
+			if(componente[i].getRango() > rango){
+				rango = componente[i].getRango();
+			}
+		}
+		return parseInt(rango)+subirRango;
 	};
 	
 	/**
 	 * 
 	 */
 	this.getMovimiento = function(){
-		if(representada=="si") return m*20;
-		else return Number.MAX_VALUE;
+		/**
+		 * En caso de haber montura o bestia de tiro, siempre se toma el movimiento de esta.
+		 * En caso contrario se toma el menor de todos.
+		 */
+		var hayMontura = false;
+		var movimiento = Number.MAX_VALUE;
+		
+		for(var i=0; i<componente.length && !hayMontura; i++){
+			if(componente[i].getMovimiento().tipo == "Montura"){
+				hayMontura = true;
+				movimiento = componente[i].getMovimiento().movimiento;
+			}
+			else{
+				if(componente[i].getMovimiento().movimiento < movimiento){
+					movimiento = componente[i].getMovimiento().movimiento;
+				}
+			}
+		}
+		
+		return movimiento;
 	};
 	
 	/*M�TODOS INTERNOS*/
-	
+	function iniciarComponentes(){
+		for(var i=0 ; i<fichasComponentes.length ; i++){
+			componente[i] = new Componente("componente"+fichasComponentes[i].innerHTML+tropaId, fichasComponentes[i].innerHTML);
+			console.log(componente[i].getPeana()+" - "+componente[i].getRepresentada());
+		}
+	}
 		
 	
 	/*METODOS DE INTERACTUACION*/
@@ -51,24 +82,16 @@ function Unidad(unidadReferencia,rango,indice){
 	 * 
 	 */
 	this.posicionar = function(x,y,tipo,situacion,zoom,user){
-		if(representada=="si"){
-			situacion.linewidth=4;
-			
-			if(user){
-				situacion.fillStyle = "blue";
-			}
-			else{
-				situacion.fillStyle = "red";
-			}
-			
-			if(tipo=="caballeria"||tipo=="carro"){
-				situacion.fillRect(x,y,peana*zoom,peana*2*zoom);
-				situacion.strokeRect(x,y,peana*zoom,peana*2*zoom);
-			}
-			else{
-				situacion.fillRect(x,y,peana*zoom,peana*zoom);
-				situacion.strokeRect(x,y,peana*zoom,peana*zoom);
-			}
+		situacion.linewidth=4;
+		
+		if(user){
+			situacion.fillStyle = "blue";
 		}
+		else{
+			situacion.fillStyle = "red";
+		}
+			
+		situacion.fillRect(x, y, this.getPeana()*zoom, this.getPeana()*zoom);
+		situacion.strokeRect(x, y, this.getPeana()*zoom, this.getPeana()*zoom);
 	}
 };

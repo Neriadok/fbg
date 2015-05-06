@@ -20,6 +20,7 @@
 		<link rel='stylesheet' type='text/css' href='css/partida.css' />
 		<script type="text/javascript" src="jFBG/AsinCronos.js"></script>
 		<script type="text/javascript" src="jFBG/Interfaz.js"></script>
+		<script type="text/javascript" src="jFBG/Componente.js"></script>
 		<script type="text/javascript" src="jFBG/Unidad.js"></script>
 		<script type="text/javascript" src="jFBG/Tropa.js"></script>
 		<script type="text/javascript" src="jFBG/Partida.js"></script>

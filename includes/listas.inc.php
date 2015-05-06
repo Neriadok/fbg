@@ -1141,7 +1141,7 @@
 						$sentencia -> store_result();
 			
 						//Segundo generamos los caballos
-						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,2,1,false,?,?,?,?,?,?,?,?,?,true,false,false)");
+						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,2,1,true,?,?,?,?,?,?,?,?,?,true,false,false)");
 						$sentencia -> bind_param(
 								'issiiiiiiiii'
 								, $uid
@@ -1218,7 +1218,7 @@
 						$sentencia -> store_result();
 			
 						//Segundo generamos los caballos
-						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,2,1,false,?,?,?,?,?,?,?,?,?,true,false,false)");
+						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,2,1,true,?,?,?,?,?,?,?,?,?,true,false,false)");
 						$sentencia -> bind_param(
 								'issiiiiiiiii'
 								, $uid
@@ -1254,7 +1254,7 @@
 						//Tratamos las unidades una a una
 						//Cada unidad se compone de un carro, dos soldados y dos caballos
 						//Primero generamos los soldados
-						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,1,2,false,?,?,?,?,?,?,?,?,?,false,false,true)");
+						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,1,2,true,?,?,?,?,?,?,?,?,?,false,false,true)");
 						$sentencia -> bind_param(
 								'issiiiiiiiii'
 								, $uid
@@ -1299,7 +1299,7 @@
 						//Tratamos las unidades una a una
 						//Cada unidad se compone de un carro, dos soldados y dos caballos
 						//Primero generamos los soldados
-						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,1,2,false,?,?,?,?,?,?,?,?,?,false,false,true)");
+						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,1,2,true,?,?,?,?,?,?,?,?,?,false,false,true)");
 						$sentencia -> bind_param(
 								'issiiiiiiiii'
 								, $uid

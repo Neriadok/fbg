@@ -18,7 +18,8 @@ function Tropa(tropaId,panelOut){
 	//Situacion
 	var selected = false;
 	var eliminada = document.getElementById("eliminada"+tropaId).innerHTML;
-	var enCampo = document.getElementById("encampo"+tropaId).innerHTML;
+	var enCampo = document.getElementById("encampo"+tropaId).value;
+	var user = document.getElementById("user"+tropaId).value;
 	var estado = document.getElementById("estado"+tropaId).innerHTML;
 	var latitud = parseInt(document.getElementById("latitud"+tropaId).innerHTML);
 	var altitud = parseInt(document.getElementById("altitud"+tropaId).innerHTML);
@@ -30,9 +31,9 @@ function Tropa(tropaId,panelOut){
 	
 	//Miembros
 	var unidad = [];
+	var fichasUnidades = [];
 	var tropaAdoptadaId = [];
-	
-	//iniciarUnidades();
+	iniciarUnidades();
 	
 	
 	
@@ -217,16 +218,6 @@ function Tropa(tropaId,panelOut){
 		return nFilasIncompletas;
 	};
 	
-	/**
-	 * M�todo que nos indica si la unidad pertenece al usuario de la partida o a su adversario.
-	 * 
-	 * @return true si pertenece al usuario.
-	 */
-	this.getUser = function(){
-		if(document.getElementById("user"+tropaId).value == "si") return true;
-		else return false;
-	};
-	
 		
 	
 	/*M�TODOS INTERNOS*/
@@ -236,15 +227,16 @@ function Tropa(tropaId,panelOut){
 	 */
 	function actualizar(){
 		eliminada = document.getElementById("eliminada"+tropaId).innerHTML;
-		enCampo = document.getElementById("encampo"+tropaId).innerHTML;
+		enCampo = document.getElementById("encampo"+tropaId).value;
 		estado = document.getElementById("estado"+tropaId).innerHTML;
 		latitud = parseInt(document.getElementById("latitud"+tropaId).innerHTML);
 		altitud = parseInt(document.getElementById("altitud"+tropaId).innerHTML);
 		orientacion = parseInt(document.getElementById("orientacion"+tropaId).innerHTML)*Math.PI/180;
 		unidadesFila = document.getElementById("unidadesfila"+tropaId).innerHTML;
 		tropaAdoptivaId = document.getElementById("tropaadoptivaid"+tropaId).innerHTML;
-		tropaBajoAtaque = document.getElementById("tropabajoataqueid"+tropaId).innerHTML;
-		//iniciarUnidades();
+		tropaBajoAtaqueId = document.getElementById("tropabajoataqueid"+tropaId).innerHTML;
+		tropaBajoAtaqueFlanco = document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML;
+		iniciarUnidades();
 	};
 	
 	/**
@@ -254,14 +246,15 @@ function Tropa(tropaId,panelOut){
 		//Vaciamos el array
 		unidad = [];
 		var nUnidad = 0;
+		
 		//Iniciamos las unidades propias
 		for(;nUnidad<miembros;nUnidad++){
-			unidad[nUnidad] = new  Unidad("unidad"+(nUnidad+1),selected);
+			unidad[nUnidad] = new  Unidad(tropaId, "ficha"+tropaId, selected, i, 0);
 		}
 		//Iniciamos las unidades adoptadas
 		for(var i=0;i<tropaAdoptadaId.length;i++){
-			for(var j=0;j<document.getElementById("miembros"+tropaAdoptadaId[i]).innerHTML;j++,nUnidad++){
-				unidad[nUnidad] = new  Unidad(tropaAdoptadaId[i]+"unidad"+(j+1),selected);
+			for(var j=0; j<document.getElementById("miembros"+tropaAdoptadaId[i]).innerHTML; j++,nUnidad++){
+				unidad[nUnidad] = new  Unidad(tropaAdoptadaId[i], "ficha"+tropaAdoptadaId[i], selected, j, 0);
 			}
 		}
 		if(enCampo == "si"){
@@ -272,7 +265,6 @@ function Tropa(tropaId,panelOut){
 				unidadesFila=unidad.length;
 			}
 		}
-			
 		
 		ordenarUnidades();
 	};
@@ -297,6 +289,13 @@ function Tropa(tropaId,panelOut){
 				}
 			}
 		}
+		
+		/**
+		 * Tras haber organizado las unidades 
+		 * vamos retirando en orden las de menor rango
+		 * en función de las heridas de la tropa.
+		 */
+		//retirarUnidades();
 	};
 	
 	/**
@@ -362,6 +361,8 @@ function Tropa(tropaId,panelOut){
 	
 	/**
 	 * M�todo que establece el movimiento de una tropa.
+	 * Una tropa se mueve tanto como el más lento de sus integrantes.
+	 * 
 	 * @return devolver� 0 si no existen unidades que muevan. 
 	 * En caso contrario devolver� el menor movimiento de las unidades de la tropa.
 	 */
@@ -486,6 +487,7 @@ function Tropa(tropaId,panelOut){
 	 * M�todo que ejecuta los procesos cuando esta tropa es seleccionada.
 	 */
 	this.seleccionar = function(){
+		console.log("Seleccionada tropa "+tropaId);
 		selected=true;
 		document.getElementById(panelOut).innerHTML="Tropa <b>"+nombre+"</b> seleccionada.";
 	};
@@ -504,7 +506,7 @@ function Tropa(tropaId,panelOut){
 	 * @param angle orientacion en que se despliega la tropa.
 	 */
 	this.desplegar = function(x,y,angle,ancho,campoAncho,campoAlto,userOrder){
-		if(eliminada=="no"){
+		if(eliminada!="si"){
 			if(x<10){
 				x=10;
 			}
@@ -514,7 +516,7 @@ function Tropa(tropaId,panelOut){
 			if(y<10){
 				y=10;
 			}
-			if(userOrder=="desafiante"){
+			if(userOrder=="Desafiador"){
 				if(y>campoAlto/4){
 					y=campoAlto/4;
 				}
@@ -538,11 +540,12 @@ function Tropa(tropaId,panelOut){
 			document.getElementById("latitud"+tropaId).innerHTML = x;
 			document.getElementById("altitud"+tropaId).innerHTML = y;
 			document.getElementById("orientacion"+tropaId).innerHTML = angle;
-			document.getElementById("encampo"+tropaId).innerHTML = "si";
+			document.getElementById("encampo"+tropaId).value = "si";
 			document.getElementById("unidadesfila"+tropaId).innerHTML = ancho;
-			document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "-1";
+			document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "";
 			actualizar();
 			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" desplegada en "+latitud+"x "+altitud+"y.<br/>Orientacion: "+parseInt(orientacion*180/Math.PI);
+			console.log("Tropa "+nombre+" desplegada en "+latitud+"x "+altitud+"y.<br/>Orientacion: "+parseInt(orientacion*180/Math.PI));
 		}
 	};
 	
@@ -550,7 +553,7 @@ function Tropa(tropaId,panelOut){
 	 * M�todo que arrastra una tropa sin alterar su orientacion
 	 */
 	this.arrastrar = function(x,y,campoAncho,campoAlto,userOrder){
-		if(eliminada=="no"){
+		if(eliminada != "si"){
 			if(x<10){
 				x=10;
 			}
@@ -576,8 +579,8 @@ function Tropa(tropaId,panelOut){
 
 			document.getElementById("latitud"+tropaId).innerHTML = x;
 			document.getElementById("altitud"+tropaId).innerHTML = y;
-			document.getElementById("encampo"+tropaId).innerHTML = "si";
-			document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "-1";
+			document.getElementById("encampo"+tropaId).value = "si";
+			document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "";
 			actualizar();
 			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" movida a "+latitud+"x "+altitud+"y.";
 		}
@@ -590,7 +593,7 @@ function Tropa(tropaId,panelOut){
 	 * @param zoom proporcion de las medidas del dibujo.
 	 */
 	this.posicionar = function(situacion,zoom){
-		if(enCampo=="si" && eliminada=="no" && tropaAdoptivaId == -1){
+		if(enCampo == "si" && eliminada != "si" && tropaAdoptivaId == ""){
 						
 			//Modificamos el contexto
 			situacion.translate(latitud*zoom,altitud*zoom);
@@ -611,6 +614,12 @@ function Tropa(tropaId,panelOut){
 				situacion.strokeStyle="black";
 			}
 			situacion.fillStyle = "silver";
+
+			console.log("anchoColumna "+anchoColumna);
+			console.log("altofila "+altoFila());
+			console.log("filas incompletas "+this.getFilasIncompletas());
+			console.log("Tropa de "+anchoColumna*unidadesFila*zoom+"x"+altoFila()*this.getFilasIncompletas()*zoom);
+			
 			situacion.fillRect(0,0,anchoColumna*unidadesFila*zoom,altoFila()*this.getFilasIncompletas()*zoom);
 			
 			//Disponemos las tropas una a una.
@@ -627,6 +636,8 @@ function Tropa(tropaId,panelOut){
 			//Reestablecemos el contexto
 			situacion.rotate(orientacion*(-1));
 			situacion.translate(latitud*zoom*(-1),altitud*zoom*(-1));
+
+			console.log(nombre+" posicionada.");
 		}
 	};
 	
@@ -639,7 +650,7 @@ function Tropa(tropaId,panelOut){
 		document.getElementById("latitud"+tropaId).innerHTML = "--";
 		document.getElementById("altitud"+tropaId).innerHTML = "--";
 		document.getElementById("orientacion"+tropaId).innerHTML = "--";
-		document.getElementById("encampo"+tropaId).innerHTML = "si";
+		document.getElementById("encampo"+tropaId).value = "si";
 		document.getElementById("unidadesfila"+tropaId).innerHTML = "--";
 		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = tropaPadre;
 		actualizar();
@@ -734,9 +745,9 @@ function Tropa(tropaId,panelOut){
 		document.getElementById("latitud"+tropaId).innerHTML = "--";
 		document.getElementById("altitud"+tropaId).innerHTML = "--";
 		document.getElementById("orientacion"+tropaId).innerHTML = "--";
-		document.getElementById("encampo"+tropaId).innerHTML = "no";
+		document.getElementById("encampo"+tropaId).value = "no";
 		document.getElementById("unidadesfila"+tropaId).innerHTML = "--";
-		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "-1";
+		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "";
 		actualizar();
 		document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" retirada del campo.";
 	};

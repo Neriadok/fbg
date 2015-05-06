@@ -71,9 +71,10 @@
 
 #datosSeleccion{
 	position:relative;
+	padding-top: 5px;
 	padding-left: 1%;
 	padding-right: 1%;
-	height: 210px;
+	height: 200px;
 	width: 38%;
 	margin-left: 30%;
 	margin-top: -220px;
@@ -83,6 +84,7 @@
 
 #panelfase{
 	position:relative;
+	padding-top: 5px;
 	padding-left: 1%;
 	padding-right: 1%;
 	height: 220px;
@@ -97,14 +99,19 @@
 	height: 30px;
 }
 
-.tropa{
-	width: 100%;
-}
-
 .selectorTropa{
-	width:90%;
+	width:85%;
 }
 
 .columnaUnidades{
-	width: 10%;
+	width: 15%;
+}
+
+.halfWidth{
+	width: 50%;
+}
+
+.tropaContent{
+	width: 100%;
+	height: auto;
 }
