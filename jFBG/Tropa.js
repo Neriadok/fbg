@@ -14,6 +14,7 @@ function Tropa(tropaId,panelOut){
 	var nombre = document.getElementById("nombre"+tropaId).innerHTML;
 	var miembros = parseInt(document.getElementById("miembros"+tropaId).innerHTML);
 	var tipo = document.getElementById("tipo"+tropaId).innerHTML;
+	var larga = false;
 	
 	//Situacion
 	var selected = false;
@@ -39,14 +40,14 @@ function Tropa(tropaId,panelOut){
 	
 	/*GETTERS*/
 	/**
-	 * M�todo get del atributo id
+	 * Método get del atributo id
 	 */
 	this.getId = function(){
 		return id;
 	};
 	
 	/**
-	 * M�todo get del atributo nombre.
+	 * Método get del atributo nombre.
 	 * 
 	 * @return nombre de la tropa.
 	 */
@@ -55,7 +56,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo get del atributo user.
+	 * Método get del atributo user.
 	 * 
 	 * @return true si user == "si".
 	 */
@@ -65,7 +66,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo get del atributo enCampo.
+	 * Método get del atributo enCampo.
 	 * 
 	 * @return true si enCampo == "si".
 	 */
@@ -75,7 +76,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo get del atributo estado.
+	 * Método get del atributo estado.
 	 * 
 	 * @return true si enCampo == "si".
 	 */
@@ -84,7 +85,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo get que retorna el rango mas bajo de las unidades
+	 * Método get que retorna el rango mas bajo de las unidades
 	 * 
 	 * @return rango mas bajo.
 	 */
@@ -99,7 +100,22 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo get que retorna valores distintos en funcion de por que frentes combata.
+	 * Método get que retorna el rango mas alto de las unidades
+	 * 
+	 * @return rango mas alto.
+	 */
+	this.getRangoAlto = function(){
+		var max=0;
+		for(var i=0;i<unidad.length;i++){
+			if(unidad[i].getRango()>max){
+				max=unidad[i].getRango();
+			}
+		}
+		return max;
+	};
+	
+	/**
+	 * Método get que retorna valores distintos en funcion de por que frentes combata.
 	 * 
 	 * @return el c�digo devuelto se forma por 4 n�meros (vsdr)
 	 * Un valor igual a 0 indica que no hay combate por eese frente.
@@ -116,7 +132,7 @@ function Tropa(tropaId,panelOut){
 	}
 	
 	/**
-	 * M�todo get que retorna las coordenadas del punto vanguardiaSiniestra.
+	 * Método get que retorna las coordenadas del punto vanguardiaSiniestra.
 	 * 
 	 * @return coordenadas X e Y de la esquina.
 	 */
@@ -132,7 +148,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo get que retorna las coordenadas del punto vanguardiaDiestra.
+	 * Método get que retorna las coordenadas del punto vanguardiaDiestra.
 	 * 
 	 * @return coordenadas X e Y de la esquina.
 	 */
@@ -152,7 +168,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo get que retorna las coordenadas del punto vanguardiaDiestra.
+	 * Método get que retorna las coordenadas del punto vanguardiaDiestra.
 	 * 
 	 * @return coordenadas X e Y de la esquina.
 	 */
@@ -172,7 +188,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo get que retorna las coordenadas del punto retaguardiaDiestra.
+	 * Método get que retorna las coordenadas del punto retaguardiaDiestra.
 	 * 
 	 * @return coordenadas X e Y de la esquina.
 	 */
@@ -192,7 +208,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo get que retorna la orientacion en grados de la unidad.
+	 * Método get que retorna la orientacion en grados de la unidad.
 	 * 
 	 * @return devuelve un integer
 	 */
@@ -200,9 +216,18 @@ function Tropa(tropaId,panelOut){
 		return orientacion*180/Math.PI;
 	};
 	
+	/**
+	 * Método get que retorna el numero de unidades por fila.
+	 * 
+	 * @return devuelve un integer
+	 */
+	this.getAnchoFila = function(){
+		return unidadesFila;
+	};
+	
 	
 	/**
-	 * M�todo get que retorna el numero de filas no completas de la tropa.
+	 * Método get que retorna el numero de filas no completas de la tropa.
 	 * 
 	 * @return numero de filas incompletas.
 	 */
@@ -222,7 +247,7 @@ function Tropa(tropaId,panelOut){
 	
 	/*M�TODOS INTERNOS*/
 	/**
-	 * M�todo que tras modificar los valores del panel de entrada (panelIn)
+	 * Método que tras modificar los valores del panel de entrada (panelIn)
 	 * actualiza los atributos de la tropa.
 	 */
 	function actualizar(){
@@ -240,7 +265,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo que nos inicia las unidades de juego.
+	 * Método que nos inicia las unidades de juego.
 	 */
 	function iniciarUnidades(){
 		//Vaciamos el array
@@ -270,7 +295,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo que ordena las unidades de la tropa en funcion de su rango.
+	 * Método que ordena las unidades de la tropa en funcion de su rango.
 	 * Usamos el metodo de la burbuja con switch.
 	 */
 	function ordenarUnidades(){
@@ -299,7 +324,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo para comprobar el tama�o de peana mas grande
+	 * Método para comprobar el tama�o de peana mas grande
 	 * dentro de las unidades de la tropa.
 	 * 
 	 * @return tama�o mas grande de peana.
@@ -307,22 +332,27 @@ function Tropa(tropaId,panelOut){
 	function maximoPeana(){
 		var max=0;
 		for(var i=0;i<unidad.length;i++){
-			if(unidad[i].getPeana()>max){
-				max=unidad[i].getPeana();
+			
+			if(unidad[i].getPeana().peana >max){
+				max=unidad[i].getPeana().peana;
+			}
+			
+			if(unidad[i].getPeana().larga){
+				larga = true;
 			}
 		}
 		return max;
 	};
 	
 	/**
-	 * M�todo para devolver el alto de las filas.
+	 * Método para devolver el alto de las filas.
 	 * 
 	 * @return alto de la fila.
 	 */
 	function altoFila(){
 		var altoFila;
 		
-		if(tipo=="caballeria"||tipo=="carro"){
+		if(larga){
 			altoFila = maximoPeana()*2;
 		}
 		else{
@@ -332,7 +362,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo para devolver el ancho y el alto de la tropa.
+	 * Método para devolver el ancho y el alto de la tropa.
 	 * 
 	 * @return dimension del alto y dimension del ancho.
 	 */
@@ -360,7 +390,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo que establece el movimiento de una tropa.
+	 * Método que establece el movimiento de una tropa.
 	 * Una tropa se mueve tanto como el más lento de sus integrantes.
 	 * 
 	 * @return devolver� 0 si no existen unidades que muevan. 
@@ -382,7 +412,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo que comprueba que un punto est� contenido en una recta,
+	 * Método que comprueba que un punto est� contenido en una recta,
 	 * por encima, o por debajo.
 	 * 
 	 * @param xP coordenada x del punto.
@@ -427,7 +457,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo que calcula la distancia entre dos puntos.
+	 * Método que calcula la distancia entre dos puntos.
 	 * 
 	 * @param x1 coordenada x del punto 1.
 	 * @param y1 coordenada y del punto 1.
@@ -443,7 +473,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo que comprueba que un punto est� contenido en una recta,
+	 * Método que comprueba que un punto est� contenido en una recta,
 	 * por encima, o por debajo.
 	 * 
 	 * @param xP coordenada x del punto.
@@ -465,7 +495,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo que comprieba si un punto est� en visi�n directa.
+	 * Método que comprieba si un punto est� en visi�n directa.
 	 * Es aconsejable establecer primero que est� en linea de visi�n.
 	 * @param x,y Coordenadas del punto a comprobar.
 	 */
@@ -484,22 +514,22 @@ function Tropa(tropaId,panelOut){
 
 	/*METODOS DE INTERACTUACION*/
 	/**
-	 * M�todo que ejecuta los procesos cuando esta tropa es seleccionada.
+	 * Método que ejecuta los procesos cuando esta tropa es seleccionada.
 	 */
 	this.seleccionar = function(){
 		console.log("Seleccionada tropa "+tropaId);
 		selected=true;
-		document.getElementById(panelOut).innerHTML="Tropa <b>"+nombre+"</b> seleccionada.";
+		document.getElementById(panelOut).innerHTML="Tropa <b>"+nombre+"</b> seleccionada. ";
 	};
 	/**
-	 * M�todo que ejecuta los procesos cuando esta tropa es deseleccionada.
+	 * Método que ejecuta los procesos cuando esta tropa es deseleccionada.
 	 */
 	this.deseleccionar = function(){
 		selected=false;
 	};
 	
 	/**
-	 * M�todo que despliega la unidad en el campo de batalla.
+	 * Método que despliega la unidad en el campo de batalla.
 	 * 
 	 * @param x latitud del despliegue.
 	 * @param y altitud del despliegue.
@@ -550,7 +580,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo que arrastra una tropa sin alterar su orientacion
+	 * Método que arrastra una tropa sin alterar su orientacion
 	 */
 	this.arrastrar = function(x,y,campoAncho,campoAlto,userOrder){
 		if(eliminada != "si"){
@@ -563,7 +593,7 @@ function Tropa(tropaId,panelOut){
 			if(y<10){
 				y=10;
 			}
-			if(userOrder=="desafiante"){
+			if(userOrder=="Desafiador"){
 				if(y>campoAlto/4){
 					y=campoAlto/4;
 				}
@@ -582,7 +612,7 @@ function Tropa(tropaId,panelOut){
 			document.getElementById("encampo"+tropaId).value = "si";
 			document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "";
 			actualizar();
-			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" movida a "+latitud+"x "+altitud+"y.";
+			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" movida a "+latitud+"x "+altitud+"y. ";
 		}
 	};
 	
@@ -608,16 +638,16 @@ function Tropa(tropaId,panelOut){
 			var anchoColumna=maximoPeana();
 			
 			if(selected){
-				situacion.strokeStyle="yellow";
+				situacion.strokeStyle="white";
 			}
 			else{
-				situacion.strokeStyle="black";
+				situacion.strokeStyle="grey";
 			}
-			situacion.fillStyle = "silver";
+			situacion.fillStyle = "grey";
 
-			console.log("anchoColumna "+anchoColumna);
-			console.log("altofila "+altoFila());
-			console.log("filas incompletas "+this.getFilasIncompletas());
+			console.log("Ancho Columna "+anchoColumna);
+			console.log("Alto Fila "+altoFila());
+			console.log("Filas Incompletas "+this.getFilasIncompletas());
 			console.log("Tropa de "+anchoColumna*unidadesFila*zoom+"x"+altoFila()*this.getFilasIncompletas()*zoom);
 			
 			situacion.fillRect(0,0,anchoColumna*unidadesFila*zoom,altoFila()*this.getFilasIncompletas()*zoom);
@@ -630,7 +660,7 @@ function Tropa(tropaId,panelOut){
 						columna=0;
 					}
 				}
-				unidad[i].posicionar(columna*anchoColumna*zoom,altoFila()*fila*zoom,tipo,situacion,zoom,this.getUser());
+				unidad[i].posicionar(columna*anchoColumna*zoom, altoFila()*fila*zoom, tipo, situacion, zoom, this.getUser());
 			}
 			
 			//Reestablecemos el contexto
@@ -642,7 +672,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo para incorporarse a una tropa.
+	 * Método para incorporarse a una tropa.
 	 * 
 	 * @param id de la tropa a que se incorpora.
 	 */
@@ -654,11 +684,11 @@ function Tropa(tropaId,panelOut){
 		document.getElementById("unidadesfila"+tropaId).innerHTML = "--";
 		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = tropaPadre;
 		actualizar();
-		document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" incorporada exitosamente.";
+		document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" incorporada exitosamente. ";
 	};
 	
 	/**
-	 * M�todo para incorporar unidades a la tropa.
+	 * Método para incorporar unidades a la tropa.
 	 * 
 	 * @param id de la tropa a incorporar.
 	 */
@@ -676,7 +706,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo para sacar unidades de la tropa.
+	 * Método para sacar unidades de la tropa.
 	 * 
 	 * @param id de la tropa a separar.
 	 */
@@ -692,7 +722,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo para comprobar si dos unidades entran en colision.
+	 * Método para comprobar si dos unidades entran en colision.
 	 * 
 	 * @param x coordenada X del punto en supuesta colision.
 	 * @param y coordenada y del punto en supuesta colision.
@@ -739,21 +769,22 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo para retirar una tropa del campo de batalla.
+	 * Método para retirar una tropa del campo de batalla.
 	 */
 	this.retirar = function(){
-		document.getElementById("latitud"+tropaId).innerHTML = "--";
-		document.getElementById("altitud"+tropaId).innerHTML = "--";
-		document.getElementById("orientacion"+tropaId).innerHTML = "--";
+		document.getElementById("latitud"+tropaId).innerHTML = "";
+		document.getElementById("altitud"+tropaId).innerHTML = "";
+		document.getElementById("orientacion"+tropaId).innerHTML = "";
 		document.getElementById("encampo"+tropaId).value = "no";
-		document.getElementById("unidadesfila"+tropaId).innerHTML = "--";
+		document.getElementById("unidadesfila"+tropaId).innerHTML = "";
 		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "";
 		actualizar();
-		document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" retirada del campo.";
+		console.log("Tropa "+nombre+" retirada del campo.")
+		document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" retirada del campo. ";
 	};
 	
 	/**
-	 * M�todo para comprobar si un punto est� dentro del cono de vision de la tropa.
+	 * Método para comprobar si un punto est� dentro del cono de vision de la tropa.
 	 * 
 	 * @param x coordenada X del punto.
 	 * @param y coordenada Y del punto.
@@ -808,7 +839,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo que comprueba si la tropa bloquea una linea entre dos puntos.
+	 * Método que comprueba si la tropa bloquea una linea entre dos puntos.
 	 * 
 	 * @param x1,y1 Coordenadas del punto de origen de visi�n.
 	 * @param x2,y2 Coordenadas del punto objetivo de visi�n.
@@ -884,7 +915,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo que comprueba si una tropa est� a alcance de carga.
+	 * Método que comprueba si una tropa est� a alcance de carga.
 	 * El alcance de carga es el doble del movimiento de la unidad mas lenta o el de la montura.
 	 * 
 	 * @param objetivo Tropa objetivo de la carga.
@@ -965,7 +996,8 @@ function Tropa(tropaId,panelOut){
 		return false;
 	};	
 	/**
-	 * M�todo que devuelve la distancia entre la tropa y un punto.
+	 * Método que devuelve la distancia entre la tropa y un punto.
+	 * 
 	 * @param punto objeto con atributos "x" e "y".
 	 * @return Devuelve la menor distancia entre el frente de la tropa y el punto.
 	 */
@@ -984,7 +1016,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * M�todo que establece los eventos cuando esta tropa carga a otra.
+	 * Método que establece los eventos cuando esta tropa carga a otra.
 	 * 
 	 * @param objetivo tropa que recibe la carga
 	 * @param frente frente por el enemigo que recibe la carga.
@@ -996,25 +1028,25 @@ function Tropa(tropaId,panelOut){
 		document.getElementById(panelOut).innerHTML = nombre+" carga contra "+objetivo.getNombre();
 		switch(frente){
 			case 1: 
-				document.getElementById(panelOut).innerHTML += " de frente.";
+				document.getElementById(panelOut).innerHTML += " de frente. ";
 				document.getElementById("latitud"+tropaId).innerHTML = objetivo.getVanguardiaDiestra().x;
 				document.getElementById("altitud"+tropaId).innerHTML = objetivo.getVanguardiaDiestra().y;
 				document.getElementById("orientacion"+tropaId).innerHTML = ""+(parseInt(180)+objetivo.getOrientacion());
 			break;
 			case 2: 
-				document.getElementById(panelOut).innerHTML += " por el flanco izquierdo.";
+				document.getElementById(panelOut).innerHTML += " por el flanco izquierdo. ";
 				document.getElementById("latitud"+tropaId).innerHTML = objetivo.getVanguardiaSiniestra().x;
 				document.getElementById("altitud"+tropaId).innerHTML = objetivo.getVanguardiaSiniestra().y;
 				document.getElementById("orientacion"+tropaId).innerHTML = ""+(parseInt(90)+objetivo.getOrientacion());
 			break;
 			case 3: 
-				document.getElementById(panelOut).innerHTML += " por el flanco derecho.";
+				document.getElementById(panelOut).innerHTML += " por el flanco derecho. ";
 				document.getElementById("latitud"+tropaId).innerHTML = objetivo.getRetaguardiaDiestra().x;
 				document.getElementById("altitud"+tropaId).innerHTML = objetivo.getRetaguardiaDiestra().y;
 				document.getElementById("orientacion"+tropaId).innerHTML = ""+(parseInt(270)+objetivo.getOrientacion());
 			break;
 			case 4: 
-				document.getElementById(panelOut).innerHTML += " por la retaguardia.";
+				document.getElementById(panelOut).innerHTML += " por la retaguardia. ";
 				document.getElementById("latitud"+tropaId).innerHTML = objetivo.getRetaguardiaSiniestra().x;
 				document.getElementById("altitud"+tropaId).innerHTML = objetivo.getRetaguardiaSiniestra().y;
 				document.getElementById("orientacion"+tropaId).innerHTML = ""+objetivo.getOrientacion();
@@ -1024,7 +1056,7 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	this.cargaFallida = function(){
-		document.getElementById(panelOut).innerHTML = "Carga fallida.";
+		document.getElementById(panelOut).innerHTML = "Carga fallida. ";
 	};
 	
 	this.cargada = function(frente){
