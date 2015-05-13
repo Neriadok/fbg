@@ -12,6 +12,7 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 	//Car�cter�sticas
 	var fichasComponentes = document.getElementsByClassName(classNameFichas);
 	var componente = [];
+	var larga = false;
 	
 	iniciarComponentes();
 	
@@ -24,9 +25,12 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 		for(var i=0; i<componente.length; i++){
 			if(componente[i].getRepresentada()){
 				peana += componente[i].getPeana();
+				if(componente[i].getTipo() == "Montura-Tiro"){
+					larga = true;
+				}
 			}
 		}
-		return parseInt(peana);
+		return {peana: parseInt(peana), larga: larga};
 	};
 	
 	/**
@@ -54,13 +58,13 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 		var movimiento = Number.MAX_VALUE;
 		
 		for(var i=0; i<componente.length && !hayMontura; i++){
-			if(componente[i].getMovimiento().tipo == "Montura"){
+			if(componente[i].getTipo() == "Montura-Tiro"){
 				hayMontura = true;
-				movimiento = componente[i].getMovimiento().movimiento;
+				movimiento = componente[i].getMovimiento();
 			}
 			else{
 				if(componente[i].getMovimiento().movimiento < movimiento){
-					movimiento = componente[i].getMovimiento().movimiento;
+					movimiento = componente[i].getMovimiento();
 				}
 			}
 		}
@@ -72,7 +76,6 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 	function iniciarComponentes(){
 		for(var i=0 ; i<fichasComponentes.length ; i++){
 			componente[i] = new Componente("componente"+fichasComponentes[i].innerHTML+tropaId, fichasComponentes[i].innerHTML);
-			console.log(componente[i].getPeana()+" - "+componente[i].getRepresentada());
 		}
 	}
 		
@@ -82,16 +85,22 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 	 * 
 	 */
 	this.posicionar = function(x,y,tipo,situacion,zoom,user){
-		situacion.linewidth=4;
 		
 		if(user){
-			situacion.fillStyle = "blue";
+			situacion.fillStyle = "#E8E65F";
 		}
 		else{
-			situacion.fillStyle = "red";
+			situacion.fillStyle = "#C1D0E3";
 		}
-			
-		situacion.fillRect(x, y, this.getPeana()*zoom, this.getPeana()*zoom);
-		situacion.strokeRect(x, y, this.getPeana()*zoom, this.getPeana()*zoom);
+		
+		if(larga){
+			situacion.fillRect(x, y, this.getPeana().peana*zoom, this.getPeana().peana*zoom*2);
+			situacion.strokeRect(x, y, this.getPeana().peana*zoom, this.getPeana().peana*zoom*2);
+		}
+		
+		else{
+			situacion.fillRect(x, y, this.getPeana().peana*zoom, this.getPeana().peana*zoom);
+			situacion.strokeRect(x, y, this.getPeana().peana*zoom, this.getPeana().peana*zoom);
+		}
 	}
 };

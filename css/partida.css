@@ -12,6 +12,9 @@
 */
 
 /**FORMATO Y ASPECTO**/
+canvas{
+	cursor: url("../src/cursor.png"),url("../src/cursor.svg"),hand;
+}
 
 #contenidoPrincipal *{
 	position:relative;
@@ -69,6 +72,11 @@
 	width: 28%;
 }
 
+#panelout{
+	width:auto;
+	margin: 30px;
+}
+
 #datosSeleccion{
 	position:relative;
 	padding-top: 5px;
@@ -112,6 +120,20 @@
 }
 
 .tropaContent{
-	width: 100%;
+	width: auto;
 	height: auto;
+}
+
+.scrollingBox{
+	background-color: transparent;
+}
+
+.atributoComponente{
+	color:white;
+	font-weight:bold;
+	font-size:smaller;
+}
+
+.componente{
+	width:50px;
 }
