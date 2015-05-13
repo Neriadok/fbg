@@ -575,20 +575,19 @@
 	 */
 	function partida_unidadesTropa($conexion,$tropaId){
 		echo "
-			<div class='tropaContent'>
-				<table>
-					<tr>
-						<td class='atributoComponente'></td>
-						<td class='atributoComponente'>M</td>
-						<td class='atributoComponente'>HA</td>
-						<td class='atributoComponente'>HP</td>
-						<td class='atributoComponente'>F</td>
-						<td class='atributoComponente'>R</td>
-						<td class='atributoComponente'>PS</td>
-						<td class='atributoComponente'>I</td>
-						<td class='atributoComponente'>A</td>
-						<td class='atributoComponente'>L</td>
-					</tr>
+			<table class='tropaContent'>
+				<tr>
+					<td class='enfasis'></td>
+					<td class='enfasis'>M</td>
+					<td class='enfasis'>HA</td>
+					<td class='enfasis'>HP</td>
+					<td class='enfasis'>F</td>
+					<td class='enfasis'>R</td>
+					<td class='enfasis'>PS</td>
+					<td class='enfasis'>I</td>
+					<td class='enfasis'>A</td>
+					<td class='enfasis'>L</td>
+				</tr>
 		";
 		
 		$sentencia = $conexion -> prepare("CALL proceso_unidadesTropaEjercito(?)");
@@ -625,16 +624,16 @@
 		
 			echo "
 				'>
-					<td id='tipocomponente".$tipoRango."tropa$tropaId' class='atributoComponente'>$tipoRango</td>
-					<td id='movimientocomponente".$tipoRango."tropa$tropaId' class='atributoComponente'>$movimiento</td>
-					<td id='hacomponente".$tipoRango."tropa$tropaId' class='atributoComponente'>$ha</td>
-					<td id='hpcomponente".$tipoRango."tropa$tropaId' class='atributoComponente'>$hp</td>
-					<td id='fcomponente".$tipoRango."tropa$tropaId' class='atributoComponente'>$f</td>
-					<td id='rcomponente".$tipoRango."tropa$tropaId' class='atributoComponente'>$r</td>
-					<td id='pscomponente".$tipoRango."tropa$tropaId' class='atributoComponente'>$ps</td>
-					<td id='icomponente".$tipoRango."tropa$tropaId' class='atributoComponente'>$i</td>
-					<td id='acomponente".$tipoRango."tropa$tropaId' class='atributoComponente'>$a</td>
-					<td id='lcomponente".$tipoRango."tropa$tropaId' class='atributoComponente'>$l</td>
+					<td id='tipocomponente".$tipoRango."tropa$tropaId' class='enfasis'>$tipoRango</td>
+					<td id='movimientocomponente".$tipoRango."tropa$tropaId' class='enfasis'>$movimiento</td>
+					<td id='hacomponente".$tipoRango."tropa$tropaId' class='enfasis'>$ha</td>
+					<td id='hpcomponente".$tipoRango."tropa$tropaId' class='enfasis'>$hp</td>
+					<td id='fcomponente".$tipoRango."tropa$tropaId' class='enfasis'>$f</td>
+					<td id='rcomponente".$tipoRango."tropa$tropaId' class='enfasis'>$r</td>
+					<td id='pscomponente".$tipoRango."tropa$tropaId' class='enfasis'>$ps</td>
+					<td id='icomponente".$tipoRango."tropa$tropaId' class='enfasis'>$i</td>
+					<td id='acomponente".$tipoRango."tropa$tropaId' class='enfasis'>$a</td>
+					<td id='lcomponente".$tipoRango."tropa$tropaId' class='enfasis'>$l</td>
 					<td class='oculto'>
 						<p class='fichatropa$tropaId'>$tipoRango</p>
 						<p id='rangocomponente".$tipoRango."tropa$tropaId'>$rango</p>
@@ -661,8 +660,7 @@
 		$sentencia -> close();
 		
 		echo "
-				</table>
-			</div>
+			</table>
 		";
 	}
 	

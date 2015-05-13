@@ -25,8 +25,11 @@ function Componente(fichaReferencia, tipo){
 	var a = document.getElementById("a"+fichaReferencia).innerHTML;
 	var l = document.getElementById("l"+fichaReferencia).innerHTML;
 	
-	if(rango >= 6 || tipo == "Montura-Tiro" || tipo == "Maquinaria-Carro"){
-		peana = 45;
+	if(rango >= 6 || tipo == "Montura"){
+		peana = 50;
+	}
+	else if(tipo == "Maquinaria"){
+		peana = 80;
 	}
 	
 	
@@ -51,20 +54,12 @@ function Componente(fichaReferencia, tipo){
 	};
 	
 	/**
-	 * Método getter para el atributo tipo.
-	 * 
-	 * @return Devuelve un String.
-	 */
-	this.getTipo = function(){
-		return tipo;
-	};
-	
-	/**
 	 * Método getter para el atributo representada.
 	 * 
 	 * @return Devuelve un boolean.
 	 */
 	this.getRepresentada = function(){
+		console.log(representada);
 		if(representada == "si") return true;
 		else return false;
 	};
@@ -88,7 +83,7 @@ function Componente(fichaReferencia, tipo){
 		else{
 			movimiento = m*20;
 		}
-		return movimiento;
+		return {movimiento: movimiento, tipo: tipo};
 	};
 	
 	/*M�TODOS INTERNOS*/

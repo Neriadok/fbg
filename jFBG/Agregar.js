@@ -148,11 +148,11 @@ function Agregar(botonId,elementoPadreId,tipoAgregado,datos){
 		agregado.className = "adminForo";
 		
 		var contenido = "<td  class='adminCol1' colspan='2'>";
-		contenido += "	<input class='nuevoForo' name='nuevoForo["+numeroAgregados+"-"+datos+"]' type='text' value=''/>";
+		contenido += "	<input class='nuevoForo' name='nuevoForo["+numeroAgregados+"]' type='text' value=''/>";
 		contenido += "</td>";
 		contenido += "<td  class='adminCol2'  colspan='2'>";
 		contenido += "Nuevo Foro";
-		contenido += "<input type='hidden' class='categoriaNuevoForo' name='categoriaNuevoForo["+numeroAgregados+"-"+datos+"]' value='"+datos+"'/>";
+		contenido += "<input type='hidden' class='categoriaNuevoForo' name='categoriaNuevoForo["+numeroAgregados+"]' value='"+datos+"'/>";
 		contenido += "</td>";
 		
 		agregado.innerHTML = contenido;

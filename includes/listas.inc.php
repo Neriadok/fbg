@@ -1567,7 +1567,7 @@
 					
 			
 						//Segundo generamos los caballos
-						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,2,1,true,?,?,?,?,?,?,?,?,?,true,false,false)");
+						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,2,1,false,?,?,?,?,?,?,?,?,?,true,false,false)");
 						$sentencia -> bind_param(
 							'issiiiiiiiii'
 								, $uid
@@ -1664,7 +1664,7 @@
 					//Mach = Maquinaria
 					else if($mach){
 						//Cada unidad se compone de la maquinaria, el personaje y quizá su dotacion
-						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,1,?,true,?,?,?,?,?,?,?,?,?,false,false,false)");
+						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,1,?,false,?,?,?,?,?,?,?,?,?,false,false,false)");
 						$sentencia -> bind_param(
 								'issiiiiiiiiii'
 								, $uid
@@ -1740,7 +1740,7 @@
 					}
 			
 					else{//Default = Personaje a Pie
-						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,1,?,true,?,?,?,?,?,?,?,?,?,false,false,false)");
+						$sentencia = $conexion -> prepare("CALL proceso_newUnit(?,?,?,1,?,false,?,?,?,?,?,?,?,?,?,false,false,false)");
 						$sentencia -> bind_param(
 								'issiiiiiiiiii'
 								, $uid

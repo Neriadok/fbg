@@ -20,9 +20,6 @@ function Submit(tipo,elementoId,form,ca,sitioCarga){
 	document.getElementById(elementoId).onmouseout = cFuera;
 	document.getElementById(elementoId).onmousedown = cPulsado;
 	asignarEnter(form);
-	if(tipo == 8 || tipo == 11){
-		form.onchange = cambios;
-	}
 	
 	
 	/***MÉTODOS Y FUNCIONES***/
@@ -444,7 +441,7 @@ function Submit(tipo,elementoId,form,ca,sitioCarga){
 			
 			//Asignamos el indice de la variable dentro del objeto
 			var index = newf[i].name.substr(indexBegin,longitudIndex);
-
+			
 			//Damos valor a dicho indice
 			datos.nuevoForo[index] = newf[i].value;
 		}
@@ -595,9 +592,6 @@ function Submit(tipo,elementoId,form,ca,sitioCarga){
 		//Suponemos los datos correctos
 		var correcto = true;
 		
-		//Agregamos los ultimos cambios realizados
-		cambios();
-		
 		//Comprobamos que exista un nombre
 		if(document.getElementById("nombreLista").value == ""){
 			document.getElementById("nombreLista").focus();
@@ -650,11 +644,7 @@ function Submit(tipo,elementoId,form,ca,sitioCarga){
 	 * @see Documentacion Externa - Guía para el Programador Vol.3 (Macroformularios de datos)
 	 */
 	function saveEditLista(){
-		//Suponemos los datos correctos
 		var correcto = true;
-
-		//Agregamos los ultimos cambios realizados
-		cambios();
 		
 		//Comprobamos que la puntuacion sea un número.				
 		var puntos = parseInt(document.getElementById("puntosLista").innerHTML);
@@ -723,37 +713,6 @@ function Submit(tipo,elementoId,form,ca,sitioCarga){
 		
 		//Actualizamos los contenidos mediante la conexion asíncrona en función de los datos obtenidos.
 		ca.actualizar(datos,sitioCarga);
-	};
-	
-	
-	/**
-	 * Método que se ejecuta cuando se produce un cambio en la lista.
-	 * Tiene como objetivo establecer la puntuacion de la lista.
-	 * 
-	 * @param e Event - Evento que disparó la función.
-	 */
-	function cambios(){
-		console.log("Evaluando Cambios Lista.");
-		var elementos = document.getElementsByClassName("puntosTP");
-		var nombreTropa = document.getElementsByClassName("nombreTP");
-		
-		var sumaPts = 0;
-		
-		//Verificamos todos los elementos de la lista.
-		for(var i=0;i<elementos.length;i++){
-			//Solo evaluamos aquellos de los que se ha indicado nombre, los demas se ignoran.
-			if(nombreTropa[i].value != ""){
-				//Si la puntuacion no es un número o esta vacía, sustituimos el valor por el texto "Error"
-				if(isNaN(elementos[i].value) || elementos[i].value == ""){
-					elementos[i].value = "Error";
-				}
-				//Si todo es correcto, aumentamos la puntuacion.
-				else{
-					sumaPts += parseInt(elementos[i].value);
-				}
-			}
-		}
-		document.getElementById("puntosLista").innerHTML = sumaPts;
 	};
 	
 	
