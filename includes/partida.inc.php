@@ -104,6 +104,7 @@
 					,$listaId
 					,$pts
 					,$turnos
+					,$faseId
 					,$fase
 					,$ordenFase
 					,$fechaInicio
@@ -156,6 +157,7 @@
 						<td>
 							<input type='hidden' id='partidaId' value='$partidaId'/>
 							<input type='hidden' id='ejercitoId' value='$ejercitoId'/>
+							<input type='hidden' id='faseId' value='$faseId'/>
 							<input type='hidden' id='ordenFase' value='$ordenFase'/>
 							<input type='hidden' id='pts' value='$pts'/>
 						</td>
@@ -174,36 +176,37 @@
 		
 		else{
 			echo "
-					<tr class='oculto'>
-						<td colspan='2' class='enfasis' id='ejercitoNombre'></td>
-					</tr>
-					<tr class='oculto'>
-						<td colspan='2' class='enfasis subtitle'></td>
-					</tr>
-					<tr class='oculto'>
-						<td colspan='2' class='enfasis subtitle'></td>
-					</tr>
-					<tr class='oculto'>
-						<td>Orden</td>
-						<td id='userorder'></td>
-					</tr>
-					<tr class='oculto'>
-						<td>Turno</td>
-						<td id='turno'></td>
-					</tr>
-					<tr class='oculto'>
-						<td>Fase</td>
-						<td id='fase'>
-						</td>
-					</tr>
-						
-					<tr class='oculto'>
-						<td>
-							<input type='hidden' id='partidaId' value=''/>
-							<input type='hidden' id='ejercitoId' value=''/>
-							<input type='hidden' id='pts' value=''/>
-						</td>
-					</tr>
+				<tr>
+					<td colspan='2' class='enfasis' id='ejercitoNombre'></td>
+				</tr>
+				<tr>
+					<td colspan='2' class='enfasis subtitle'></td>
+				</tr>
+				<tr>
+					<td colspan='2' class='enfasis subtitle'></td>
+				</tr>
+				<tr>
+					<td class='alignRight subtitle'>Orden</td>
+					<td id='userorder' class='alignLeft white'></td>
+				</tr>
+				<tr>
+					<td class='alignRight subtitle'>Turno</td>
+					<td id='turno' class='alignLeft white'></td>
+				</tr>
+				<tr>
+					<td class='alignRight subtitle'>Fase</td>
+					<td id='fase' class='alignLeft white'></td>
+				</tr>
+					
+				<tr class='oculto'>
+					<td>
+						<input type='hidden' id='partidaId' value=''/>
+						<input type='hidden' id='ejercitoId' value=''/>
+						<input type='hidden' id='faseId' value=''/>
+						<input type='hidden' id='ordenFase' value=''/>
+						<input type='hidden' id='pts' value=''/>
+					</td>
+				</tr>
 			";
 		}
 		echo "</table>";
@@ -408,13 +411,11 @@
 			, $tChamp
 			, $tMusico
 			, $tEst
-			, $tTipo
 			, $tRango
 			, $tUnidades
 			, $tHeridas
 			, $tEjercito
-			, $tEnCampo
-			, $tEstado //Cargando, bajoCarga, enCombate, desorganizada
+			, $tEstado
 			, $tLatitud
 			, $tAltitud
 			, $tOrientacion
@@ -431,12 +432,10 @@
 		$tropaChamp = null;
 		$tropaMusico = null;
 		$tropaEst = null;
-		$tropaTipo = null;
 		$tropaRango = null;
 		$tropaUnidades = null;
 		$tropaHeridas = null;
 		$tropaEjercito = null;
-		$tropaEnCampo = null;
 		$tropaEstado = null; //Cargando, bajoCarga, enCombate, desorganizada
 		$tropaLatitud = null;
 		$tropaAltitud = null;
@@ -454,12 +453,10 @@
 			$tropaChamp[$tId] = $tChamp;
 			$tropaMusico[$tId] = $tMusico;
 			$tropaEst[$tId] = $tEst;
-			$tropaTipo[$tId] = $tTipo;
 			$tropaRango[$tId] = $tRango;
 			$tropaUnidades[$tId] = $tUnidades;
 			$tropaHeridas[$tId] = $tHeridas;
 			$tropaEjercito[$tId] = $tEjercito;
-			$tropaEnCampo[$tId] = $tEnCampo;
 			$tropaEstado[$tId] = $tEstado; //Cargando, bajoCarga, enCombate, desorganizada
 			$tropaLatitud[$tId] = $tLatitud;
 			$tropaAltitud[$tId] = $tAltitud;
@@ -503,13 +500,25 @@
 						<div id='tropaDatos$tropaId' class='scrollingBox'>
 							<div id='tropaDatos".$tropaId."Content' class='scrollingBoxContent'>
 								<h3 id='nombretropa$tropaId' class='enfasis tropaContent'>$tropa</h3>
+				";
+				partida_unidadesTropa($conexion, $tropaId);
+				echo "
+								<table>
+									<tr>
+										<td class='subtitle alignRight'>Latitud: </td>
+										<td class='white alignLeft' id='latitudtropa$tropaId'>$tropaLatitud[$tropaId]</td>
+										<td class='subtitle alignRight'>Altitud: </td>
+										<td class='white alignLeft' id='altitudtropa$tropaId'>$tropaAltitud[$tropaId]</td>
+										<td class='subtitle alignRight'>Orientacion: </td>
+										<td class='white alignLeft' id='orientaciontropa$tropaId'>$tropaOrientacion[$tropaId]</td>
+									</tr>
+								</table>
 								<table class='tropaContent'>
 									<tr>
 				";
 				
 				partida_datosGeneralesTropa(
 						$tropaId
-						, $tropaTipo[$tropaId]
 						, $tropaUnidades[$tropaId]
 						, $tropaPts[$tropaId]
 						, $tropaRango[$tropaId]
@@ -519,27 +528,20 @@
 						, $tropaEst[$tropaId]
 						, $tropaMusico[$tropaId]
 						, $tropaEjercito[$tropaId]
-						, $tropaEnCampo[$tropaId]
 				);
 				
 				partida_datosConcretosTropa(
 						$tropaId
 						, $tropaHeridas[$tropaId]
 						, $tropaEstado[$tropaId]
-						, $tropaLatitud[$tropaId]
-						, $tropaAltitud[$tropaId]
-						, $tropaOrientacion[$tropaId]
 						, $tropaUnidadesFila[$tropaId]
 						, $tropaTropaAdoptivaId[$tropaId]
 						, $tropaTropaBajoAtaqueId[$tropaId]
 						, $tropaTropaBajoAtaqueFlanco[$tropaId]
 				);
 				echo "
-							</tr>
-						</table>
-				";
-				partida_unidadesTropa($conexion, $tropaId);
-				echo "
+											</tr>
+										</table>
 									</div>
 								</div>
 								<div id='tropaDatos".$tropaId."Moving' class='scrollingBoxMoving'>
@@ -687,7 +689,6 @@
 	 */
 	function partida_datosGeneralesTropa(
 			$tropaId
-			, $tropaTipo
 			, $tropaUnidades
 			, $tropaPts
 			, $tropaRango
@@ -697,7 +698,6 @@
 			, $tropaEst
 			, $tropaMusico
 			, $tropaEjercito
-			, $tropaEnCampo
 		){
 		echo "
 			<td class='halfWidth'>
@@ -707,7 +707,7 @@
 		if($tropaRango == 9){
 			echo "
 				<p>
-					<span class='subtitle white'>Esta tropa es el General del ejercito.</span>
+					<span class='subtitle white'> esta tropa es el General del ejercito.</span>
 					<span class='oculto' id='gentropa$tropaId'>si</span>
 				</p>
 			";
@@ -727,6 +727,15 @@
 		}
 		else{
 			echo "<p class='oculto' id='besttropa$tropaId'>no</p>";
+		}
+		
+		//Comprobamos si se trata del portaestandarte de batalla
+		if($tropaRango >= 6){
+			echo "
+				<p>
+					<span class='subtitle white'>Esta tropa es un oficial.</span>
+				</p>
+			";
 		}
 		
 		//Comprobamos si la tropa incluye campeon
@@ -770,10 +779,6 @@
 		
 		echo "
 				<p>
-					<span class='subtitle'>Tipo de Tropa: </span>
-					<span class='white' id='tipotropa$tropaId'>$tropaTipo</span>
-				</p>
-				<p>
 					<span class='subtitle'>Unidades: </span>
 					<span class='white' id='miembrostropa$tropaId'>$tropaUnidades</span>
 				</p>
@@ -791,6 +796,7 @@
 		echo"
 				<form class='oculto'>
 		";
+		
 		//Comprobamos si la tropa pertenece al usuario
 		if($tropaEjercito){
 			echo "<input type='hidden' id='usertropa$tropaId' value='si'/>";
@@ -799,13 +805,6 @@
 			echo "<input type='hidden' id='usertropa$tropaId' value='no'/>";
 		}
 		
-		//Comprobamos si la tropa esta en el campo de batalla
-		if($tropaEnCampo){
-			echo "<input type='hidden' id='encampotropa$tropaId' value='si'/>";
-		}
-		else{
-			echo "<input type='hidden' id='encampotropa$tropaId' value='no'/>";
-		}
 		echo "
 				</form>
 			</td>
@@ -820,9 +819,6 @@
 			$tropaId
 			, $tropaHeridas
 			, $tropaEstado
-			, $tropaLatitud
-			, $tropaAltitud
-			, $tropaOrientacion
 			, $tropaUnidadesFila
 			, $tropaTropaAdoptivaId
 			, $tropaTropaBajoAtaqueId
@@ -830,44 +826,28 @@
 		){
 		echo "
 			<td class='halfWidth'>
-				<p>
-					<span class='subtitle'>Eliminada: </span>
-					<span class='white' id='eliminadatropa$tropaId'>no</span>
-				</p>
-				<p>
-					<span class='subtitle'>Heridas: </span>
-					<span class='white' id='heridastropa$tropaId'>$tropaHeridas</span>
-				</p>
-				<p>
-					<span class='subtitle'>Estado: </span>
-					<span class='white' id='estadotropa$tropaId'>$tropaEstado</span>
-				</p>
-				<p>
-					<span class='subtitle'>Latitud: </span>
-					<span class='white' id='latitudtropa$tropaId'>$tropaLatitud</span>
-				</p>
-				<p>
-					<span class='subtitle'>Altitud: </span>
-					<span class='white' id='altitudtropa$tropaId'>$tropaAltitud</span>
-				</p>
-				<p>
-					<span class='subtitle'>Orientacion: </span>
-					<span class='white' id='orientaciontropa$tropaId'>$tropaOrientacion</span>
-				</p>
-				<p>
-					<span class='subtitle'>Unidades por fila: </span>
-					<span class='white' id='unidadesfilatropa$tropaId'>$tropaUnidadesFila</span>
-				</p>
-				<p>
-					<span class='subtitle'>Tropa Adoptiva: </span>
-					<span class='white' id='tropaadoptivatropa$tropaId'>--</span>
-				</p>
-				<p>
-					<span class='subtitle'>Tropa Bajo ataque: (pendiente)</span>
-				</p>
-				<p>
-					<span class='subtitle'>Flanco Atacado: (pendiente)</span>
-				</p>
+				
+				<span class='subtitle'>Estado: </span>
+				<span class='white' id='estadotropa$tropaId'>$tropaEstado</span>
+				<br/>
+				
+				<span class='subtitle'>Heridas: </span>
+				<span class='white' id='heridastropa$tropaId'>$tropaHeridas</span>
+				<br/>
+				
+				<span class='subtitle'>Unidades por fila: </span>
+				<span class='white' id='unidadesfilatropa$tropaId'>$tropaUnidadesFila</span>
+				<br/>
+				
+				<span class='subtitle'>Tropa Adoptiva: </span>
+				<span class='white' id='tropaadoptivatropa$tropaId'>--</span>
+				<br/>
+				
+				<span class='subtitle'>Tropa Bajo ataque: (pendiente)</span>
+				<br/>
+				<span class='subtitle'>Flanco Atacado: (pendiente)</span>
+					
+				
 				<p class='oculto'>
 					<span id='tropaadoptivaidtropa$tropaId'>$tropaTropaAdoptivaId</span>
 					<span class='white' id='tropabajoataqueidtropa$tropaId'>$tropaTropaBajoAtaqueId</span>

@@ -13,13 +13,10 @@ function Tropa(tropaId,panelOut){
 	var id = tropaId;
 	var nombre = document.getElementById("nombre"+tropaId).innerHTML;
 	var miembros = parseInt(document.getElementById("miembros"+tropaId).innerHTML);
-	var tipo = document.getElementById("tipo"+tropaId).innerHTML;
 	var larga = false;
 	
 	//Situacion
 	var selected = false;
-	var eliminada = document.getElementById("eliminada"+tropaId).innerHTML;
-	var enCampo = document.getElementById("encampo"+tropaId).value;
 	var user = document.getElementById("user"+tropaId).value;
 	var estado = document.getElementById("estado"+tropaId).innerHTML;
 	var latitud = parseInt(document.getElementById("latitud"+tropaId).innerHTML);
@@ -66,22 +63,23 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * Método get del atributo enCampo.
+	 * Método que comprueba si una tropa está en el campo.
 	 * 
-	 * @return true si enCampo == "si".
+	 * @return true si la tropa se encuentra en el terreno
 	 */
 	this.getEnCampo = function(){
-		if(enCampo == "si") return true;
+		if(estado != "Eliminada" && estado != "Sin desplegar") return true;
 		else return false;
 	};
 	
 	/**
-	 * Método get del atributo estado.
+	 * Método que comprueba si una tropa está realizando alguna acción o no esta en juego, de modo que no pueda realizar acciones.
 	 * 
-	 * @return true si enCampo == "si".
+	 * @return true si la tropa no puede realizar acciones.
 	 */
-	this.getCargando = function(){
-		return estado;
+	this.getOcupada = function(){
+		if(estado != "En juego") return true;
+		else return false;
 	};
 	
 	/**
@@ -138,7 +136,7 @@ function Tropa(tropaId,panelOut){
 	 */
 	this.getVanguardiaSiniestra = function(){
 		var coor;
-		if(enCampo == "si"){
+		if(estado != "Eliminada" && estado != "Sin desplegar"){
 			coor = { x: latitud, y: altitud }; 
 		}
 		else{
@@ -154,7 +152,7 @@ function Tropa(tropaId,panelOut){
 	 */
 	this.getVanguardiaDiestra = function(){
 		var coor;
-		if(enCampo == "si"){
+		if(estado != "Eliminada" && estado != "Sin desplegar"){
 			//X+cos(angulo)*ancho
 			//Y+sen(angulo)*ancho
 			var valorX = parseInt(latitud+dimTropa().ancho*Math.cos(orientacion));
@@ -174,7 +172,7 @@ function Tropa(tropaId,panelOut){
 	 */
 	this.getRetaguardiaSiniestra = function(){
 		var coor;
-		if(enCampo == "si"){
+		if(estado != "Eliminada" && estado != "Sin desplegar"){
 			//X-sen(angulo)*alto
 			//Y+cos(angulo)*alto
 			var valorX = parseInt(latitud-dimTropa().alto*Math.sin(orientacion));
@@ -194,7 +192,7 @@ function Tropa(tropaId,panelOut){
 	 */
 	this.getRetaguardiaDiestra = function(){
 		var coor;
-		if(enCampo == "si"){
+		if(estado != "Eliminada" && estado != "Sin desplegar"){
 			//X+cos(angulo)*ancho-sen(angulo)*alto
 			//Y+sen(angulo)*ancho+cos(angulo)*alto
 			var valorX = parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)-dimTropa().alto*Math.sin(orientacion));
@@ -233,7 +231,7 @@ function Tropa(tropaId,panelOut){
 	 */
 	this.getFilasIncompletas = function(){
 		var nFilasIncompletas = 0;
-		if(enCampo == "si"){
+		if(estado != "Eliminada" && estado != "Sin desplegar"){
 			for(var i=0;i<unidad.length;i++){
 				if(i%unidadesFila==0){
 					nFilasIncompletas++;
@@ -251,8 +249,6 @@ function Tropa(tropaId,panelOut){
 	 * actualiza los atributos de la tropa.
 	 */
 	function actualizar(){
-		eliminada = document.getElementById("eliminada"+tropaId).innerHTML;
-		enCampo = document.getElementById("encampo"+tropaId).value;
 		estado = document.getElementById("estado"+tropaId).innerHTML;
 		latitud = parseInt(document.getElementById("latitud"+tropaId).innerHTML);
 		altitud = parseInt(document.getElementById("altitud"+tropaId).innerHTML);
@@ -282,7 +278,7 @@ function Tropa(tropaId,panelOut){
 				unidad[nUnidad] = new  Unidad(tropaAdoptadaId[i], "ficha"+tropaAdoptadaId[i], selected, j, 0);
 			}
 		}
-		if(enCampo == "si"){
+		if(estado != "Eliminada" && estado != "Sin desplegar"){
 			if(unidad.length<5){
 				unidadesFila=unidad.length;
 			}
@@ -368,7 +364,7 @@ function Tropa(tropaId,panelOut){
 	 */
 	function dimTropa(){
 		var dim;
-		if(enCampo == "si"){
+		if(estado != "Eliminada" && estado != "Sin desplegar"){
 			//Comprobamos cuantas filas tiene la unidad
 			var filas = 0;
 			for(var i=0;i<unidad.length;i++){
@@ -536,7 +532,7 @@ function Tropa(tropaId,panelOut){
 	 * @param angle orientacion en que se despliega la tropa.
 	 */
 	this.desplegar = function(x,y,angle,ancho,campoAncho,campoAlto,userOrder){
-		if(eliminada!="si"){
+		if(estado != "Eliminada"){
 			if(x<10){
 				x=10;
 			}
@@ -570,7 +566,7 @@ function Tropa(tropaId,panelOut){
 			document.getElementById("latitud"+tropaId).innerHTML = x;
 			document.getElementById("altitud"+tropaId).innerHTML = y;
 			document.getElementById("orientacion"+tropaId).innerHTML = angle;
-			document.getElementById("encampo"+tropaId).value = "si";
+			document.getElementById("estado"+tropaId).innerHTML = "En juego";
 			document.getElementById("unidadesfila"+tropaId).innerHTML = ancho;
 			document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "";
 			actualizar();
@@ -583,7 +579,7 @@ function Tropa(tropaId,panelOut){
 	 * Método que arrastra una tropa sin alterar su orientacion
 	 */
 	this.arrastrar = function(x,y,campoAncho,campoAlto,userOrder){
-		if(eliminada != "si"){
+		if(estado != "Eliminada"){
 			if(x<10){
 				x=10;
 			}
@@ -609,7 +605,7 @@ function Tropa(tropaId,panelOut){
 
 			document.getElementById("latitud"+tropaId).innerHTML = x;
 			document.getElementById("altitud"+tropaId).innerHTML = y;
-			document.getElementById("encampo"+tropaId).value = "si";
+			document.getElementById("estado"+tropaId).innerHTML = "En juego";
 			document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "";
 			actualizar();
 			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" movida a "+latitud+"x "+altitud+"y. ";
@@ -623,7 +619,7 @@ function Tropa(tropaId,panelOut){
 	 * @param zoom proporcion de las medidas del dibujo.
 	 */
 	this.posicionar = function(situacion,zoom){
-		if(enCampo == "si" && eliminada != "si" && tropaAdoptivaId == ""){
+		if(estado != "Eliminada" && estado != "Sin desplegar" && tropaAdoptivaId == ""){
 						
 			//Modificamos el contexto
 			situacion.translate(latitud*zoom,altitud*zoom);
@@ -660,7 +656,7 @@ function Tropa(tropaId,panelOut){
 						columna=0;
 					}
 				}
-				unidad[i].posicionar(columna*anchoColumna*zoom, altoFila()*fila*zoom, tipo, situacion, zoom, this.getUser());
+				unidad[i].posicionar(columna*anchoColumna*zoom, altoFila()*fila*zoom, situacion, zoom, this.getUser());
 			}
 			
 			//Reestablecemos el contexto
@@ -680,7 +676,7 @@ function Tropa(tropaId,panelOut){
 		document.getElementById("latitud"+tropaId).innerHTML = "--";
 		document.getElementById("altitud"+tropaId).innerHTML = "--";
 		document.getElementById("orientacion"+tropaId).innerHTML = "--";
-		document.getElementById("encampo"+tropaId).value = "si";
+		document.getElementById("estado"+tropaId).innerHTML = "En juego";
 		document.getElementById("unidadesfila"+tropaId).innerHTML = "--";
 		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = tropaPadre;
 		actualizar();
@@ -775,7 +771,7 @@ function Tropa(tropaId,panelOut){
 		document.getElementById("latitud"+tropaId).innerHTML = "";
 		document.getElementById("altitud"+tropaId).innerHTML = "";
 		document.getElementById("orientacion"+tropaId).innerHTML = "";
-		document.getElementById("encampo"+tropaId).value = "no";
+		document.getElementById("estado"+tropaId).innerHTML = "Sin desplegar";
 		document.getElementById("unidadesfila"+tropaId).innerHTML = "";
 		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "";
 		actualizar();

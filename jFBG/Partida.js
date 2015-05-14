@@ -1571,6 +1571,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 							tropa[tropaBuscar(tropaPadre)].adoptar(tropaSeleccionadaId);
 							tropa[tropaBuscar(tropaSeleccionadaId)].incorporar(tropaPadre);
 							document.getElementById("tropaadoptiva"+tropaSeleccionadaId).innerHTML = tropa[tropaBuscar(tropaPadre)].getNombre();
+							tropaSeleccionar(tropaPadre);
 						}
 						else{
 							if(desplegable){

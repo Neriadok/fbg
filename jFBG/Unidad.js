@@ -84,7 +84,7 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 	/**
 	 * 
 	 */
-	this.posicionar = function(x,y,tipo,situacion,zoom,user){
+	this.posicionar = function(x,y,situacion,zoom,user){
 		
 		if(user){
 			situacion.fillStyle = "#E8E65F";
