@@ -137,3 +137,26 @@ canvas{
 .componente{
 	width:50px;
 }
+
+#tablaDatos{
+	margin-top:25px;
+}
+
+#finalizarFase{
+	width:100px;
+	height:60px;
+	margin:auto;
+	background-color:#4057A3;
+	color:#C1D0E3;
+	border-radius:15px;
+}
+
+#finalizarFase:hover{
+	width:100px;
+	height:60px;
+	margin:auto;
+	background-color:#CBD126;
+	color:#000030;
+	font-weight:bold;
+	border-radius:15px;
+}

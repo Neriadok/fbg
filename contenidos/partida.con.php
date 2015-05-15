@@ -28,6 +28,11 @@
 				
 				partida_registrarLista($conexion, $partida, $ejercito, $lista);
 			}
+			else if(isset($datos['fase'])){
+				
+				partida_registrarSituacion($conexion,$datos);
+				
+			}
 			
 			//Devolvemos los datos de la partida
 			partida_datosPartida($conexion,$ejercito);

@@ -26,30 +26,39 @@
 					<a href='partidas.php'>
 						<img id='matchAvatar' src='".avatar($conexion)."'/>
 					</a>
-								
-					<div id='datos'>
+					<table id='tablaDatos'>
+						<tr>
+							<td>
+								<div id='datos'>
 		";
 		partida_datosPartida($conexion,null);
 		echo "
-					</div>
-								
-					<table>
-						<tr>
-							<td colspan='2' class='subtitle'>CAMARA:</td>
-						</tr>
-						<tr>
-							<td colspan='2' id='zoom' class='white'></td>
-						</tr>
-						<tr>
-							<td colspan='2' class='subtitle'>CURSOR</td>
-						</tr>
-						<tr>
-							<td id='cursorX' class='white'>X: --</td>
-							<td id='cursorY' class='white'>Y: --</td>
+								</div>
+							</td>
+							<td>
+								<table>
+									<tr>
+										<td colspan='2' class='subtitle'>CAMARA:</td>
+									</tr>
+									<tr>
+										<td colspan='2' class='white'><span id='zoom'></span>%</td>
+									</tr>
+									<tr>
+										<td colspan='2' class='subtitle'>CURSOR</td>
+									</tr>
+									<tr>
+										<td class='subtitle'>X:</td>
+										<td class='subtitle'>Y:</td>
+									</tr>
+									<tr>
+										<td id='cursorX' class='white'>--</td>
+										<td id='cursorY' class='white'>--</td>
+									</tr>
+								</table>
+							</td>
 						</tr>
 					</table>
-					<div id='textofase'></div>
-					<div id='panelout' class='white'></div>
+					<div id='panelout' class='white'><div class='enfasis'>FANTASY BATTLE GAMES</div></div>
 				</div>
 				<div id='columnaPrincipal'>
 					<div id='contenidoPrincipal'>
@@ -152,7 +161,23 @@
 				echo "
 						</td>
 					</tr>
-						
+				";
+				/**Si la fase está activa mostramos el boton para finalizarla*/
+				if(!$faseFinalizada){
+					echo "
+						<tr>
+							<td colspan='2'>
+								<div id='finalizarFase'>
+									FINALIZAR
+									<br/>FASE
+									<br/><img src='src/botones/desafiar.png'/>
+								</div>
+							</td>
+						</tr>
+					";
+				}
+				
+				echo "
 					<tr class='oculto'>
 						<td>
 							<input type='hidden' id='partidaId' value='$partidaId'/>
@@ -778,18 +803,14 @@
 		}
 		
 		echo "
-				<p>
-					<span class='subtitle'>Unidades: </span>
-					<span class='white' id='miembrostropa$tropaId'>$tropaUnidades</span>
-				</p>
-				<p>
-					<span class='subtitle'>Puntos: </span>
-					<span class='white' id='ptstropa$tropaId'>$tropaPts</span>
-				</p>
-				<p>
-					<span class='subtitle'>Rango: </span>
-					<span class='white' id='rangotropa$tropaId'>$tropaRango</span>
-				</p>
+				<span class='subtitle'>Unidades: </span>
+				<span class='white' id='miembrostropa$tropaId'>$tropaUnidades</span>
+				<br/>
+				<span class='subtitle'>Puntos: </span>
+				<span class='white' id='ptstropa$tropaId'>$tropaPts</span>
+				<br/>
+				<span class='subtitle'>Rango: </span>
+				<span class='white' id='rangotropa$tropaId'>$tropaRango</span>
 		";
 		
 		
@@ -855,5 +876,109 @@
 				</p>
 			</td>
 		";
+	}
+	
+	
+	/**
+	 * Función que registra una nueva situacion en la base de datos.
+	 * 
+	 * @param $conexion Mysqli - Conexion a base de datos.
+	 * @param $datos Array - Array con los datos de la situacion.
+	 */
+	function partida_registrarSituacion($conexion, $datos){
+		//Los datos recibidos aun no han sido filtrado, de modo que procedemos a hacerlo.
+		$partida = preg_replace("/[^0-9]+/", "", $datos['partida']);
+		$ejercito = preg_replace("/[^0-9]+/", "", $datos['ejercito']);
+		$fase = preg_replace("/[^0-9]+/", "", $datos['fase']);
+		$ordenFase = preg_replace("/[^0-9]+/", "", $datos['ordenFase']);
+		$ordenJugador = preg_replace("/[^A-Za-z0-9]+/", "", $datos['ordenJugador']);
+		
+		//Si el orden de jugador es "Desafiador" se trata del primer jugador en efectuar sus fases.
+		if($ordenJugador == "Desafiador"){
+			$ordenJugador = 1;
+		}
+		else{
+			$ordenJugador = 2;
+		}
+		
+		//Para cada tropa prepararemos un registro de la misma en persistencia de datos.
+		foreach($datos['tropas'] as $tropa){
+			partida_registrarSituacionTropa($conexion, $fase, $tropa);
+		}
+		
+		//Tras ello lanzamos el proceso de pasar fase.
+		echo "=D";
+	}
+	
+	
+	/**
+	 * Función que registra una la situacion de una tropa en una fase en la base de datos.
+	 * 
+	 * @param $conexion Mysqli - Conexion a base de datos.
+	 * @param $fase integer - id de la fase a que pertenece la tropa.
+	 * @param $tropa Array - Array con los datos de la tropa.
+	 */
+	function partida_registrarSituacionTropa($conexion, $fase, $tropa){
+		/**
+		 * Diseñamos la consulta en funcion de una serie de valores que podrían ser null
+		 * Para ello concatenamos el valor o null en funcion de si el valor es un string vacío.
+		 */
+		
+		//Suponemos que la tropa enemiga
+		$query = "CALL proceso_addSituacion(false,?,?,?,?,?,?,?,";
+		//Si la tropa fuera aliada 
+		if($tropa['aliada']){
+			$query = "CALL proceso_addSituacion(true,?,?,?,?,?,?,?,";
+		}
+		
+		
+		//Tropa Adoptiva
+		$tropaAdoptiva = preg_replace("/[^0-9]+/", "", $tropa['tropa']);
+		if($tropaAdoptiva == ""){
+			$query .= "null,";
+		}
+		else{
+			$query .= $tropaAdoptiva.",";
+		}
+		
+		//Tropa Bajo Ataque
+		$tropaBajoAtaque = preg_replace("/[^0-9]+/", "", $tropa['tropaBajoAtaque']);
+		if($tropaBajoAtaque == ""){
+			$query .= "null,";
+		}
+		else{
+			$query .= $tropaBajoAtaque.",";
+		}
+		
+		//Tropa Bajo Ataque Flanco
+		$tropaBajoAtaqueFlanco = preg_replace("/[^0-9]+/", "", $tropa['tropaBajoAtaqueFlanco']);
+		if($tropaBajoAtaqueFlanco == ""){
+			$query .= "null,";
+		}
+		else{
+			$query .= "'".$tropaBajoAtaqueFlanco."',";
+		}
+		
+		$query .= "?)";
+		
+		$sentencia = $conexion -> prepare($query);
+		
+		$sentencia -> bind_param(
+			'iiiiiiis'
+			, preg_replace("/[^0-9]+/", "", $tropa['tropa'])
+			, $fase
+			, preg_replace("/[^0-9]+/", "", $tropa['unidadesFila'])
+			, preg_replace("/[^0-9]+/", "", $tropa['altitud'])
+			, preg_replace("/[^0-9]+/", "", $tropa['latitud'])
+			, preg_replace("/[^0-9]+/", "", $tropa['orientacion'])
+			, preg_replace("/[^0-9]+/", "", $tropa['heridas'])
+			, preg_replace("/[^0-9]+/", "", $tropa['estado'])
+		);
+		
+		if(!$sentencia -> execute()){
+			echo $sentencia -> error;
+		}
+		
+		$sentencia -> close();
 	}
 ?>

@@ -13,12 +13,13 @@ function Tropa(tropaId,panelOut){
 	var id = tropaId;
 	var nombre = document.getElementById("nombre"+tropaId).innerHTML;
 	var miembros = parseInt(document.getElementById("miembros"+tropaId).innerHTML);
+	var user = document.getElementById("user"+tropaId).value;
 	var larga = false;
 	
 	//Situacion
 	var selected = false;
-	var user = document.getElementById("user"+tropaId).value;
 	var estado = document.getElementById("estado"+tropaId).innerHTML;
+	var heridas = document.getElementById("heridas"+tropaId).innerHTML;
 	var latitud = parseInt(document.getElementById("latitud"+tropaId).innerHTML);
 	var altitud = parseInt(document.getElementById("altitud"+tropaId).innerHTML);
 	var orientacion = parseInt(document.getElementById("orientacion"+tropaId).innerHTML)*Math.PI/180;
@@ -113,23 +114,6 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	/**
-	 * Método get que retorna valores distintos en funcion de por que frentes combata.
-	 * 
-	 * @return el c�digo devuelto se forma por 4 n�meros (vsdr)
-	 * Un valor igual a 0 indica que no hay combate por eese frente.
-	 */
-	this.getCombate = function(){
-		var combate = 0;
-
-		if(combateVanguardia == "si") combate+=1000;
-		if(combateSiniestra == "si") combate+=100;
-		if(combateDiestra == "si") combate+=10;
-		if(combateVanguardia == "si") combate+=1;
-		
-		return combate;
-	}
-	
-	/**
 	 * Método get que retorna las coordenadas del punto vanguardiaSiniestra.
 	 * 
 	 * @return coordenadas X e Y de la esquina.
@@ -205,6 +189,7 @@ function Tropa(tropaId,panelOut){
 		return coor;
 	};
 	
+	
 	/**
 	 * Método get que retorna la orientacion en grados de la unidad.
 	 * 
@@ -214,6 +199,17 @@ function Tropa(tropaId,panelOut){
 		return orientacion*180/Math.PI;
 	};
 	
+	
+	/**
+	 * Método get que retorna la cantidad de unidades de la tropa.
+	 * 
+	 * @return devuelve un integer
+	 */
+	this.getUnidades = function(){
+		return parseInt(miembros);
+	};
+	
+	
 	/**
 	 * Método get que retorna el numero de unidades por fila.
 	 * 
@@ -221,6 +217,44 @@ function Tropa(tropaId,panelOut){
 	 */
 	this.getAnchoFila = function(){
 		return unidadesFila;
+	};
+	
+	
+	/**
+	 * Método get que retorna el numero de heridas.
+	 * 
+	 * @return devuelve un integer
+	 */
+	this.getHeridas = function(){
+		return heridas;
+	};
+	
+	
+	/**
+	 * Método get que retorna el estado.
+	 * 
+	 * @return devuelve un integer
+	 */
+	this.getEstado = function(){
+		return estado;
+	};
+	
+	
+	/**
+	 * Método get que retorna el numero de heridas.
+	 * 
+	 * @return devuelve un integer
+	 */
+	this.getTropaAdoptiva = function(){
+		return tropaAdoptivaId;
+	};
+	
+	
+	/**
+	 * Método get que retorna el id de la unidad bajo ataque y el flanco que se encuentra bajo ataque.
+	 */
+	this.getTropaBajoAtaque = function(){
+		return {id: tropaBajoAtaqueId, flanco: tropaBajoAtaqueFlanco};
 	};
 	
 	
