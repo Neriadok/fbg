@@ -554,7 +554,7 @@
 					$sentencia -> store_result();
 					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
-					if($sentencia -> num_rows >= 1){
+					if($sentencia -> num_rows == 1){
 						formularioTropa("Personaje", "Personaje", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
 					}
 					else{
@@ -569,7 +569,7 @@
 					$sentencia -> store_result();
 					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
-					if($sentencia -> num_rows >= 1){
+					if($sentencia -> num_rows == 1){
 						formularioTropa("<label for='monturaPersonaje".$n."'>Montura-Bestias de Tiro</label> <input type='checkbox' id='monturaPersonaje".$n."' class='monturaPersonaje' name='monturaPersonaje[".$n."]' checked='checked'/>", "MonturaPersonaje", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
 					}
 					else{
@@ -585,7 +585,7 @@
 					$sentencia -> store_result();
 					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
-					if($sentencia -> num_rows >= 1){
+					if($sentencia -> num_rows == 1){
 						formularioTropa("<label for='maquinaPersonaje".$n."'>Maquinaria-Carro</label> <input type='checkbox' id='maquinaPersonaje".$n."' class='maquinaPersonaje' name='maquinaPersonaje[".$n."]' checked='checked'/>","MaquinariaPersonaje", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
 					}
 					else{
@@ -601,7 +601,7 @@
 					$sentencia -> store_result();
 					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
-					if($sentencia -> num_rows >= 1){
+					if($sentencia -> num_rows == 1){
 						formularioTropa("<label for='dotacionPersonaje".$n."'>Dotacion</label> <input type='checkbox' id='dotacionPersonaje".$n."' class='dotacionPersonaje' name='dotacionPersonaje[".$n."]' checked='checked'/>","DotacionPersonaje", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
 					}
 					else{
@@ -770,7 +770,7 @@
 					$sentencia -> store_result();
 					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
-					if($sentencia -> num_rows >= 1){
+					if($sentencia -> num_rows == 1){
 						formularioTropa("Miembros-Dotacion","Tropa", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
 					}
 					else{
@@ -786,7 +786,7 @@
 					$sentencia -> store_result();
 					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
-					if($sentencia -> num_rows >= 1){
+					if($sentencia -> num_rows == 1){
 						formularioTropa("<label for='monturaTropa".$n."'>Montura-Bestias de Tiro</label> <input type='checkbox' id='monturaTropa".$n."' class='monturaTropa' name='monturaTropa[".$n."]' checked='checked'/>","MonturaTropa", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
 					}
 					else{
@@ -802,7 +802,7 @@
 					$sentencia -> store_result();
 					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
-					if($sentencia -> num_rows >= 1){
+					if($sentencia -> num_rows == 1){
 						formularioTropa("<label for='maquinaTropa".$n."'>Maquinaria-Carro</label> <input type='checkbox' id='maquinaTropa".$n."' class='maquinaTropa' name='maquinaTropa[".$n."]' checked='checked'/>","MaquinariaTropa", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
 					}
 					else{

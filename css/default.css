@@ -317,6 +317,11 @@ legend{
 	font-size: smaller;
 }
 
+.larger {
+	font-size: larger;
+	font-weight: bolder;
+}
+
 .cursiva {
 	font-style:italic;	
 }

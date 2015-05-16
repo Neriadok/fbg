@@ -68,7 +68,9 @@ function Submit(tipo,elementoId,form,ca,sitioCarga){
 	 */
 	function cEncima(e){
 		
+		if(document.getElementById(elementoId) != null){
 			document.getElementById(elementoId).style.borderColor="#F9FF45";
+		}
 	};
 
 		
@@ -81,7 +83,9 @@ function Submit(tipo,elementoId,form,ca,sitioCarga){
 
 		cSoltar(e);	
 		
-		document.getElementById(elementoId).style.borderColor="#CBD126";
+		if(document.getElementById(elementoId) != null){
+			document.getElementById(elementoId).style.borderColor="#CBD126";
+		}
 	};
 
 		
@@ -93,8 +97,10 @@ function Submit(tipo,elementoId,form,ca,sitioCarga){
 	function cPulsado(e){
 		
 		pulsado=true;
-
-		document.getElementById(elementoId).style.boxShadow="3px 3px 3px grey";
+		
+		if(document.getElementById(elementoId) != null){
+			document.getElementById(elementoId).style.boxShadow="3px 3px 3px grey";
+		}
 	};
 
 		
@@ -107,7 +113,9 @@ function Submit(tipo,elementoId,form,ca,sitioCarga){
 		if(pulsado){
 			pulsado = false;
 
-			document.getElementById(elementoId).style.boxShadow="none";
+			if(document.getElementById(elementoId) != null){
+				document.getElementById(elementoId).style.boxShadow="none";
+			}
 		}
 	};
 	

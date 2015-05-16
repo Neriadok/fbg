@@ -160,3 +160,25 @@ canvas{
 	font-weight:bold;
 	border-radius:15px;
 }
+
+
+.alyPairRow {
+	background-color: #D9EAFF;
+	color: #000030;
+}
+
+.alyInpairRow {
+	background-color: #9BB0C9;
+	color: #000030;
+}
+
+
+.enemyPairRow {
+	background-color: #FCFB81;
+	color: #000030;
+}
+
+.enemyInpairRow {
+	background-color: #D9D743;
+	color: #000030;
+}

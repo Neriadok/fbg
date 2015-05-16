@@ -45,7 +45,6 @@
 					
 					partidaId = galleta.slice(comienzoCookie,finCookie);
 				}
-				console.log("Partida "+partidaId);
 
 				//Tratamos los elementos de la página una única vez, de ahi en adelante es la propia partida la que los gestiona.
 				tratarElementos();
@@ -54,7 +53,7 @@
                 /** Funciones generadas al inicio **/
 
             	function tratarElementos(){
-    				console.log("Partida "+partidaId);
+    				console.log("Partida Ejercito "+partidaId);
                 	var interfaz = new Interfaz(
                     	document.getElementById("interfaz")
                 		,document.getElementById("columnaInfo")

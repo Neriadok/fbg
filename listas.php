@@ -25,7 +25,6 @@
 		<script type="text/JavaScript" src="jFBG/Alerta.js"></script>
 		<script type="text/JavaScript" src="jFBG/Destino.js"></script>
 		<script type="text/JavaScript" src="jFBG/Agregar.js"></script>
-		<script type="text/JavaScript" src="jFBG/Lista.js"></script>
 		<script>
 			
         	function inicio(){
@@ -140,11 +139,6 @@
                 	/**Genereamos el objeto Submit para guardar cambios en la lista si este existiese.**/
     				if(document.getElementById("saveeditlist") != null){
                 		var guardarLista = new Submit(11, "saveeditlist", document.getElementById("formulariolista"),ca);
-    				}
-
-    				/**Genereamos el objeto Lista.js, que evalua el coste en puntos de la lista, si este existiese.**/
-    				if(document.getElementById("formulariolista") != null){
-                		var tropas = new Lista(document.getElementById("formulariolista"), document.getElementById("puntosLista") , "puntosTP", "nombreTP");
     				}
     				
     				/**Generamos los objetos ventana si los hubiese.**/

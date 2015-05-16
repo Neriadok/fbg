@@ -87,10 +87,10 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 	this.posicionar = function(x,y,situacion,zoom,user){
 		
 		if(user){
-			situacion.fillStyle = "#E8E65F";
+			situacion.fillStyle = "#C1D0E3";
 		}
 		else{
-			situacion.fillStyle = "#C1D0E3";
+			situacion.fillStyle = "#E8E65F";
 		}
 		
 		if(larga){

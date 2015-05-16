@@ -714,7 +714,7 @@ function Tropa(tropaId,panelOut){
 		document.getElementById("unidadesfila"+tropaId).innerHTML = "--";
 		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = tropaPadre;
 		actualizar();
-		document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" incorporada exitosamente. ";
+		document.getElementById(panelOut).innerHTML += "Tropa "+nombre+" incorporada exitosamente. ";
 	};
 	
 	/**

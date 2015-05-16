@@ -109,6 +109,7 @@
 					,$partidaId
 					,$orden
 					,$nickEnemigo
+					,$ejercitoEnemigoId
 					,$ejercitoNombre
 					,$listaId
 					,$pts
@@ -182,21 +183,16 @@
 						<td>
 							<input type='hidden' id='partidaId' value='$partidaId'/>
 							<input type='hidden' id='ejercitoId' value='$ejercitoId'/>
+							<input type='hidden' id='ejercitoEnemigoId' value='$ejercitoEnemigoId'/>
 							<input type='hidden' id='faseId' value='$faseId'/>
 							<input type='hidden' id='ordenFase' value='$ordenFase'/>
 							<input type='hidden' id='pts' value='$pts'/>
 						</td>
 					</tr>
 				";
-				$sentencia -> close();
 			}
-			
-			/**En caso de no tener permisos le añadimos 2 faltas**/
-			else{
-				$sentencia -> close();
-				addFaltaUser($conexion, $_SESSION['userId']);
-				addFaltaUser($conexion, $_SESSION['userId']);
-			}
+
+			$sentencia -> close();
 		}
 		
 		else{
@@ -375,13 +371,7 @@
 				";
 			}
 			else{
-				
-				/**Es necesario comprobar si se trata de la fase de despliegue ya que aun no existiría ninguna situación.*/
-				$faseDespliegue = false;
-				if($fase == 0){
-					$faseDespliegue = true;
-				}
-				partida_tropasEjercito($conexion,$faseDespliegue,$ejercito,$partida);
+				partida_tropasEjercito($conexion, $partida, $ejercito, $fase);
 			}
 		}
 		else{
@@ -410,7 +400,7 @@
 	 * @param $ejercito integer - Id que identifica el ejercito del jugador en una partida.
 	 * @param $partida integer - Id de la partida en la que se usa dicho ejercito.
 	 */
-	function partida_tropasEjercito($conexion,$faseDespliegue,$ejercito,$partida){
+	function partida_tropasEjercito($conexion, $partida, $ejercito, $fase){
 		
 		echo "
 			<p class='enfasis alignCenter'>TROPAS</p>
@@ -419,12 +409,9 @@
 		";
 		
 		/**Debemos verificar si se trata de la fase de despliegue, ya que en la fase de despliegue aun no existen tropas desplegadas.*/
-		$query = "CALL proceso_tropasEjercito(false,?,?)";
-		if($faseDespliegue){
-			$query = "CALL proceso_tropasEjercito(true,?,?)";
-		}
+		$query = "CALL proceso_tropasEjercito(?,?,?)";
 		$sentencia = $conexion -> prepare($query);
-		$sentencia -> bind_param('ii', $ejercito, $partida);
+		$sentencia -> bind_param('iii', $partida, $ejercito, $fase);
 		$sentencia -> execute();
 		$sentencia -> store_result();
 		$sentencia -> bind_result(
@@ -500,17 +487,27 @@
 				$row++;
 				echo "<tr class='";
 				
-				if($row%2==0){
-					echo " pairRow";
+				if($tropaEjercito[$tropaId]){
+					if($row%2==0){
+						echo " alyPairRow";
+					}
+					else{
+						echo " alyInpairRow";
+					}
 				}
 				else{
-					echo " inpairRow";
+					if($row%2==0){
+						echo " enemyPairRow";
+					}
+					else{
+						echo " enemyInpairRow";
+					}
 				}
 			
 				echo "
 					'>
 						<td class='subtitle columnaUnidades alignRight'>$tropaUnidades[$tropaId] x</td>
-						<td id='selectortropa$tropaId' class='alignCenter white selectorTropa'>$tropa</td>
+						<td id='selectortropa$tropaId' class='alignCenter selectorTropa larger'>$tropa</td>
 						<td class='oculto'>
 							<div id='tropa$tropaId' class='oculto tropa
 				";
@@ -698,9 +695,7 @@
 	 * FUNCIÓN DE CONTENIDO
 	 * Función que muestra los datos generales de una tropa.
 	 * 
-	 * 
 	 * @param tropaId integer - id de la tropa en cuestion.
-	 * @param $tropaTipo String - tipo de tropa de que se trata 
 	 * @param $tropaUnidades integer - número de unidades que conforman la tropa.
 	 * @param $tropaPts integer - puntos que cuesta la tropa.
 	 * @param $tropaRango integer - mayor rango existente en la tropa (sin contar miembros del grupo de mando)
@@ -710,7 +705,6 @@
 	 * @param $tropaEst boolean - Será true si la tropa incluye un portaestandarte.
 	 * @param $tropaMusico boolean - Será true si la tropa incluye un músico.
 	 * @param $tropaEjercito boolean - Será true si la tropa pertenece al ejercito del usuario.
-	 * @param $tropaEnCampo boolean - Será true si la tropa está desplegada.
 	 */
 	function partida_datosGeneralesTropa(
 			$tropaId
@@ -834,7 +828,16 @@
 	
 	
 	/**
+	 * FUNCION DE CONTENIDO
+	 * Función que muestra estructuradamente los datos concretos de una tropa para una situacion dada.
 	 * 
+	 * @param $tropaId integer - Id de la tropa a la que pertenecen los datos.
+	 * @param $tropaHeridas integer - Número de heridas que ha recibido la tropa.
+	 * @param $tropaEstado String - Estado de la tropa en la situación.
+	 * @param $tropaUnidadesFila integer - Número de unidades qu hay en cada fila de la tropa.
+	 * @param $tropaTropaAdoptivaId integer - Id de la tropa en que se endosa la unidad si la hubiese.
+	 * @param $tropaTropaBajoAtaqueId integer - Id de la tropa a la que se está atacando si la hubiese.
+	 * @param $tropaTropaBajoAtaqueFlanco String - Flanco por el que se esta atacando a la tropa antes mencionada.
 	 */
 	function partida_datosConcretosTropa(
 			$tropaId
@@ -880,7 +883,10 @@
 	
 	
 	/**
+	 * FUNCIÓN DE EJECUCIÓN SETTER
 	 * Función que registra una nueva situacion en la base de datos.
+	 * Cabe mencionar que aunque esta función esté definida como ejecución setter
+	 * en verdad gestiona a las dos funciones que realmente registran los datos.
 	 * 
 	 * @param $conexion Mysqli - Conexion a base de datos.
 	 * @param $datos Array - Array con los datos de la situacion.
@@ -889,6 +895,8 @@
 		//Los datos recibidos aun no han sido filtrado, de modo que procedemos a hacerlo.
 		$partida = preg_replace("/[^0-9]+/", "", $datos['partida']);
 		$ejercito = preg_replace("/[^0-9]+/", "", $datos['ejercito']);
+		$ejercitoEnemigo = preg_replace("/[^0-9]+/", "", $datos['ejercitoEnemigo']);
+		$turno = preg_replace("/[^0-9]+/", "", $datos['turno']);
 		$fase = preg_replace("/[^0-9]+/", "", $datos['fase']);
 		$ordenFase = preg_replace("/[^0-9]+/", "", $datos['ordenFase']);
 		$ordenJugador = preg_replace("/[^A-Za-z0-9]+/", "", $datos['ordenJugador']);
@@ -903,22 +911,36 @@
 		
 		//Para cada tropa prepararemos un registro de la misma en persistencia de datos.
 		foreach($datos['tropas'] as $tropa){
-			partida_registrarSituacionTropa($conexion, $fase, $tropa);
+			partida_registrarSituacionTropa($conexion, $ejercito, $tropa, false);
+			if($ordenFase != 0 || $ordenJugador != 1){
+				partida_registrarSituacionTropa($conexion, $ejercitoEnemigo, $tropa, true);
+			}
 		}
 		
 		//Tras ello lanzamos el proceso de pasar fase.
-		echo "=D";
+		
+		partida_registrarNuevaFase(
+				$conexion
+				,$partida
+				,$ejercito
+				,$ejercitoEnemigo
+				,$turno
+				,$fase
+				,$ordenFase
+				,$ordenJugador
+			);
 	}
 	
 	
 	/**
+	 * FUNCIÓN DE EJECUCIÓN SETTER
 	 * Función que registra una la situacion de una tropa en una fase en la base de datos.
 	 * 
 	 * @param $conexion Mysqli - Conexion a base de datos.
 	 * @param $fase integer - id de la fase a que pertenece la tropa.
 	 * @param $tropa Array - Array con los datos de la tropa.
 	 */
-	function partida_registrarSituacionTropa($conexion, $fase, $tropa){
+	function partida_registrarSituacionTropa($conexion, $ejercito, $tropa, $situacionEnemiga){
 		/**
 		 * Diseñamos la consulta en funcion de una serie de valores que podrían ser null
 		 * Para ello concatenamos el valor o null en funcion de si el valor es un string vacío.
@@ -927,13 +949,13 @@
 		//Suponemos que la tropa enemiga
 		$query = "CALL proceso_addSituacion(false,?,?,?,?,?,?,?,";
 		//Si la tropa fuera aliada 
-		if($tropa['aliada']){
+		if(($tropa['aliada'] && !$situacionEnemiga) || (!$tropa['aliada'] && $situacionEnemiga)){
 			$query = "CALL proceso_addSituacion(true,?,?,?,?,?,?,?,";
 		}
 		
 		
 		//Tropa Adoptiva
-		$tropaAdoptiva = preg_replace("/[^0-9]+/", "", $tropa['tropa']);
+		$tropaAdoptiva = preg_replace("/[^0-9]+/", "", $tropa['tropaAdoptiva']);
 		if($tropaAdoptiva == ""){
 			$query .= "null,";
 		}
@@ -966,19 +988,143 @@
 		$sentencia -> bind_param(
 			'iiiiiiis'
 			, preg_replace("/[^0-9]+/", "", $tropa['tropa'])
-			, $fase
+			, $ejercito
 			, preg_replace("/[^0-9]+/", "", $tropa['unidadesFila'])
 			, preg_replace("/[^0-9]+/", "", $tropa['altitud'])
 			, preg_replace("/[^0-9]+/", "", $tropa['latitud'])
 			, preg_replace("/[^0-9]+/", "", $tropa['orientacion'])
 			, preg_replace("/[^0-9]+/", "", $tropa['heridas'])
-			, preg_replace("/[^0-9]+/", "", $tropa['estado'])
+			, preg_replace("/[^0-9a-zA-Z\ ]+/", "", $tropa['estado'])
 		);
 		
-		if(!$sentencia -> execute()){
-			echo $sentencia -> error;
-		}
-		
+		$sentencia -> execute();
 		$sentencia -> close();
+	}
+	
+	
+	/**
+	 * FUNCIÓN DE EJECUCIÓN SETTER
+	 * Función que registra la siguiente fase de la partida. Una vez excedido el turno 4 se finaliza la partida.
+	 * 
+	 * @param $conexion Mysqli - Conexion a base de datos.
+	 * @param $partida integer - Id de la partida que se está jugando.
+	 * @param $ejercito integer - Id del ejercito que está finalizando la fase.
+	 * @param $ejercitoEnemigo - Id del ejercito enemigo.
+	 * @param $fase integer - Id de la fase que se va a finalizar.
+	 * @param $ordenFase integer - Orden de la fase que se está jugando, importante para definir cual será la siguiente.
+	 * @param $ordenJugador integer - Orden del jugador a fin de definir si al finalizar la fase le toca al oponente o no.
+	 */
+	function partida_registrarNuevaFase(
+		$conexion, $partida, $ejercito, $ejercitoEnemigo, $turno, $fase, $ordenFase, $ordenJugador
+	){
+		//Constante
+		$MAXTURNOS = 4;
+		
+		//Lo primero que hacemos es finalizar la fase actual. 
+		$sentencia = $conexion -> prepare("CALL proceso_finalizarFase(?,?)");
+		$sentencia -> bind_param('ii',$turno,$ejercito);
+		$sentencia -> execute();
+		$sentencia -> close();
+		
+		//Comprobamos que no se trata de la fase de chequeos del segundo jugador en el ultimo turno
+		if($turno == $MAXTURNOS && $ordenJugador == 2 && $fase == 5){
+			//Si ese es el caso, comprobamos quien es el vencedor.
+			
+			//Despues finalizamos la partida.
+			
+		}
+		else{
+			//En caso contrario comprobamos de que jugador se trata.
+			if($ordenJugador == 1){
+				
+				/**
+				 * En el primer turno, hay que crear el turno del segundo jugador
+				 * tras la fase de despliegue del primero.
+				 * En todos los demas se realiza
+				 * tras la fase de declaracion de cargas.
+				 */
+				if(($turno == 1 && $ordenFase == 0) || ($turno != 1 && $ordenFase == 1)){
+					$sentencia = $conexion -> prepare("CALL proceso_nuevoTurno(?,?)");
+					$sentencia -> bind_param('ii',$turno,$ejercitoEnemigo);
+					$sentencia -> execute();
+					$sentencia -> close();
+				}
+				
+				//Comprobamos de que fase se trata
+				switch($ordenFase){
+					case 0:
+						/**
+						 * Al finalizar la fase de despliegue del primer jugador
+						 * se pasa a la fase de despliegue del segundo.
+						 */
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(0,?)");
+						$sentencia -> bind_param('i',$ejercitoEnemigo);
+						$sentencia -> execute();
+						$sentencia -> close();
+						
+					case 1:
+						/**
+						 * Al finalizar la fase de declaracion de cargas del primer jugador
+						 * se pasa a la de reaccion de cargas del segundo.
+						 */
+					case 2:
+						/**
+						 * Al finalizar la fase de reaccion de cargas del primer jugador
+						 * se pasa a la de movimiento del primero.
+						 */
+					case 3:
+						/**
+						 * Al finalizar la fase de movimiento del primer jugador
+						 * se pasa a la de movimiento del segundo.
+						 */
+					case 4:
+						/**
+						 * Al finalizar la fase de combate del primer jugador
+						 * se pasa a la fase de chequeo del segundo.
+						 */
+					case 5:
+						/**
+						 * Al finalizar la dase de chequeo del primer jugador
+						 * se finaliza el turno y se empieza uno nuevo.
+						 * Tras ello se pasa a la fase de declaracion de cargas del mismo.
+						 */
+				}
+			}
+			else{
+				//Comprobamos de que fase se trata
+				switch($ordenFase){
+					case 0:
+						/**
+						 * Al finalizar la fase de despliegue del segundo jugador
+						 * se pasa a la fase de declaracion de cargas del primero.
+						 */
+					case 1:
+						/**
+						 * Al finalizar la fase de declaracion de cargas del segundo jugador
+						 * se pasa a la de reaccion de cargas del primero.
+						 */
+					case 2:
+						/**
+						 * Al finalizar la fase de reaccion de cargas del segundo jugador
+						 * se pasa a la de declaracion de cargas del mismo.
+						 */
+					case 3:
+						/**
+						 * Al finalizar la fase de movimiento del segundo jugador
+						 * se pasa a la de combate del primero.
+						 */
+					case 4:
+						/**
+						 * Al finalizar la fase de combate del segundo jugador
+						 * se pasa a la de chequeo del primero.
+						 */
+					case 5:
+						/**
+						 * Al finalizar la dase de chequeo del segundo jugador
+						 * se pasa a la de combate del mismo.
+						 */
+				}
+			}
+		}
 	}
 ?>

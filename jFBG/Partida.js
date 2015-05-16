@@ -151,7 +151,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		else{
 			datosPartida.situacionPartida = document.getElementById("partidaId").value;
 			datosPartida.situacionEjercito = ejercitoId;
-			datosPartida.fase = document.getElementById("ordenFase").value;
+			datosPartida.fase = document.getElementById("faseId").value;
 		}
 		
 		//Lo convertimos a texto
@@ -217,7 +217,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
     	}
     	if(fichaTropaEnemiga != null){
     		for(var i=0; i<fichaTropaEnemiga.length ; i++){
-        		for(var i=0; i<fichaTropa.length; i++){
+        		for(var i=0; i<fichaTropaEnemiga.length; i++){
         			/**
         			 * Cuando hagamos click en algun selector, se mostrará dicha tropa.
         			 */
@@ -228,7 +228,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
         			 * Cada vez que realizamos esta acción, la tropa en cuestion se reposiciona al final del array
         			 * y la siguiente ocupara la posición 0, de modo que siempre tratamos la tropa 0.
         			 */
-        			document.getElementById("datosSeleccion").appendChildEnemiga(fichaTropa[0]);
+        			document.getElementById("datosSeleccion").appendChild(fichaTropaEnemiga[0]);
         		}
     		}
     	}
@@ -308,6 +308,8 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		
 		datos.partida = document.getElementById("partidaId").value;
 		datos.ejercito = document.getElementById("ejercitoId").value;
+		datos.ejercitoEnemigo = document.getElementById("ejercitoEnemigoId").value;
+		datos.turno = document.getElementById("turno").innerHTML;
 		datos.fase = document.getElementById("faseId").value;
 		datos.ordenFase = fase;
 		datos.ordenJugador = userOrder;
@@ -1699,6 +1701,9 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 				if(isNaN(angle)){
 					if(userOrder == "Desafiador"){
 						angle = 180;
+					}
+					else{
+						angle = 0;
 					}
 				}
 				tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(posicionCursor(e).x,posicionCursor(e).y,angle,5,CAMPO_ANCHO,CAMPO_ALTO,userOrder);
