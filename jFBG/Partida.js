@@ -108,7 +108,8 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	 * Estos son necesarios para poder identificar las tablas
 	 * que en conjunto representan la situación de la partida.
 	 */
-	function obtenerSituacion(){
+	function obtenerSituacion(e){
+		if(e != null) e.preventDefault();
 		/**
 		 * Para obtener la situacióna ctual de la partida tenemos,
 		 * en primer lugar, que detectar cual es la ultima fase y algunos otros datos.
@@ -172,6 +173,10 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		/**Comprobamos si existe un boton para finalizar fase.**/
 		if(document.getElementById("finalizarFase") != null){
 			document.getElementById("finalizarFase").ondblclick = finalizarFase;
+		}
+		/**Comprobamos si existe un boton para finalizar fase.**/
+		if(document.getElementById("actualizarSituacion") != null){
+			document.getElementById("actualizarSituacion").ondblclick = obtenerSituacion;
 		}
 		
 		/**Generamos los objetos ventana si los hubiese.**/
@@ -349,13 +354,28 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	 * Para ello asocia a cada objeto tropa la informacion contenida a un elemento de clase tropa existente en el DOM.
 	 */
 	function tropasIniciar(){
-		/** Verificamos que existen elementos tropa en el dom */
+		/** Verificamos que existen elementos tropa en el dom y creamos los objetos tropa pertinentes*/
 		if(fichaTropa != null){
 			for(var i=0; i<fichaTropa.length; i++){
 				tropa[i] = new  Tropa(fichaTropa[i].id, panelOut);
 			}
+		}
+		if(fichaTropaEnemiga != null){
 			for(var i=fichaTropa.length; i<fichaTropa.length+fichaTropaEnemiga.length; i++){
 				tropa[i] = new  Tropa(fichaTropaEnemiga[i-fichaTropa.length].id, panelOut);
+			}
+		}
+	
+		//Establecemos los parentescos que no existiesen.
+		if(tropa.length != 0){
+			for(var i=0; i<tropa.length; i++){
+				var tropaPadre = tropa[i].getTropaAdoptiva();
+				console.log(tropa[i].getId()+" - "+tropaPadre);
+				if(tropaPadre != ""){
+					tropa[tropaBuscar(tropaPadre)].adoptar(tropa[i].getId());
+					tropa[tropaBuscar(tropa[i].getId())].incorporar(tropaPadre);
+					document.getElementById("tropaadoptiva"+tropa[i].getId()).innerHTML = tropa[tropaBuscar(tropaPadre)].getNombre();
+				}
 			}
 		}
 	};
@@ -415,19 +435,22 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		document.getElementById(panelFase).innerHTML = "";
 		var elemento = document.createElement("form");
 		var contenido = "";
-		
-		switch(fase){
-			case "0":
-				contenido = panelFaseDespliegue(contenido);
-			break;
-			
-			case "1":
-				contenido = panelFaseDeclaracionCargas(contenido);
-			break;
-			
-			default: ;
+		if(document.getElementById("finalizarFase") != null){
+			switch(fase){
+				case "0":
+					contenido = panelFaseDespliegue(contenido);
+				break;
+				
+				case "1":
+					contenido = panelFaseDeclaracionCargas(contenido);
+				break;
+				
+				default: ;
+			}
 		}
-		
+		else{
+			contenido = "";
+		}
 		
 		elemento.innerHTML = contenido;
 		document.getElementById(panelFase).appendChild(elemento);
@@ -1173,11 +1196,13 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		
 		if(cursorPulsado){
 			if(clickEnTropa){
-				switch(fase){
-				
-					case "0": accionMoverCursorPulsadoDespliegue(e); break;
+				if(document.getElementById("finalizarFase") != null){
+					switch(fase){
 					
-					default: ;
+						case "0": accionMoverCursorPulsadoDespliegue(e); break;
+						
+						default: ;
+					}
 				}
 			}
 			else{
@@ -1186,11 +1211,12 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			}
 		}
 		else{
-			switch(fase){
-			
-				case "1": accionMoverCursorDeclaracionCargas(e); break;
-					
-				default: ;
+			if(document.getElementById("finalizarFase") != null){
+				switch(fase){
+					case "1": accionMoverCursorDeclaracionCargas(e); break;
+						
+					default: ;
+				}
 			}
 		}
 	};
@@ -1244,13 +1270,14 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		/**Indicamos que ya no se est� pulsando el cursor.*/
 		cursorPulsado = false;
 		clickEnTropa = false;
-		
-		switch(fase){
-			case "0": accionSoltarCursorDespliegue(e); break;
-				
-			case "1": break;
-				
-			default: ;
+		if(document.getElementById("finalizarFase") != null){
+			switch(fase){
+				case "0": accionSoltarCursorDespliegue(e); break;
+					
+				case "1": break;
+					
+				default: ;
+			}
 		}
 		situacionConstruir();
 	};
@@ -1295,12 +1322,14 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			}
 		}
 		else{
-			switch(fase){
-				case "0": accionDobleClickDespliegue(e); break;
-					
-				case "1": break;
-
-				default: ;
+			if(document.getElementById("finalizarFase") != null){
+				switch(fase){
+					case "0": accionDobleClickDespliegue(e); break;
+						
+					case "1": break;
+	
+					default: ;
+				}
 			}
 		}
 		situacionConstruir();
@@ -1370,12 +1399,14 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	 function accionFase(e){
 		/**Prevenimos los efectos por defecto del evento.*/
 		e.preventDefault();
-		switch(fase){
-			case "0": accionFaseDespliegue(); break;
-				
-			case "1": accionFaseDeclaracionCargas(); break;
-				
-			default: ;
+		if(document.getElementById("finalizarFase") != null){
+			switch(fase){
+				case "0": accionFaseDespliegue(); break;
+					
+				case "1": accionFaseDeclaracionCargas(); break;
+					
+				default: ;
+			}
 		}
 		situacionConstruir();
 	};

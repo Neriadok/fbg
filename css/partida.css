@@ -142,7 +142,7 @@ canvas{
 	margin-top:25px;
 }
 
-#finalizarFase{
+#finalizarFase, #actualizarSituacion{
 	width:100px;
 	height:60px;
 	margin:auto;
@@ -151,7 +151,7 @@ canvas{
 	border-radius:15px;
 }
 
-#finalizarFase:hover{
+#finalizarFase:hover, #actualizarSituacion:hover{
 	width:100px;
 	height:60px;
 	margin:auto;

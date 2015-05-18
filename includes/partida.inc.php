@@ -162,23 +162,31 @@
 				echo "
 						</td>
 					</tr>
+					<tr>
+						<td colspan='2'>
 				";
 				/**Si la fase está activa mostramos el boton para finalizarla*/
-				if(!$faseFinalizada){
+				if($fase != null && $faseFinalizada){
 					echo "
-						<tr>
-							<td colspan='2'>
-								<div id='finalizarFase'>
-									FINALIZAR
-									<br/>FASE
-									<br/><img src='src/botones/desafiar.png'/>
-								</div>
-							</td>
-						</tr>
+						<div id='actualizarSituacion'>
+							Actualizar
+							<br/><img src='src/botones/refresh.png'/>
+						</div>
+					";
+				}
+				else if($fase != null){
+					echo "
+						<div id='finalizarFase'>
+							FINALIZAR
+							<br/>FASE
+							<br/><img src='src/botones/desafiar.png'/>
+						</div>
 					";
 				}
 				
 				echo "
+						</td>
+					</tr>
 					<tr class='oculto'>
 						<td>
 							<input type='hidden' id='partidaId' value='$partidaId'/>
@@ -848,6 +856,19 @@
 			, $tropaTropaBajoAtaqueId
 			, $tropaTropaBajoAtaqueFlanco
 		){
+		
+		/**
+		 * Recordamos, que para el correcto tratamiento mediante JS,
+		 * a los identificadores de tropa hay que precederles de la palabra "tropa"
+		 */
+		if($tropaTropaAdoptivaId != null){
+			$tropaTropaAdoptivaId = "tropa".$tropaTropaAdoptivaId;
+		}
+		
+		if($tropaTropaBajoAtaqueId != null){
+			$tropaTropaBajoAtaqueId = "tropa".$tropaTropaBajoAtaqueId;
+		}
+		
 		echo "
 			<td class='halfWidth'>
 				
@@ -909,16 +930,7 @@
 			$ordenJugador = 2;
 		}
 		
-		//Para cada tropa prepararemos un registro de la misma en persistencia de datos.
-		foreach($datos['tropas'] as $tropa){
-			partida_registrarSituacionTropa($conexion, $ejercito, $tropa, false);
-			if($ordenFase != 0 || $ordenJugador != 1){
-				partida_registrarSituacionTropa($conexion, $ejercitoEnemigo, $tropa, true);
-			}
-		}
-		
-		//Tras ello lanzamos el proceso de pasar fase.
-		
+		//Lanzamos el proceso de pasar fase.
 		partida_registrarNuevaFase(
 				$conexion
 				,$partida
@@ -928,7 +940,15 @@
 				,$fase
 				,$ordenFase
 				,$ordenJugador
-			);
+		);
+		
+		//Para cada tropa prepararemos un registro de la misma en persistencia de datos.
+		foreach($datos['tropas'] as $tropa){
+			partida_registrarSituacionTropa($conexion, $ejercito, $tropa, false);
+			if($ordenFase != 0 || $ordenJugador != 1){
+				partida_registrarSituacionTropa($conexion, $ejercitoEnemigo, $tropa, true);
+			}
+		}
 	}
 	
 	
@@ -1018,7 +1038,7 @@
 		$conexion, $partida, $ejercito, $ejercitoEnemigo, $turno, $fase, $ordenFase, $ordenJugador
 	){
 		//Constante
-		$MAXTURNOS = 4;
+		$MAXTURNOS = 20;
 		
 		//Lo primero que hacemos es finalizar la fase actual. 
 		$sentencia = $conexion -> prepare("CALL proceso_finalizarFase(?,?)");
@@ -1050,6 +1070,7 @@
 					$sentencia -> close();
 				}
 				
+				
 				//Comprobamos de que fase se trata
 				switch($ordenFase){
 					case 0:
@@ -1061,33 +1082,65 @@
 						$sentencia -> bind_param('i',$ejercitoEnemigo);
 						$sentencia -> execute();
 						$sentencia -> close();
+						break;
 						
 					case 1:
 						/**
 						 * Al finalizar la fase de declaracion de cargas del primer jugador
 						 * se pasa a la de reaccion de cargas del segundo.
 						 */
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(2,?)");
+						$sentencia -> bind_param('i',$ejercitoEnemigo);
+						$sentencia -> execute();
+						$sentencia -> close();
+						break;
 					case 2:
 						/**
 						 * Al finalizar la fase de reaccion de cargas del primer jugador
 						 * se pasa a la de movimiento del primero.
 						 */
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(3,?)");
+						$sentencia -> bind_param('i',$ejercito);
+						$sentencia -> execute();
+						$sentencia -> close();
+						break;
 					case 3:
 						/**
 						 * Al finalizar la fase de movimiento del primer jugador
 						 * se pasa a la de movimiento del segundo.
 						 */
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(3,?)");
+						$sentencia -> bind_param('i',$ejercitoEnemigo);
+						$sentencia -> execute();
+						$sentencia -> close();
+						break;
 					case 4:
 						/**
 						 * Al finalizar la fase de combate del primer jugador
 						 * se pasa a la fase de chequeo del segundo.
 						 */
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(5,?)");
+						$sentencia -> bind_param('i',$ejercitoEnemigo);
+						$sentencia -> execute();
+						$sentencia -> close();
+						break;
 					case 5:
 						/**
 						 * Al finalizar la dase de chequeo del primer jugador
-						 * se finaliza el turno y se empieza uno nuevo.
 						 * Tras ello se pasa a la fase de declaracion de cargas del mismo.
+						 * se finaliza el turno y se empieza uno nuevo.
 						 */
+						$turno++;
+						$sentencia = $conexion -> prepare("CALL proceso_nuevoTurno(?,?)");
+						$sentencia -> bind_param('ii',$turno,$ejercito);
+						$sentencia -> execute();
+						$sentencia -> close();
+						
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(1,?)");
+						$sentencia -> bind_param('i',$ejercito);
+						$sentencia -> execute();
+						$sentencia -> close();
+						break;
 				}
 			}
 			else{
@@ -1098,31 +1151,61 @@
 						 * Al finalizar la fase de despliegue del segundo jugador
 						 * se pasa a la fase de declaracion de cargas del primero.
 						 */
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(1,?)");
+						$sentencia -> bind_param('i',$ejercitoEnemigo);
+						$sentencia -> execute();
+						$sentencia -> close();
+						break;
 					case 1:
 						/**
 						 * Al finalizar la fase de declaracion de cargas del segundo jugador
 						 * se pasa a la de reaccion de cargas del primero.
 						 */
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(2,?)");
+						$sentencia -> bind_param('i',$ejercitoEnemigo);
+						$sentencia -> execute();
+						$sentencia -> close();
+						break;
 					case 2:
 						/**
 						 * Al finalizar la fase de reaccion de cargas del segundo jugador
 						 * se pasa a la de declaracion de cargas del mismo.
 						 */
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(1,?)");
+						$sentencia -> bind_param('i',$ejercito);
+						$sentencia -> execute();
+						$sentencia -> close();
+						break;
 					case 3:
 						/**
 						 * Al finalizar la fase de movimiento del segundo jugador
 						 * se pasa a la de combate del primero.
 						 */
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(4,?)");
+						$sentencia -> bind_param('i',$ejercitoEnemigo);
+						$sentencia -> execute();
+						$sentencia -> close();
+						break;
 					case 4:
 						/**
 						 * Al finalizar la fase de combate del segundo jugador
 						 * se pasa a la de chequeo del primero.
 						 */
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(5,?)");
+						$sentencia -> bind_param('i',$ejercitoEnemigo);
+						$sentencia -> execute();
+						$sentencia -> close();
+						break;
 					case 5:
 						/**
 						 * Al finalizar la dase de chequeo del segundo jugador
 						 * se pasa a la de combate del mismo.
 						 */
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(4,?)");
+						$sentencia -> bind_param('i',$ejercito);
+						$sentencia -> execute();
+						$sentencia -> close();
+						break;
 				}
 			}
 		}

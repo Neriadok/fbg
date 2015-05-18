@@ -134,7 +134,13 @@
 								echo "Pendiente de empezar";
 							}
 							else{
-								echo "Turno $turnos, fase de $fase";
+								echo "Turno $turnos, ";
+								if($fase == null){
+									echo "fase del enemigo";
+								}
+								else{
+									echo "fase de $fase";
+								}
 							}
 						}
 						else{
