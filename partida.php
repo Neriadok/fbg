@@ -18,15 +18,16 @@
 		<link rel='shortcut icon' href='src/dragon.ico'/>
 		<link rel='stylesheet' type='text/css' href='css/default.css' />
 		<link rel='stylesheet' type='text/css' href='css/partida.css' />
-		<script type="text/javascript" src="jFBG/AsinCronos.js"></script>
-		<script type="text/javascript" src="jFBG/Interfaz.js"></script>
-		<script type="text/javascript" src="jFBG/Componente.js"></script>
-		<script type="text/javascript" src="jFBG/Unidad.js"></script>
-		<script type="text/javascript" src="jFBG/Tropa.js"></script>
-		<script type="text/javascript" src="jFBG/Partida.js"></script>
-		<script type="text/javascript" src="jFBG/Scrolling.js"></script>
-		<script type="text/javascript" src="jFBG/MostrarMensaje.js"></script>
-		<script type="text/javascript" src="jFBG/Submit.js"></script>
+		<script type="text/javascript" src="js/jFBG/AsinCronos.js"></script>
+		<script type="text/javascript" src="js/jFBG/Interfaz.js"></script>
+		<script type="text/javascript" src="js/jFBG/Scrolling.js"></script>
+		<script type="text/javascript" src="js/jFBG/MostrarMensaje.js"></script>
+		<script type="text/javascript" src="js/jFBG/Submit.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/PreventTextSelect.js"></script>
+		<script type="text/javascript" src="js/gamingFBG/Componente.js"></script>
+		<script type="text/javascript" src="js/gamingFBG/Unidad.js"></script>
+		<script type="text/javascript" src="js/gamingFBG/Tropa.js"></script>
+		<script type="text/javascript" src="js/gamingFBG/Partida.js"></script>
 		<script>
         	function inicio(){
 				/** Comprobamos en que partida nos encontramos actualmente **/
@@ -53,6 +54,8 @@
                 /** Funciones generadas al inicio **/
 
             	function tratarElementos(){
+
+                	
     				console.log("Partida Ejercito "+partidaId);
                 	var interfaz = new Interfaz(
                     	document.getElementById("interfaz")

@@ -56,11 +56,12 @@ function Destino(ca,elementoId,tipo,tipoDestino,sitioCarga){
 	function cEncima(e){
 		/**Prevenimos eventos por defecto*/
 		e.preventDefault();
-		
-		switch(tipo){
-			case 1: e.target.style.border="2px solid #F9FF45"; break;
-			case 2: document.getElementById(elementoId).style.textShadow="2px 2px 2px #CBD126"; break;
-			default:;
+		if(e.target != null){
+			switch(tipo){
+				case 1: e.target.style.border="2px solid #F9FF45"; break;
+				case 2: document.getElementById(elementoId).style.textShadow="2px 2px 2px #CBD126"; break;
+				default:;
+			}
 		}
 	};
 
@@ -75,13 +76,14 @@ function Destino(ca,elementoId,tipo,tipoDestino,sitioCarga){
 		e.preventDefault();
 		
 		cSoltar(e);	
-		
-		switch(tipo){
-			case 1: e.target.style.border="2px solid "+e.target.style.background; break;
-			case 2: document.getElementById(elementoId).style.color="white";
-				document.getElementById(elementoId).style.textShadow="none"; 
-				break;
-			default:;
+		if(e.target != null){
+			switch(tipo){
+				case 1: e.target.style.border="2px solid "+e.target.style.background; break;
+				case 2: document.getElementById(elementoId).style.color="white";
+					document.getElementById(elementoId).style.textShadow="none"; 
+					break;
+				default:;
+			}
 		}
 	};
 
@@ -97,10 +99,12 @@ function Destino(ca,elementoId,tipo,tipoDestino,sitioCarga){
 	
 		pulsado=true;
 		
-		switch(tipo){
-			case 1: e.target.style.boxShadow="2px 2px 2px black"; break;
-			case 2: document.getElementById(elementoId).style.color="#F9FF45"; break;
-			default:;
+		if(e.target != null){
+			switch(tipo){
+				case 1: e.target.style.boxShadow="2px 2px 2px black"; break;
+				case 2: document.getElementById(elementoId).style.color="#F9FF45"; break;
+				default:;
+			}
 		}
 	};
 
@@ -113,13 +117,14 @@ function Destino(ca,elementoId,tipo,tipoDestino,sitioCarga){
 	function cSoltar(e){
 		if(pulsado){
 			pulsado = false;
-			
-			switch(tipo){
-				case 1: e.target.style.boxShadow="none"; break;
-				case 2: document.getElementById(elementoId).style.color="white";
-					document.getElementById(elementoId).style.textShadow="none";
-					break;
-				default:;
+			if(e.target != null){
+				switch(tipo){
+					case 1: e.target.style.boxShadow="none"; break;
+					case 2: document.getElementById(elementoId).style.color="white";
+						document.getElementById(elementoId).style.textShadow="none";
+						break;
+					default:;
+				}
 			}
 		}
 	};

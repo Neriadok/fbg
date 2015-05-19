@@ -714,7 +714,7 @@ function Tropa(tropaId,panelOut){
 		document.getElementById("unidadesfila"+tropaId).innerHTML = "--";
 		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = tropaPadre;
 		actualizar();
-		document.getElementById(panelOut).innerHTML += "Tropa "+nombre+" incorporada exitosamente. ";
+		console.log("Tropa "+nombre+" incorporada exitosamente. ");
 	};
 	
 	/**
@@ -768,32 +768,53 @@ function Tropa(tropaId,panelOut){
 		var anguloVertical = parseInt(orientacion*180/Math.PI)+90;
 		
 		//Posicion de un punto de las rectas 1 y 3.
-		var xR=parseInt(latitud);
-		var yR=parseInt(altitud);
+		var xR = parseInt(latitud);
+		var yR = parseInt(altitud);
+		
 		//Posicion de un punto de las rectas 2 y 4.
-		var xS=Math.round(parseInt(latitud)+dimTropa().ancho*Math.cos(orientacion)-dimTropa().alto*Math.sin(orientacion));
-		var yS=Math.round(parseInt(altitud)+dimTropa().ancho*Math.sin(orientacion)+dimTropa().alto*Math.cos(orientacion));
+		var xS = Math.round(
+				parseInt(latitud)+dimTropa().ancho*Math.cos(orientacion)-dimTropa().alto*Math.sin(orientacion)
+			);
+		var yS = Math.round(
+				parseInt(altitud)+dimTropa().ancho*Math.sin(orientacion)+dimTropa().alto*Math.cos(orientacion)
+			);
 		
 		
-		//comprobamos que este por encima de la recta 1, dada por el punto R y el angulo horizontal, y por debajo de la recta 2, dada por el punto S y el angulo horizontal.
+		/**
+		 * comprobamos que este por encima de la recta 1,
+		 * dada por el punto R y el angulo horizontal,
+		 * y por debajo de la recta 2,
+		 * dada por el punto S y el angulo horizontal.
+		 */
 		if(posicionPuntoRecta(x,y,xR,yR,anguloHorizontal)>=0 && posicionPuntoRecta(x,y,xS,yS,anguloHorizontal)<=0){
 			colisionVertical=true;
 		}
-		//comprobamos que este por debajo de la recta 1 y por encima de la recta 2.
+		/**
+		 * comprobamos que este por debajo de la recta 1 y por encima de la recta 2.
+		 */
 		if(posicionPuntoRecta(x,y,xR,yR,anguloHorizontal)<=0 && posicionPuntoRecta(x,y,xS,yS,anguloHorizontal)>=0){
 			colisionVertical=true;
 		}
 		
-		//comprobamos que este por encima de la recta 3, dada por el punto R y el angulo vertical, y por debajo de la recta 4, dada por el punto S y el angulo vertical.
+		/**
+		 * comprobamos que este por encima de la recta 3,
+		 * dada por el punto R y el angulo vertical,
+		 * y por debajo de la recta 4,
+		 * dada por el punto S y el angulo vertical.
+		 */
 		if(posicionPuntoRecta(x,y,xR,yR,anguloVertical)>=0 && posicionPuntoRecta(x,y,xS,yS,anguloVertical)<=0){
 			colisionHorizontal=true;
 		}
-		//comprobamos que este por encima de la recta 3 y por debajo de la recta 4.
+		/**
+		 * Comprobamos que este por encima de la recta 3 y por debajo de la recta 4.
+		 */
 		if(posicionPuntoRecta(x,y,xR,yR,anguloVertical)<=0 && posicionPuntoRecta(x,y,xS,yS,anguloVertical)>=0){
 			colisionHorizontal=true;
 		}
 		
-		//Comprobamos que se dan ambas colisiones
+		/**
+		 * Comprobamos que se dan ambas colisiones
+		 */
 		if(colisionVertical && colisionHorizontal) return true;
 		else return false;
 	};
@@ -836,32 +857,61 @@ function Tropa(tropaId,panelOut){
 
 		//Comprobaciones
 		if((angleCen>=0 && angleCen<=45) || (angleCen>315 && angleCen<360)){
-			if(posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq)<=0 && posicionPuntoRecta(x,y,xIzq,yIzq,angleCen)<=0 && posicionPuntoRecta(x,y,xDer,yDer,angleDer)<=0){
+			if(
+				posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq) <= 0
+				&& posicionPuntoRecta(x,y,xIzq,yIzq,angleCen) <= 0 
+				&& posicionPuntoRecta(x,y,xDer,yDer,angleDer) <= 0
+			){
 				return true;
 			}
 		}
+		
 		if(angleCen>45 && angleCen<=90){
-			if(posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq)>=0 && posicionPuntoRecta(x,y,xIzq,yIzq,angleCen)<=0 && posicionPuntoRecta(x,y,xDer,yDer,angleDer)<=0){
+			if(
+				posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq) >= 0
+				&& posicionPuntoRecta(x,y,xIzq,yIzq,angleCen) <= 0 
+				&& posicionPuntoRecta(x,y,xDer,yDer,angleDer) <= 0
+			){
 				return true;
 			}
 		}
+		
 		if(angleCen>90 && angleCen<=135){
-			if(posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq)>=0 && posicionPuntoRecta(x,y,xIzq,yIzq,angleCen)>=0 && posicionPuntoRecta(x,y,xDer,yDer,angleDer)<=0){
+			if(
+				posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq) >= 0 
+				&& posicionPuntoRecta(x,y,xIzq,yIzq,angleCen) >= 0 
+				&& posicionPuntoRecta(x,y,xDer,yDer,angleDer) <= 0
+			){
 				return true;
 			}
 		}
+		
 		if(angleCen>135 && angleCen<=225){
-			if(posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq)>=0 && posicionPuntoRecta(x,y,xIzq,yIzq,angleCen)>=0 && posicionPuntoRecta(x,y,xDer,yDer,angleDer)>=0){
+			if(
+				posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq) >= 0 
+				&& posicionPuntoRecta(x,y,xIzq,yIzq,angleCen) >= 0 
+				&& posicionPuntoRecta(x,y,xDer,yDer,angleDer) >= 0
+			){
 				return true;
 			}
 		}
+		
 		if(angleCen>225 && angleCen<=270){
-			if(posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq)<=0 && posicionPuntoRecta(x,y,xIzq,yIzq,angleCen)>=0 && posicionPuntoRecta(x,y,xDer,yDer,angleDer)>=0){
+			if(
+				posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq) <= 0 
+				&& posicionPuntoRecta(x,y,xIzq,yIzq,angleCen) >= 0 
+				&& posicionPuntoRecta(x,y,xDer,yDer,angleDer) >= 0
+			){
 				return true;
 			}
 		}
+		
 		if(angleCen>270 && angleCen<=315){
-			if(posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq)<=0 && posicionPuntoRecta(x,y,xIzq,yIzq,angleCen)<=0 && posicionPuntoRecta(x,y,xDer,yDer,angleDer)>=0){
+			if(
+				posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq) <= 0 
+				&& posicionPuntoRecta(x,y,xIzq,yIzq,angleCen) <= 0 
+				&& posicionPuntoRecta(x,y,xDer,yDer,angleDer) >= 0
+			){
 				return true;
 			}
 		}
@@ -879,23 +929,85 @@ function Tropa(tropaId,panelOut){
 		//Evaluamos la orientacion de la linea de vision y comparamos con cada uno de los frentes en cada caso
 		//Las funciones se corresponden con los get de vanguardia y retaguardia.
 		if(x1==x2){
-			if(x1<=latitud && x1>=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)) || x1>=latitud && x1<=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion))){
+			if(
+				x1<=latitud 
+				&& x1>=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)) 
+				|| 
+				x1>=latitud 
+				&& x1<=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion))
+			){
 				return true;//Frente
-			}else if(x1<=latitud && x1>=parseInt(latitud-dimTropa().alto*Math.sin(orientacion)) || x1>=latitud && x1<=parseInt(latitud-dimTropa().alto*Math.sin(orientacion))){
+			}
+			
+			else if(
+				x1<=latitud 
+				&& x1>=parseInt(latitud-dimTropa().alto*Math.sin(orientacion)) 
+				||
+				x1>=latitud 
+				&& x1<=parseInt(latitud-dimTropa().alto*Math.sin(orientacion))
+			){
 				return true;//Izquierda
-			}else if(x1<=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)) && x1>=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)-dimTropa().alto*Math.sin(orientacion)) || x1>=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)) && x1<=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)-dimTropa().alto*Math.sin(orientacion))){
+			}
+			
+			else if(
+				x1<=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)) 
+				&& x1>=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)-dimTropa().alto*Math.sin(orientacion)) 
+				|| 
+				x1>=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)) 
+				&& x1<=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)-dimTropa().alto*Math.sin(orientacion))
+			){
 				return true;//Derecha
-			}else if(x1<=parseInt(latitud-dimTropa().alto*Math.sin(orientacion)) && x1>=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)-dimTropa().alto*Math.sin(orientacion)) || x1>=parseInt(latitud-dimTropa().alto*Math.sin(orientacion)) && x1<=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)-dimTropa().alto*Math.sin(orientacion))){
+			}
+			
+			else if(
+				x1<=parseInt(latitud-dimTropa().alto*Math.sin(orientacion)) 
+				&& x1>=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)-dimTropa().alto*Math.sin(orientacion)) 
+				||
+				x1>=parseInt(latitud-dimTropa().alto*Math.sin(orientacion)) 
+				&& x1<=parseInt(latitud+dimTropa().ancho*Math.cos(orientacion)-dimTropa().alto*Math.sin(orientacion))
+			){
 				return true;//Atr�s
 			}
-		}else if(y1==y2){
-			if(y1<=altitud && y1>=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)) || y1>=altitud && y1<=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion))){
+		}
+		
+		else if(y1==y2){
+			if(
+				y1<=altitud 
+				&& y1>=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)) 
+				||
+				y1>=altitud 
+				&& y1<=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion))
+			){
 				return true;//Frente
-			}else if(y1<=altitud && y1>=parseInt(altitud+dimTropa().alto*Math.cos(orientacion)) || y1>=altitud && y1<=parseInt(altitud+dimTropa().alto*Math.cos(orientacion))){
+			}
+			
+			else if(
+				y1<=altitud 
+				&& y1>=parseInt(altitud+dimTropa().alto*Math.cos(orientacion)) 
+				||
+				y1>=altitud 
+				&& y1<=parseInt(altitud+dimTropa().alto*Math.cos(orientacion))
+			){
 				return true;//Izquierda
-			}else if(y1<=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)) && y1>=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)+dimTropa().alto*Math.cos(orientacion)) || y1>=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)) && y1<=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)+dimTropa().alto*Math.cos(orientacion))){
+			}
+			
+			else if(
+				y1<=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)) 
+				&& y1>=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)+dimTropa().alto*Math.cos(orientacion)) 
+				||
+				y1>=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion))
+				&& y1<=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)+dimTropa().alto*Math.cos(orientacion))
+			){
 				return true;//Derecha
-			}else if(y1<=parseInt(altitud+dimTropa().alto*Math.cos(orientacion)) && y1>=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)+dimTropa().alto*Math.cos(orientacion)) || y1>=parseInt(altitud+dimTropa().alto*Math.cos(orientacion)) && y1<=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)+dimTropa().alto*Math.cos(orientacion))){
+			}
+			
+			else if(
+				y1<=parseInt(altitud+dimTropa().alto*Math.cos(orientacion)) 
+				&& y1>=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)+dimTropa().alto*Math.cos(orientacion)) 
+				||
+				y1>=parseInt(altitud+dimTropa().alto*Math.cos(orientacion)) 
+				&& y1<=parseInt(altitud+dimTropa().ancho*Math.sin(orientacion)+dimTropa().alto*Math.cos(orientacion))
+			){
 				return true;//Atr�s
 			}
 		}else{
@@ -957,70 +1069,345 @@ function Tropa(tropaId,panelOut){
 		var yVI = altitud;
 		var xVD = parseInt(latitud+dimTropa().ancho*Math.cos(orientacion));
 		var yVD = parseInt(altitud+dimTropa().ancho*Math.sin(orientacion));
+		
 		switch(frente){
 			case 1://Cargar por el frente
-				if(visionDirecta(objetivo.getVanguardiaSiniestra().x,objetivo.getVanguardiaSiniestra().y)){
-					if(distanciaPuntoRecta(objetivo.getVanguardiaSiniestra().x,objetivo.getVanguardiaSiniestra().y,xVI,yVI,orientacion*180/Math.PI) <= movimiento()*2) return true;
+				if(
+					(
+						visionDirecta(
+							objetivo.getVanguardiaSiniestra().x
+							,objetivo.getVanguardiaSiniestra().y
+						)
+						
+						&&
+						
+						distanciaPuntoRecta(
+							objetivo.getVanguardiaSiniestra().x
+							,objetivo.getVanguardiaSiniestra().y
+							,xVI
+							,yVI
+							,orientacion*180/Math.PI
+						) <= movimiento()*2
+					)
+
+					||
+					
+					
+					distanciaPuntoPunto(
+						objetivo.getVanguardiaSiniestra().x
+						,objetivo.getVanguardiaSiniestra().y
+						,xVI
+						,yVI
+					)
+					<= movimiento()*2
+					
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getVanguardiaSiniestra().x
+						,objetivo.getVanguardiaSiniestra().y
+						,xVD
+						,yVD
+					)
+					<= movimiento()*2
+					
+
+					||
+					
+					(
+						visionDirecta(
+							objetivo.getVanguardiaDiestra().x
+							,objetivo.getVanguardiaDiniestra().y
+						)
+						
+						&&
+						
+						distanciaPuntoRecta(
+							objetivo.getVanguardiaDiestra().x
+							,objetivo.getVanguardiaDiestra().y
+							,xVI
+							,yVI
+							,orientacion*180/Math.PI
+						)
+						<= movimiento()*2
+					)
+
+					||
+					
+					
+					distanciaPuntoPunto(
+						objetivo.getVanguardiaDiestra().x
+						,objetivo.getVanguardiaDiestra().y
+						,xVI
+						,yVI
+					)
+					<= movimiento()*2
+					
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getVanguardiaDiestra().x
+						,objetivo.getVanguardiaDiestra().y
+						,xVD
+						,yVD
+					)
+					<= movimiento()*2
+				){
+					return true;
 				}
-				else{
-					if(distanciaPuntoPunto(objetivo.getVanguardiaSiniestra().x,objetivo.getVanguardiaSiniestra().y,xVI,yVI)<=movimiento()*2) return true;
-					if(distanciaPuntoPunto(objetivo.getVanguardiaSiniestra().x,objetivo.getVanguardiaSiniestra().y,xVD,yVD)<=movimiento()*2) return true;
-				}
-				if(visionDirecta(objetivo.getVanguardiaDiestra().x,objetivo.getVanguardiaDiniestra().y)){
-					if(distanciaPuntoRecta(objetivo.getVanguardiaDiestra().x,objetivo.getVanguardiaDiestra().y,xVI,yVI,orientacion*180/Math.PI) <= movimiento()*2) return true;
-				}
-				else{
-					if(distanciaPuntoPunto(objetivo.getVanguardiaDiestra().x,objetivo.getVanguardiaDiestra().y,xVI,yVI)<=movimiento()*2) return true;
-					if(distanciaPuntoPunto(objetivo.getVanguardiaDiestra().x,objetivo.getVanguardiaDiestra().y,xVD,yVD)<=movimiento()*2) return true;
-				}
+				
 			break;
+			
 			case 2://Cargar por el flanco izquierdo
-				if(visionDirecta(objetivo.getVanguardiaSiniestra().x,objetivo.getVanguardiaSiniestra().y)){
-					if(distanciaPuntoRecta(objetivo.getVanguardiaSiniestra().x,objetivo.getVanguardiaSiniestra().y,xVI,yVI,orientacion*180/Math.PI) <= movimiento()*2) return true;
+				if(
+					(
+						visionDirecta(
+							objetivo.getVanguardiaSiniestra().x
+							,objetivo.getVanguardiaSiniestra().y
+						)
+						
+						&&
+						
+						distanciaPuntoRecta(
+							objetivo.getVanguardiaSiniestra().x
+							,objetivo.getVanguardiaSiniestra().y
+							,xVI
+							,yVI
+							,orientacion*180/Math.PI
+						)
+						<= movimiento()*2
+					)
+
+					||
+						
+					distanciaPuntoPunto(
+						objetivo.getVanguardiaSiniestra().x
+						,objetivo.getVanguardiaSiniestra().y,xVI,yVI
+					)
+					<= movimiento()*2
+					
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getVanguardiaSiniestra().x
+						,objetivo.getVanguardiaSiniestra().y
+						,xVD
+						,yVD
+					)
+					<= movimiento()*2
+					
+					||
+					
+					(
+						visionDirecta(
+							objetivo.getRetaguardiaSiniestra().x
+							,objetivo.getRetaguardiaSiniestra().y
+						)
+						
+						&&
+						
+						distanciaPuntoRecta(
+							objetivo.getRetaguardiaSiniestra().x
+							,objetivo.getRetaguardiaSiniestra().y
+							,xVI
+							,yVI
+							,orientacion*180/Math.PI
+						)
+						<= movimiento()*2
+					)
+
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getRetaguardiaSiniestra().x
+						,objetivo.getRetaguardiaSiniestra().y
+						,xVI
+						,yVI
+					)
+					<= movimiento()*2
+					
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getRetaguardiaSiniestra().x
+						,objetivo.getRetaguardiaSiniestra().y
+						,xVD
+						,yVD
+					)
+					<= movimiento()*2
+				){
+					return true;
 				}
-				else{
-					if(distanciaPuntoPunto(objetivo.getVanguardiaSiniestra().x,objetivo.getVanguardiaSiniestra().y,xVI,yVI)<=movimiento()*2) return true;
-					if(distanciaPuntoPunto(objetivo.getVanguardiaSiniestra().x,objetivo.getVanguardiaSiniestra().y,xVD,yVD)<=movimiento()*2) return true;
-				}
-				if(visionDirecta(objetivo.getRetaguardiaSiniestra().x,objetivo.getRetaguardiaSiniestra().y)){
-					if(distanciaPuntoRecta(objetivo.getRetaguardiaSiniestra().x,objetivo.getRetaguardiaSiniestra().y,xVI,yVI,orientacion*180/Math.PI) <= movimiento()*2) return true;
-				}
-				else{
-					if(distanciaPuntoPunto(objetivo.getRetaguardiaSiniestra().x,objetivo.getRetaguardiaSiniestra().y,xVI,yVI)<=movimiento()*2) return true;
-					if(distanciaPuntoPunto(objetivo.getRetaguardiaSiniestra().x,objetivo.getRetaguardiaSiniestra().y,xVD,yVD)<=movimiento()*2) return true;
-				}
+				
 			break;
+			
 			case 3://Cargar por el flanco derecho
-				if(visionDirecta(objetivo.getVanguardiaDiestra().x,objetivo.getVanguardiaDiestra().y)){
-					if(distanciaPuntoRecta(objetivo.getVanguardiaDiestra().x,objetivo.getVanguardiaDiestra().y,xVI,yVI,orientacion*180/Math.PI) <= movimiento()*2) return true;
+				if(
+					(
+						visionDirecta(
+							objetivo.getVanguardiaDiestra().x
+							,objetivo.getVanguardiaDiestra().y
+						)
+						
+						&&
+						
+						distanciaPuntoRecta(
+							objetivo.getVanguardiaDiestra().x
+							,objetivo.getVanguardiaDiestra().y
+							,xVI
+							,yVI
+							,orientacion*180/Math.PI
+						) <= movimiento()*2
+					)
+
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getVanguardiaDiestra().x
+						,objetivo.getVanguardiaDiestra().y
+						,xVI
+						,yVI
+					)
+					<= movimiento()*2
+					
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getVanguardiaDiestra().x
+						,objetivo.getVanguardiaDiestra().y
+						,xVD
+						,yVD
+					)
+					<= movimiento()*2
+
+					||
+					
+					(
+						visionDirecta(
+							objetivo.getRetaguardiaDiestra().x
+							,objetivo.getRetaguardiaDiestra().y
+						)
+						
+						&&
+						
+						distanciaPuntoRecta(
+							objetivo.getRetaguardiaDiestra().x
+							,objetivo.getRetaguardiaDiestra().y
+							,xVI
+							,yVI
+							,orientacion*180/Math.PI
+						)
+						<= movimiento()*2
+					)
+
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getRetaguardiaDiestra().x
+						,objetivo.getRetaguardiaDiestra().y
+						,xVI
+						,yVI
+					)
+					<=movimiento()*2
+					
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getRetaguardiaDiestra().x
+						,objetivo.getRetaguardiaDiestra().y
+						,xVD
+						,yVD
+					)
+					<=movimiento()*2
+				){
+					return true;
 				}
-				else{
-					if(distanciaPuntoPunto(objetivo.getVanguardiaDiestra().x,objetivo.getVanguardiaDiestra().y,xVI,yVI)<=movimiento()*2) return true;
-					if(distanciaPuntoPunto(objetivo.getVanguardiaDiestra().x,objetivo.getVanguardiaDiestra().y,xVD,yVD)<=movimiento()*2) return true;
-				}
-				if(visionDirecta(objetivo.getRetaguardiaDiestra().x,objetivo.getRetaguardiaDiestra().y)){
-					if(distanciaPuntoRecta(objetivo.getRetaguardiaDiestra().x,objetivo.getRetaguardiaDiestra().y,xVI,yVI,orientacion*180/Math.PI) <= movimiento()*2) return true;
-				}
-				else{
-					if(distanciaPuntoPunto(objetivo.getRetaguardiaDiestra().x,objetivo.getRetaguardiaDiestra().y,xVI,yVI)<=movimiento()*2) return true;
-					if(distanciaPuntoPunto(objetivo.getRetaguardiaDiestra().x,objetivo.getRetaguardiaDiestra().y,xVD,yVD)<=movimiento()*2) return true;
-				}
+				
 			break;
+			
 			case 4://Cargar por retaguardia
-				if(visionDirecta(objetivo.getRetaguardiaSiniestra().x,objetivo.getRetaguardiaSiniestra().y)){
-					if(distanciaPuntoRecta(objetivo.getRetaguardiaSiniestra().x,objetivo.getRetaguardiaSiniestra().y,xVI,yVI,orientacion*180/Math.PI) <= movimiento()*2) return true;
+				if(
+					(
+						visionDirecta(
+							objetivo.getRetaguardiaSiniestra().x
+							,objetivo.getRetaguardiaSiniestra().y
+						)
+						
+						&&
+						
+						distanciaPuntoRecta(
+							objetivo.getRetaguardiaSiniestra().x
+							,objetivo.getRetaguardiaSiniestra().y
+							,xVI
+							,yVI
+							,orientacion*180/Math.PI
+						)
+						<= movimiento()*2
+					)
+
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getRetaguardiaSiniestra().x
+						,objetivo.getRetaguardiaSiniestra().y
+						,xVI
+						,yVI
+					)
+					<= movimiento()*2
+					
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getRetaguardiaSiniestra().x
+						,objetivo.getRetaguardiaSiniestra().y
+						,xVD
+						,yVD
+					)
+					<= movimiento()*2
+
+					||
+					
+					(
+						visionDirecta(
+							objetivo.getRetaguardiaDiestra().x
+							,objetivo.getRetaguardiaDiniestra().y
+						)
+						
+						&&
+					
+						distanciaPuntoRecta(
+							objetivo.getRetaguardiaDiestra().x
+							,objetivo.getRetaguardiaDiestra().y
+							,xVI
+							,yVI
+							,orientacion*180/Math.PI
+						)
+						<= movimiento()*2
+					)
+
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getRetaguardiaDiestra().x
+						,objetivo.getRetaguardiaDiestra().y
+						,xVI
+						,yVI
+					)
+					<= movimiento()*2
+					
+					||
+					
+					distanciaPuntoPunto(
+						objetivo.getRetaguardiaDiestra().x
+						,objetivo.getRetaguardiaDiestra().y
+						,xVD
+						,yVD
+					)
+					<= movimiento()*2
+				){
+					return true;
 				}
-				else{
-					if(distanciaPuntoPunto(objetivo.getRetaguardiaSiniestra().x,objetivo.getRetaguardiaSiniestra().y,xVI,yVI)<=movimiento()*2) return true;
-					if(distanciaPuntoPunto(objetivo.getRetaguardiaSiniestra().x,objetivo.getRetaguardiaSiniestra().y,xVD,yVD)<=movimiento()*2) return true;
-				}
-				if(visionDirecta(objetivo.getRetaguardiaDiestra().x,objetivo.getRetaguardiaDiniestra().y)){
-					if(distanciaPuntoRecta(objetivo.getRetaguardiaDiestra().x,objetivo.getRetaguardiaDiestra().y,xVI,yVI,orientacion*180/Math.PI) <= movimiento()*2) return true;
-				}
-				else{
-					if(distanciaPuntoPunto(objetivo.getRetaguardiaDiestra().x,objetivo.getRetaguardiaDiestra().y,xVI,yVI)<=movimiento()*2) return true;
-					if(distanciaPuntoPunto(objetivo.getRetaguardiaDiestra().x,objetivo.getRetaguardiaDiestra().y,xVD,yVD)<=movimiento()*2) return true;
-				}
+				
 			break;
 		}
 		return false;

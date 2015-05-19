@@ -56,7 +56,9 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 		/**Prevenimos eventos por defecto*/
 		e.preventDefault();
 		
-		e.target.style.textShadow="2px 2px 2px #CBD126";
+		if(e.target != null){
+			e.target.style.textShadow="2px 2px 2px #CBD126";
+		}
 	};
 
 		
@@ -71,8 +73,10 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 		
 		cSoltar(e);	
 		
-		e.target.style.color="white";
-		e.target.style.textShadow="none";
+		if(e.target != null){
+			e.target.style.color="white";
+			e.target.style.textShadow="none";
+		}
 	};
 
 	
@@ -87,7 +91,9 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 	
 		pulsado=true;
 		
-		e.target.style.color="#F9FF45";
+		if(e.target != null){
+			e.target.style.color="#F9FF45";
+		}
 	};
 
 		
@@ -99,9 +105,10 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 	function cSoltar(e){
 		if(pulsado){
 			pulsado = false;
-			
-			e.target.style.color="white";
-			e.target.style.textShadow="none";
+			if(e.target != null){
+				e.target.style.color="white";
+				e.target.style.textShadow="none";
+			}
 		}
 	};
 	

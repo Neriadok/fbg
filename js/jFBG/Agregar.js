@@ -33,7 +33,9 @@ function Agregar(botonId,elementoPadreId,tipoAgregado,datos){
 		/**Prevenimos eventos por defecto*/
 		e.preventDefault();
 		
-		document.getElementById(botonId).style.borderColor="#F9FF45";
+		if(document.getElementById(botonId) != null){
+			document.getElementById(botonId).style.borderColor="#F9FF45";
+		}
 	};
 	
 	
@@ -48,7 +50,9 @@ function Agregar(botonId,elementoPadreId,tipoAgregado,datos){
 
 		cSoltar(e);	
 		
-		document.getElementById(botonId).style.borderColor="#CBD126";
+		if(document.getElementById(botonId) != null){
+			document.getElementById(botonId).style.borderColor="#CBD126";
+		}
 	};
 	
 	
@@ -63,7 +67,9 @@ function Agregar(botonId,elementoPadreId,tipoAgregado,datos){
 		
 		pulsado=true;
 
-		document.getElementById(botonId).style.boxShadow="3px 3px 3px grey";
+		if(document.getElementById(botonId) != null){
+			document.getElementById(botonId).style.boxShadow="3px 3px 3px grey";
+		}
 	};
 	
 	
@@ -75,7 +81,9 @@ function Agregar(botonId,elementoPadreId,tipoAgregado,datos){
 	function cSoltar(e){
 		if(pulsado){
 			pulsado = false;
-			document.getElementById(botonId).style.boxShadow="none";
+			if(document.getElementById(botonId) != null){
+				document.getElementById(botonId).style.boxShadow="none";
+			}
 		}
 	};
 	

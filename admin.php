@@ -16,13 +16,14 @@
 		<link rel='stylesheet' type='text/css' href='css/default.css' />
 		<link rel='stylesheet' type='text/css' href='css/admin.css' />
 		<script type="text/JavaScript" src="js/sha512.js"></script>
-		<script type="text/JavaScript" src="jFBG/AsinCronos.js"></script>
-		<script type="text/JavaScript" src="jFBG/Submit.js"></script>
-		<script type="text/JavaScript" src="jFBG/Yggdrasil.js"></script>
-		<script type="text/JavaScript" src="jFBG/ItemDesplegable.js"></script>
-		<script type="text/JavaScript" src="jFBG/Scrolling.js"></script>
-		<script type="text/JavaScript" src="jFBG/Ventana.js"></script>
-		<script type="text/JavaScript" src="jFBG/Agregar.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/AsinCronos.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Submit.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Yggdrasil.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/ItemDesplegable.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Scrolling.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Ventana.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Agregar.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/PreventTextSelect.js"></script>
 		<script>
         	function inicio(){
             	var ca = new AsinCronos("contenidos/admin.con.php");
@@ -49,7 +50,9 @@
     				d1d = new ItemDesplegable(document.getElementById("desplegable1D"),"D",1);
     				d2d = new ItemDesplegable(document.getElementById("desplegable2D"),"D",2);
     				d3d = new ItemDesplegable(document.getElementById("desplegable3D"),"D",3);
-					
+
+                	/**Prevenimos la selección de texto*/
+                	var preventTextSelect = new PreventTextSelect();
 	            	
 					/**Genereamos el objeto Submit para registrarnos si este existiese.**/
 					if(document.getElementById("registrar") != null){

@@ -170,6 +170,10 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	 * Método que actualiza los elementos de la página tras alguna actualización asíncrona.
 	 */
 	function actualizarElementos(){
+
+    	/**Prevenimos la selección de texto*/
+    	var preventTextSelect = new PreventTextSelect();
+    	
 		/**Comprobamos si existe un boton para finalizar fase.**/
 		if(document.getElementById("finalizarFase") != null){
 			document.getElementById("finalizarFase").ondblclick = finalizarFase;

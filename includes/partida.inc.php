@@ -168,7 +168,7 @@
 				/**Si la fase está activa mostramos el boton para finalizarla*/
 				if($fase != null && $faseFinalizada){
 					echo "
-						<div id='actualizarSituacion'>
+						<div id='actualizarSituacion' class='actualizarSituacion'>
 							Actualizar
 							<br/><img src='src/botones/refresh.png'/>
 						</div>
@@ -176,7 +176,7 @@
 				}
 				else if($fase != null){
 					echo "
-						<div id='finalizarFase'>
+						<div id='finalizarFase' class='finalizarFase'>
 							FINALIZAR
 							<br/>FASE
 							<br/><img src='src/botones/desafiar.png'/>
