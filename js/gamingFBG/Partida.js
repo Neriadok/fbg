@@ -261,7 +261,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		tropaSeleccionadaPreviaId = -1;
 		fichaTropa = document.getElementsByClassName("tropapropia");
 		fichaTropaEnemiga = document.getElementsByClassName("tropaenemiga");
-		
+		document.getElementById(panelOut).innerHTML = "<div class='enfasis'>FANTASY BATTLE GAMES</div>";
 		console.log("Situacion actualizada.");
 	};
 	
@@ -443,12 +443,16 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			switch(fase){
 				case "0":
 					contenido = panelFaseDespliegue(contenido);
-				break;
+					break;
 				
 				case "1":
 					contenido = panelFaseDeclaracionCargas(contenido);
-				break;
+					break;
 				
+				case "3":
+					contenido = panelFaseMovimiento(contenido);
+					break;
+					
 				default: ;
 			}
 		}
@@ -1408,8 +1412,10 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 				case "0": accionFaseDespliegue(); break;
 					
 				case "1": accionFaseDeclaracionCargas(); break;
-					
-				default: ;
+				
+				case "3": accionFaseMovimiento(); break;
+				
+				default: alert("Accion fase default");
 			}
 		}
 		situacionConstruir();
@@ -1622,7 +1628,188 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	};
 	
 	
-	
+
+	/**
+	 * Método que construye el contenido para el panel de fase de despliegue
+	 * 
+	 * @param contenido String - String al que se le añadirá el nuevo contenido.
+	 * @return Retornará un String que asignar al innerHTML.
+	 */
+	function panelFaseMovimiento(contenido){
+		if(tropaSeleccionadaId != -1){
+			if(tropa[tropaBuscar(tropaSeleccionadaId)].getUser()){
+				contenido += "<table class='subtitle'>";
+				
+				if(tropa[tropaBuscar(tropaSeleccionadaId)].getTropaAdoptiva() == ""){
+					
+					if(!tropa[tropaBuscar(tropaSeleccionadaId)].getOcupada() && !tropa[tropaBuscar(tropaSeleccionadaId)].getMovida()){
+						
+						//Mover
+						contenido += "<tr>";
+						
+						contenido += "<td class='alignRight'>";
+						contenido += "<input type='radio' name='accionFaseMovimiento' value='mover'/>";
+						contenido += "</td>";
+						
+						contenido += "<td class='alignLeft white'>";
+						contenido  += "MOVER";
+						contenido += "</td>";
+						
+						contenido += "</tr>";
+						
+						contenido += "<tr>";
+						
+						contenido += "<td>";
+						contenido += "<select id='moverDistancia'>";
+						for(var i=0; i <= tropa[tropaBuscar(tropaSeleccionadaId)].getMovimiento(); i++){
+							contenido += "<option value='"+i+"'>"+i+" puntos</option>";
+						}
+						contenido += "</select>";
+						contenido += "</td>";
+						contenido += "<td class='alignLeft'>";
+						contenido += "distancia";
+						contenido += "</td>";
+						
+						contenido += "<td>";
+						contenido += "<select id='moverDireccion'>";
+						contenido += "<option value='0'>Vanguardia</option>";
+						contenido += "<option value='45'>Vanguardia-Siniestra</option>";
+						contenido += "<option value='90'>Siniestra</option>";
+						contenido += "<option value='135'>Retaguardia-Siniestra</option>";
+						contenido += "<option value='180'>Retaguardia</option>";
+						contenido += "<option value='225'>Retaguardia-Diestra</option>";
+						contenido += "<option value='270'>Diestra</option>";
+						contenido += "<option value='315'>Vanguardia-Diestra</option>";
+						contenido += "</select>";
+						contenido += "</td>";
+						contenido += "<td class='alignLeft'>";
+						contenido += "direccion";
+						contenido += "</td>";
+						
+						contenido += "</tr>";
+						
+						//Girar
+						contenido += "<tr>";
+						
+						contenido += "<td class='alignRight'>";
+						contenido += "<input type='radio' name='accionFaseMovimiento' value='girar'/>";
+						contenido += "</td>";
+						
+						contenido += "<td class='alignLeft white'>";
+						contenido  += "GIRAR";
+						contenido += "</td>";
+						
+						contenido += "<td colspan='2' rowspan='4' class='alignCenter'>";
+						contenido += "<div id='accionFase' class='boton'><img src='src/botones/aceptar.png'/></div>";
+						contenido += "</td>";
+						
+						contenido += "</tr>";
+						
+						contenido += "<tr>";
+						
+						contenido += "<td>";
+						contenido += "<select id='girarAngulo'>";
+						for(var i = 0; i < 360; i++){
+							contenido += "<option value='"+i+"'>"+i+"º</option>";
+						}
+						contenido += "</select>";
+						contenido += "</td>";
+						contenido += "<td class='alignLeft'>";
+						contenido += "grados";
+						contenido += "</td>";
+						
+						contenido += "</tr>";
+
+						//Marchar
+						if(!tropa[tropaBuscar(tropaSeleccionadaId)].esMaquinaria()){
+							contenido += "<tr>";
+							
+							contenido += "<td class='alignRight'>";
+							contenido += "<input type='radio' name='accionFaseMovimiento' value='marchar'/>";
+							contenido += "</td>";
+							
+							contenido += "<td class='alignLeft white'>";
+							contenido  += "MARCHAR";
+							contenido += "</td>";
+							
+							contenido += "</tr>";
+							
+							contenido += "<tr>";
+							
+							contenido += "<td>";
+							contenido += "<select id='marcharDistancia'>";
+							for(var i=0; i <= tropa[tropaBuscar(tropaSeleccionadaId)].getMovimiento()*2; i++){
+								contenido += "<option value='"+i+"'>"+i+" puntos</option>";
+							}
+							contenido += "</select>";
+							contenido += "</td>";
+							contenido += "<td class='alignLeft'>";
+							contenido += "distancia";
+							contenido += "</td>";
+							
+							contenido += "</tr>";
+						}
+						else{
+							contenido += "<tr><td colspan='2' rowspan='2'>Las tropas con maquinaria no pueden marchar debido al peso.</td></tr>";
+						}
+					}
+					else{
+						contenido += "<tr><td>La tropa está ocupada o ya ha movido y por lo tanto no puede mover.</td></tr>";
+					}
+				}
+				else{
+					contenido += "<tr>";
+					
+					contenido += "<td colspan='2' class='alignCenter white'>";
+					contenido  += "SEPARAR";
+					contenido += "</td>";
+					
+					contenido += "</tr>";
+					
+					contenido += "<tr>";
+					
+					contenido += "<td colspan='2' class='alignCenter'>";
+					contenido += "Si separas la tropa <b>\"";
+					contenido += tropa[tropaBuscar(tropaSeleccionadaId)].getNombre();
+					contenido += "\"</b> de la tropa <b>\"";
+					contenido += tropa[tropaBuscar(tropa[tropaBuscar(tropaSeleccionadaId)].getTropaAdoptiva())].getNombre();
+					contenido += "\"</b> no podrás volver a unirlas.";
+					contenido += "</td>";
+					
+					contenido += "</tr>";
+					
+					contenido += "<tr>";
+					
+					contenido += "<td class='alignCenter'>";
+					contenido += "Confirmar:";
+					contenido += "<input type='checkbox' name='accionFaseMovimiento' value='separar'/>";
+					contenido += "</td>";
+					
+					contenido += "</tr>";
+					
+					contenido += "<tr>";
+					
+					contenido += "<td colspan='2' class='alignCenter'>";
+					contenido += "<div id='accionFase' class='boton'><img src='src/botones/aceptar.png'/></div>";
+					contenido += "</td>";
+					
+					contenido += "</tr>";
+					
+				}
+				
+				contenido += "</table>";
+				
+			}
+			else{
+				contenido += "<p>Tropa enemiga.</p>";
+			}
+		}
+		else{
+			contenido += "<p>Por favor, elija una tropa.</p>";
+		}
+		
+		return contenido;
+	};
 	
 	
 	
@@ -1679,10 +1866,6 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 					document.getElementById(panelOut).innerHTML += "<div class='error'>Orientacion erronea. </div>";
 				}
 				
-				while(angle>=360){
-					angle-=360;
-				}
-				
 				
 				if(tropaPadre != -1){
 					if(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML != ""){
@@ -1733,6 +1916,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 				
 				/**Y la desplegamos en la posicion del dobleclick, la orientacion varía segun se trate de desafiador o desafiado.*/
 				var angle = tropa[tropaBuscar(tropaSeleccionadaId)].getOrientacion();
+				
 				if(isNaN(angle)){
 					if(userOrder == "Desafiador"){
 						angle = 180;
@@ -1822,4 +2006,104 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			}
 		}
 	};
+	
+	
+	/**
+	 * Método que gestiona las acciones de la fase de despliegue
+	 */
+	function accionFaseMovimiento(){
+		
+		/**
+		 * El panel de fase "Movimiento"
+		 * contiene los elementos necesarios para mover.
+		 * Las unidades se moveran en funcion de los datos aportados.
+		 */
+		if(tropaSeleccionadaId != -1){
+			/**
+			 * Comprobamos que tipo de movimiento decidió realizar el jugador.
+			 */
+			var acciones = document.getElementsByName("accionFaseMovimiento");
+			var accionRealizada = null;
+			
+			for(var i=0; i<acciones.length; i++){
+				if(acciones[i].checked){
+					accionRealizada = acciones[i].value;
+				}
+			}
+			
+			switch(accionRealizada){
+				case "mover": 
+					tropa[tropaBuscar(tropaSeleccionadaId)].mover(
+						parseInt(document.getElementById("moverDistancia").value)
+						, parseInt(document.getElementById("moverDireccion").value)
+						, CAMPO_ANCHO
+						, CAMPO_ALTO
+						,true
+					);
+					
+					//Si la tropa choca con otra, deshacemos el movimiento.
+					if(tropaColision(tropaSeleccionadaId)){
+						tropa[tropaBuscar(tropaSeleccionadaId)].mover(
+							-parseInt(document.getElementById("moverDistancia").value)
+							, parseInt(document.getElementById("moverDireccion").value)
+							, CAMPO_ANCHO
+							, CAMPO_ALTO
+							,false
+						);
+						document.getElementById(panelOut).innerHTML += "<div class='error'>No puedes terminar el movimiento sobre otra tropa</div>";
+					}
+					break;
+					
+				case "girar": 
+					tropa[tropaBuscar(tropaSeleccionadaId)].reorientar(
+							parseInt(document.getElementById("girarAngulo").value)
+							, CAMPO_ANCHO
+							, CAMPO_ALTO
+							,true
+						);
+						
+						//Si la tropa choca con otra, deshacemos el movimiento.
+						if(tropaColision(tropaSeleccionadaId)){
+							tropa[tropaBuscar(tropaSeleccionadaId)].reorientar(
+								-parseInt(document.getElementById("girarAngulo").value)
+								, CAMPO_ANCHO
+								, CAMPO_ALTO
+								,false
+							);
+							document.getElementById(panelOut).innerHTML += "<div class='error'>No puedes terminar el movimiento sobre otra tropa</div>";
+						}
+					break;
+					
+				case "marchar": 
+					tropa[tropaBuscar(tropaSeleccionadaId)].mover(
+							parseInt(document.getElementById("marcharDistancia").value)
+							, 0
+							, CAMPO_ANCHO
+							, CAMPO_ALTO
+							,true
+						);
+						
+						//Si la tropa choca con otra, deshacemos el movimiento.
+						if(tropaColision(tropaSeleccionadaId)){
+							tropa[tropaBuscar(tropaSeleccionadaId)].mover(
+								-parseInt(document.getElementById("marcharDistancia").value)
+								, 0
+								, CAMPO_ANCHO
+								, CAMPO_ALTO
+								,false
+							);
+							document.getElementById(panelOut).innerHTML += "<div class='error'>No puedes terminar el movimiento sobre otra tropa</div>";
+						}
+					break;
+					
+				case "separar": 
+					alert(accionRealizada);
+					break;
+				
+				default: 
+					document.getElementById(panelOut).innerHTML = "<div class='error'>Ninguna acción seleccionada. Por favor, selecciona alguna y vuelve a intentarlo.</div>";
+			}
+		}
+	};
+
 };

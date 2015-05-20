@@ -36,6 +36,36 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 	/**
 	 * 
 	 */
+	this.getTipo = function(){
+		var tipo = "Infantería";
+		var maquinaria = false;
+		var tiro = false;
+		
+		for(var i=0; i<componente.length; i++){
+			if(componente[i].getTipo() == "Montura-Tiro"){
+				tiro = true;
+			}
+			else if(componente[i].getTipo() == "Maquinaria-Carro"){
+				maquinaria = true;
+			}
+		}
+		
+		if(tiro && maquinaria){
+			tipo = "Carro";
+		}
+		else if(tiro){
+			tipo = "Caballería";
+		}
+		else if(maquinaria){
+			tipo = "Artillería";
+		}
+		
+		return tipo;
+	};
+	
+	/**
+	 * 
+	 */
 	this.getRango = function(){
 		var rango = 0;
 		for(var i=0; i<componente.length; i++){
@@ -55,7 +85,7 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 		 * En caso contrario se toma el menor de todos.
 		 */
 		var hayMontura = false;
-		var movimiento = Number.MAX_VALUE;
+		var movimiento = 40;
 		
 		for(var i=0; i<componente.length && !hayMontura; i++){
 			if(componente[i].getTipo() == "Montura-Tiro"){
@@ -63,12 +93,12 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 				movimiento = componente[i].getMovimiento();
 			}
 			else{
-				if(componente[i].getMovimiento().movimiento < movimiento){
+				if(componente[i].getMovimiento() < movimiento){
 					movimiento = componente[i].getMovimiento();
 				}
 			}
 		}
-		
+
 		return movimiento;
 	};
 	

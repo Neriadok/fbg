@@ -83,11 +83,12 @@ function Componente(fichaReferencia, tipo){
 	this.getMovimiento = function(){
 		var movimiento;
 		if(m == 0){
-			movimiento = Number.MAX_VALUE;
+			movimiento = 40;
 		}
 		else{
-			movimiento = m*20;
+			movimiento = m;
 		}
+
 		return movimiento;
 	};
 	
