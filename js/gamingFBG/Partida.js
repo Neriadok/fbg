@@ -83,7 +83,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 				}
 			}
 			//Ciclo de repetición en milisegundos
-			,200
+			,100
 	);
 
 	situacionConstruir();
@@ -173,15 +173,6 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 
     	/**Prevenimos la selección de texto*/
     	var preventTextSelect = new PreventTextSelect();
-    	
-		/**Comprobamos si existe un boton para finalizar fase.**/
-		if(document.getElementById("finalizarFase") != null){
-			document.getElementById("finalizarFase").ondblclick = finalizarFase;
-		}
-		/**Comprobamos si existe un boton para finalizar fase.**/
-		if(document.getElementById("actualizarSituacion") != null){
-			document.getElementById("actualizarSituacion").ondblclick = obtenerSituacion;
-		}
 		
 		/**Generamos los objetos ventana si los hubiese.**/
     	var ventanas = document.getElementsByClassName("ventana");
@@ -263,6 +254,15 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		fichaTropaEnemiga = document.getElementsByClassName("tropaenemiga");
 		document.getElementById(panelOut).innerHTML = "<div class='enfasis'>FANTASY BATTLE GAMES</div>";
 		console.log("Situacion actualizada.");
+    	
+		/**Comprobamos si existe un boton para finalizar fase.**/
+		if(document.getElementById("finalizarFase") != null){
+			document.getElementById("finalizarFase").ondblclick = finalizarFase;
+		}
+		/**Comprobamos si existe un boton para finalizar fase.**/
+		if(document.getElementById("actualizarSituacion") != null){
+			document.getElementById("actualizarSituacion").ondblclick = obtenerSituacion;
+		}
 	};
 	
 	
@@ -1128,8 +1128,10 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	 */
 	function lineaLibre(p1,p2,t1ID,t2ID){
 		for(var i=0;i<tropa.length;i++){
-			if(tropa[i].getId()!=t1ID && tropa[i].getId()!=t2ID){
+			if(tropa[i].getId() != t1ID && tropa[i].getId() != t2ID){
+				
 				if(tropa[i].bloqueaLinea(p1.x,p1.y,p2.x,p2.y)){
+					console.log(tropa[i].getNombre());
 					return false;
 				}
 			}
@@ -1562,66 +1564,152 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	function panelFaseDeclaracionCargas(contenido){
 
 		if(tropaSeleccionadaId != -1 && tropaSeleccionadaPreviaId != -1){
-			/**Si la tropa seleccionada pertenece al usuario y la previa no:*/
-			if(tropa[tropaBuscar(tropaSeleccionadaId)].getUser() && !tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser()){
-				switch(tropaFrenteVer(tropa[tropaBuscar(tropaSeleccionadaId)],tropa[tropaBuscar(tropaSeleccionadaPreviaId)])){
-					case 0:
-						document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> no puede ver a la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b>. ";
-						break;
-					case 1:
-						document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> ve a la tropa enmiga <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> de frente.<br/>";
-						document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
-						break;
-					case 2:
-						document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> ve el flanco izquierdo de la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b>.<br/>";
-						document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
-						break;
-					case 3:
-						document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> ve el flanco derecho de la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b>.<br/>";
-						document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
-						break;
-					case 4:
-						document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> ve la retauardia de la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b>.<br/>";
-						document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
-						break;
-					default:
-						document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> no puede ver a la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b>. ";
+			/**Si alguna de las tropas es aliada y la otra enemiga.*/
+			if(
+				(
+					tropa[tropaBuscar(tropaSeleccionadaId)].getUser() 
+					&& !tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser()
+				)
+				||
+				(
+					tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser()
+					&& !tropa[tropaBuscar(tropaSeleccionadaId)].getUser()
+				)
+			){
+				/** Comprobamos cual de las tropas es enemiga y cual aliada */
+				if(tropa[tropaBuscar(tropaSeleccionadaId)].getUser()){
+					var tropaPropia = tropa[tropaBuscar(tropaSeleccionadaId)];
+					var tropaEnemiga = tropa[tropaBuscar(tropaSeleccionadaPreviaId)];
 				}
-			}
-			/**Si la tropa seleccionada no pertenece al usuario y la previa si:*/
-			if(tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser() && !tropa[tropaBuscar(tropaSeleccionadaId)].getUser()){
-				switch(tropaFrenteVer(tropa[tropaBuscar(tropaSeleccionadaPreviaId)],tropa[tropaBuscar(tropaSeleccionadaId)])){
+				else{
+					var tropaPropia = tropa[tropaBuscar(tropaSeleccionadaPreviaId)];
+					var tropaEnemiga = tropa[tropaBuscar(tropaSeleccionadaId)];
+				}
+				
+				var frenteVisiblePrioritario = tropaFrenteVer(tropaPropia, tropaEnemiga);
+				
+				switch(frenteVisiblePrioritario){
 					case 0:
-						document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> no puede ver a la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b>. ";
-					break;
+						contenido += "<p>";
+						contenido += "La tropa ";
+						
+						contenido += "<b>";
+						contenido += tropaPropia.getNombre();
+						contenido += "</b>";
+						
+						contenido += " no puede ver a la tropa enemiga ";
+							
+						contenido += "<b>";
+						contenido += tropaEnemiga.getNombre();
+						contenido += "</b>.";
+						
+						contenido += "</p>";
+						break;
+						
 					case 1:
-						document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> ve a la tropa enmiga <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> de frente.<br/>";
-						document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
+						contenido += "<p>";
+						contenido += "La tropa ";
+						
+						contenido += "<b>";
+						contenido += tropaPropia.getNombre();
+						contenido += "</b>";
+						
+						contenido += " ve a la tropa enemiga "
+							
+						contenido += "<b>";
+						contenido += tropaEnemiga.getNombre();
+						contenido += "</b>";
+						
+						contenido += " por su vanguardia.";
+						
+						contenido += "</p>";
 						break;
+						
 					case 2:
-						document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> ve el flanco izquierdo de la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b>.<br/>";
-						document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
+
+						contenido += "<p>";
+						contenido += "La tropa ";
+						
+						contenido += "<b>";
+						contenido += tropaPropia.getNombre();
+						contenido += "</b>";
+						
+						contenido += " ve a la tropa enemiga "
+							
+						contenido += "<b>";
+						contenido += tropaEnemiga.getNombre();
+						contenido += "</b>";
+						
+						contenido += " por su flanco izquierdo.";
+						
+						contenido += "</p>";
 						break;
+						
 					case 3:
-						document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> ve el flanco derecho de la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b>.<br/>";
-						document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
+
+						contenido += "<p>";
+						contenido += "La tropa ";
+						
+						contenido += "<b>";
+						contenido += tropaPropia.getNombre();
+						contenido += "</b>";
+						
+						contenido += " ve a la tropa enemiga "
+							
+						contenido += "<b>";
+						contenido += tropaEnemiga.getNombre();
+						contenido += "</b>";
+						
+						contenido += " por su flanco derecho. ";
+						
+						contenido += "</p>";
 						break;
+						
 					case 4:
-						document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> ve la retauardia de la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b>.<br/>";
-						document.getElementById("textoFase").innerHTML += "&nbsp; &nbsp; <input id='cargar' type='submit' value='Cargar'/>";
+
+						contenido += "<p>";
+						contenido += "La tropa ";
+						
+						contenido += "<b>";
+						contenido += tropaPropia.getNombre();
+						contenido += "</b>";
+						
+						contenido += " ve a la tropa enemiga "
+							
+						contenido += "<b>";
+						contenido += tropaEnemiga.getNombre();
+						contenido += "</b>";
+						
+						contenido += " por su retaguardia.";
+						
+						contenido += "</p>";
 						break;
+						
 					default:
-						document.getElementById("textoFase").innerHTML = "La tropa <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> no puede ver a la tropa enemiga <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b>. ";
+						contenido += "La tropa <b>"+tropaPropia.getNombre()+"</b> no puede ver a la tropa enemiga <b>"+tropaEnemiga.getNombre()+"</b>. ";
+				}
+				
+				
+				if(frenteVisiblePrioritario != 0){
+					contenido += "<div colspan='2' class='alignCenter'>";
+					contenido += "¿Deseas cargar?<br/>";
+					contenido += "<div id='accionFase' class='boton'><img src='src/botones/desafiar.png'/></div>";
+					contenido += "</div>";
 				}
 			}
 			/**Si ambas tropas pertenecen al usuario*/
-			if(tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser() && tropa[tropaBuscar(tropaSeleccionadaId)].getUser() || !tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser() && !tropa[tropaBuscar(tropaSeleccionadaId)].getUser()){
-				document.getElementById("textoFase").innerHTML = "Las tropas <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> y <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> son aliadas. Carga con una de tus tropas a una tropa enemiga. ";
+			else if(
+				tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser() 
+				&& tropa[tropaBuscar(tropaSeleccionadaId)].getUser() 
+				|| !tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser() 
+				&& !tropa[tropaBuscar(tropaSeleccionadaId)].getUser()
+			){
+				contenido += "Las tropas <b>"+tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getNombre()+"</b> y <b>"+tropa[tropaBuscar(tropaSeleccionadaId)].getNombre()+"</b> son aliadas.<br/><br/>Carga con una de tus tropas a una tropa enemiga. ";
 			}
 		}
 		/**Si ninguna de las tropas seleccionadas pertenece al usuario*/
 		else{
-			document.getElementById("textoFase").innerHTML = "Por favor, elija una tropa con que cargar o a la que cargar. ";
+			contenido += "Por favor, elija una tropa con que cargar o a la que cargar. ";
 		}
 		
 		return contenido;
@@ -1673,13 +1761,13 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 						contenido += "<td>";
 						contenido += "<select id='moverDireccion'>";
 						contenido += "<option value='0'>Vanguardia</option>";
-						contenido += "<option value='45'>Vanguardia-Siniestra</option>";
-						contenido += "<option value='90'>Siniestra</option>";
-						contenido += "<option value='135'>Retaguardia-Siniestra</option>";
+						contenido += "<option value='45'>Vanguardia-Diestra</option>";
+						contenido += "<option value='90'>Diestra</option>";
+						contenido += "<option value='135'>Retaguardia-Diestra</option>";
 						contenido += "<option value='180'>Retaguardia</option>";
-						contenido += "<option value='225'>Retaguardia-Diestra</option>";
-						contenido += "<option value='270'>Diestra</option>";
-						contenido += "<option value='315'>Vanguardia-Diestra</option>";
+						contenido += "<option value='225'>Retaguardia-Siniestra</option>";
+						contenido += "<option value='270'>Siniestra</option>";
+						contenido += "<option value='315'>Vanguardia-Siniestra</option>";
 						contenido += "</select>";
 						contenido += "</td>";
 						contenido += "<td class='alignLeft'>";
@@ -1883,14 +1971,14 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 						if(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML != ""){
 							tropa[tropaBuscar(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML)].sacar(tropaSeleccionadaId);
 						}
-						tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(x,y,angle,anchoFila,CAMPO_ANCHO,CAMPO_ALTO,userOrder);
+						tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(x,y,angle,anchoFila,CAMPO_ANCHO,CAMPO_ALTO,userOrder,fase);
 						if(tropaColision(tropaSeleccionadaId)){
 							tropa[tropaBuscar(tropaSeleccionadaId)].retirar();
 							document.getElementById(panelOut).innerHTML += "<div class='error'>Tropa no desplegada. Ya hay otra tropa en el lugar deseado. </div>";
 						}
 					}
 					else{
-						tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(0,0,0,0,CAMPO_ANCHO,CAMPO_ALTO,userOrder);
+						tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(0,0,0,0,CAMPO_ANCHO,CAMPO_ALTO,userOrder,fase);
 						tropa[tropaBuscar(tropaSeleccionadaId)].retirar();
 						document.getElementById(panelOut).innerHTML += "<div class='error'> El despliegue era inviable. Comprueba los datos que introduciste. </div>";
 					}
@@ -1925,7 +2013,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 						angle = 0;
 					}
 				}
-				tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(posicionCursor(e).x,posicionCursor(e).y,angle,5,CAMPO_ANCHO,CAMPO_ALTO,userOrder);
+				tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(posicionCursor(e).x,posicionCursor(e).y,angle,5,CAMPO_ANCHO,CAMPO_ALTO,userOrder,fase);
 				
 				/**Si la tropa choca con otra, la retiramos.*/
 				if(tropaColision(tropaSeleccionadaId)){
@@ -1948,7 +2036,13 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 				if(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML != ""){
 					tropa[tropaBuscar(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML)].sacar(tropaSeleccionadaId);
 				}
-				tropa[tropaBuscar(tropaSeleccionadaId)].arrastrar(posicionCursor(e).x,posicionCursor(e).y,CAMPO_ANCHO,CAMPO_ALTO,userOrder);
+				tropa[tropaBuscar(tropaSeleccionadaId)].arrastrar(
+					posicionCursor(e).x
+					,posicionCursor(e).y
+					,CAMPO_ANCHO
+					,CAMPO_ALTO
+					,userOrder
+				);
 				situacionConstruir();
 			}
 		}
@@ -1999,10 +2093,43 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	 * 
 	 * @param e Event - Evento que lanzo la accion.
 	 */
-	function accionMoverCursorDeclaracionCargas(){
+	function accionMoverCursorDeclaracionCargas(e){
+		var tropaPropia = null;
+		
 		if(tropaSeleccionadaId != -1){
 			if(tropa[tropaBuscar(tropaSeleccionadaId)].getUser()){
-				
+				tropaPropia = tropa[tropaBuscar(tropaSeleccionadaId)];
+			}
+			else if(tropaSeleccionadaPreviaId != -1){
+				if(tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser()){
+					tropaPropia = tropa[tropaBuscar(tropaSeleccionadaPreviaId)];
+				}
+			}
+		}
+		
+		if(tropaPropia != null){
+			if(
+				tropaPropia.lineaVision(
+					posicionCursor(e).x
+					,posicionCursor(e).y
+				)
+			){
+				if(
+					lineaLibre(
+						tropaPropia.getVanguardiaSiniestra()
+						, posicionCursor(e)
+						, tropaPropia.getId()
+						, null
+					)
+				){
+					document.getElementById(panelOut).innerHTML = "La tropa ve el punto en que se encuentra el cursor.";
+				}
+				else{
+					document.getElementById(panelOut).innerHTML = "La tropa no puede ver el punto en que se encuentra el cursor.";
+				}
+			}
+			else{
+				document.getElementById(panelOut).innerHTML = "La tropa no puede ver el punto en que se encuentra el cursor.";
 			}
 		}
 	};
@@ -2097,7 +2224,30 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 					break;
 					
 				case "separar": 
-					alert(accionRealizada);
+					var tropaPadre = document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML;
+					
+					//Comprobamos por seguridad que exista una tropa padre (cuestion de evitar BUGS)
+					if(tropaPadre != ""){
+						//Sacamos la tropa de su tropa padre
+						tropa[tropaBuscar(tropaPadre)].sacar(tropaSeleccionadaId);
+						
+						//La posicionamos la tropa justo encima de su padre
+						var x = tropa[tropaBuscar(tropaPadre)].getVanguardiaSiniestra().x;
+						var y = tropa[tropaBuscar(tropaPadre)].getVanguardiaSiniestra().y;
+						var angle = tropa[tropaBuscar(tropaPadre)].getOrientacion();
+						tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(x, y, angle, 1, CAMPO_ANCHO,CAMPO_ALTO,userOrder,fase);
+						
+						//Tras posicionarla la desplazamos a la izquierda su ancho mas 3 puntos, siempre teniendo en cuenta el zoom.
+						var desplazamiento = parseInt(tropa[tropaBuscar(tropaSeleccionadaId)].getDimensiones().ancho + 10)*zoom/5;
+						tropa[tropaBuscar(tropaSeleccionadaId)].mover(
+							desplazamiento
+							, 270
+							, CAMPO_ANCHO
+							, CAMPO_ALTO
+							,false
+						);
+					}
+					
 					break;
 				
 				default: 
