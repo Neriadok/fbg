@@ -8,7 +8,10 @@
   *  @version 1.1 (23/07/2014)
   */
 function Tropa(tropaId,panelOut){
-	/ * VARIABLES */
+	/** CONSTANTES */
+	var UNIDAD_MOVIMIENTO = 20;
+	
+	/** VARIABLES */
 	//Car�cter�sticas
 	var id = tropaId;
 	var nombre = document.getElementById("nombre"+tropaId).innerHTML;
@@ -37,7 +40,7 @@ function Tropa(tropaId,panelOut){
 	
 	
 	
-	/ * GETTERS */
+	/** GETTERS */
 	/**
 	  *  Método get del atributo id
 	  */
@@ -355,7 +358,7 @@ function Tropa(tropaId,panelOut){
 	this.getDimensiones = dimensiones();
 		
 	
-	/ * M�TODOS INTERNOS */
+	/** M�TODOS INTERNOS */
 	/**
 	  *  Método que tras modificar los valores del panel de entrada (panelIn)
 	  *  actualiza los atributos de la tropa.
@@ -579,12 +582,23 @@ function Tropa(tropaId,panelOut){
 	  *  y en caso de estar debajo o a la izquierda devolvera -1.
 	  */
 	function distanciaPuntoRecta(xP,yP,xR,yR,angle){
-		//y = mx+n
-		var m = Math.tan(angle * Math.PI/180);
-		var n = yR - xR * m;
 		
-		//(mx-y+n)/raiz cuadrada de m^2 +1 = distancia
-		return parseInt((m * xP-yP+n)/Math.sqrt(Math.pow(m,2)+1));
+		if(angle == 90 || angle == 270){
+			//Si la inclinacion es vertical, la distancia minima es la diferencia entre latitudes.
+			return Math.abs(xP - xR)
+		}
+		else{
+			//y = mx+n
+			var m = Math.tan(angle * Math.PI/180);
+			var n = yR - xR * m;
+			
+			//(mx - y + n)/raiz cuadrada de m^2 +1 = distancia
+			return Math.abs(
+				parseInt(
+					(m * xP- yP + n) / Math.sqrt( Math.pow(m,2) + 1)
+				)
+			);
+		}
 	};
 	
 	
@@ -598,15 +612,18 @@ function Tropa(tropaId,panelOut){
 		var yVI = altitud;
 		var xVD = parseInt(latitud+dimensiones().ancho * Math.cos(orientacion));
 		var yVD = parseInt(altitud+dimensiones().ancho * Math.sin(orientacion));
-		var angle = orientacion * 180/Math.PI+90;
-		if(posicionPuntoRecta(x,y,xVI,yVI,angle) <= 0 && posicionPuntoRecta(x,y,xVD,yVD,angle) >= 0) return true;
-		if(posicionPuntoRecta(x,y,xVI,yVI,angle) >= 0 && posicionPuntoRecta(x,y,xVD,yVD,angle) <= 0) return true;
+		var angle = orientacion * 180/Math.PI + 90;
+		
+		if(posicionPuntoRecta(x,y,xVI,yVI,angle) < 0 && posicionPuntoRecta(x,y,xVD,yVD,angle) > 0) return true;
+		
+		if(posicionPuntoRecta(x,y,xVI,yVI,angle) > 0 && posicionPuntoRecta(x,y,xVD,yVD,angle) < 0) return true;
+		
 		return false;
 	};
 	
 
 
-	/ * METODOS DE INTERACTUACION */
+	/**  METODOS DE INTERACTUACION */
 	/**
 	  *  Método que ejecuta los procesos cuando esta tropa es seleccionada.
 	  */
@@ -710,16 +727,14 @@ function Tropa(tropaId,panelOut){
 				y=campoAlto-40;
 			}
 			
-			if(fase == 0){
-				if(userOrder=="Desafiador"){
-					if(y>campoAlto/4){
-						y=campoAlto/4;
-					}
+			if(userOrder=="Desafiador"){
+				if(y>campoAlto/4){
+					y=campoAlto/4;
 				}
-				else{
-					if(y<campoAlto-campoAlto/4){
-						y=campoAlto-campoAlto/4;
-					}
+			}
+			else{
+				if(y<campoAlto-campoAlto/4){
+					y=campoAlto-campoAlto/4;
 				}
 			}
 
@@ -763,23 +778,50 @@ function Tropa(tropaId,panelOut){
 				situacion.strokeStyle="grey";
 			}
 			situacion.fillStyle = "grey";
-
-			console.log("Ancho Columna "+anchoColumna);
-			console.log("Alto Fila "+altoFila());
-			console.log("Filas Incompletas "+this.getFilasIncompletas());
-			console.log("Tropa de "+anchoColumna * unidadesFila * zoom+"x"+altoFila() * this.getFilasIncompletas() * zoom);
 			
 			situacion.fillRect(0,0,anchoColumna * unidadesFila * zoom,altoFila() * this.getFilasIncompletas() * zoom);
+
+
+			var tamanioCono = 0;
+			var grd = null;
 			
-			//Establecemos un gradiente para indicar dirección de visión.
-			var tamanioCono = 160;
-			var grd = situacion.createLinearGradient(0, 0, 0, -tamanioCono*zoom);
-			grd.addColorStop(0, "white");
-			grd.addColorStop(0.1, "cyan");
-			grd.addColorStop(1, "transparent");
+			var color1 = null;
+			var color2 = null;
+			
+			if(this.getUser()){
+				color1 = "cyan";
+				color2 = "white";
+			}
+			else{
+				color1 = "orange";
+				color2 = "yellow";
+			}
+			
+			if(this.getOcupada()){
+				color2 = color1;
+			}
+			
+			if(estado == "Cargando" || estado == "Bajo carga" || estado == "En combate"){
+				tamanioCono = 15;
+				
+				//Establecemos un gradiente para indicar dirección de visión.
+				grd = situacion.createLinearGradient(0, 0, 0, -tamanioCono*zoom);
+				grd.addColorStop(0, "red");
+				grd.addColorStop(1, "transparent");
+			}
+			else{
+				tamanioCono = 160;
+				
+				//Establecemos un gradiente para indicar dirección de visión.
+				grd = situacion.createLinearGradient(0, 0, 0, -tamanioCono*zoom);
+				grd.addColorStop(0, color2);
+				grd.addColorStop(0.2, color1);
+				grd.addColorStop(1, "transparent");
+			}
+			
 			situacion.fillStyle = grd;
 			
-			//Dibujamos un trapecio con una altura de 80 puntos.
+			//Dibujamos un trapecio
 			situacion.beginPath(0,0);
 			situacion.lineTo(-tamanioCono * zoom, -tamanioCono * zoom);
 			situacion.lineTo((anchoColumna * unidadesFila + tamanioCono) * zoom, -tamanioCono * zoom);
@@ -802,8 +844,6 @@ function Tropa(tropaId,panelOut){
 			//Reestablecemos el contexto
 			situacion.rotate(orientacion * (-1));
 			situacion.translate(latitud * zoom * (-1),altitud * zoom * (-1));
-
-			console.log(nombre+" posicionada.");
 		}
 	};
 	
@@ -1399,355 +1439,85 @@ function Tropa(tropaId,panelOut){
 	  *  
 	  *  
 	  *  @param objetivo Tropa objetivo de la carga.
-	  *  @param frente Frente de combate m�s pr�ximo.
+	  *  @param frente Frente de combate mas próximo.
 	  *  @return Devuelve verdadero si la carga es viable.
 	  */
 	this.alcanceCarga = function(objetivo,frente){
-		//Los puntos de vision son los dos vertices de la vanguardia de esta tropa.
-		var xVI = latitud;
-		var yVI = altitud;
-		var xVD = parseInt(latitud+dimensiones().ancho * Math.cos(orientacion));
-		var yVD = parseInt(altitud+dimensiones().ancho * Math.sin(orientacion));
+		
+		//El angulo la orientacion de la tropa en grados
+		var angle = orientacion * 180 / Math.PI;
+		
+		//El alcance el doble del movimiento * 20.
+		var alcance = this.getMovimiento() * UNIDAD_MOVIMIENTO * 2;
+		
+		//Declaramos los puntos del frente enemigo
+		var punto1 = null;
+		var punto2 = null;
 		
 		switch(frente){
-			case 1://Cargar por el frente
+			//Vanguardia
+			case 1:
+				//Definimos los puntos del frente
+				punto1 = objetivo.getVanguardiaSiniestra();
+				punto2 = objetivo.getVanguardiaDiestra();
+				
 				if(
-					(
-						visionDirecta(
-							objetivo.getVanguardiaSiniestra().x
-							,objetivo.getVanguardiaSiniestra().y
-						)
-						
-						&&
-						
-						distanciaPuntoRecta(
-							objetivo.getVanguardiaSiniestra().x
-							,objetivo.getVanguardiaSiniestra().y
-							,xVI
-							,yVI
-							,orientacion * 180/Math.PI
-						)  <=  this.getMovimiento() * 2
-					)
-
+					this.distanciaFrentePunto(punto1) <= alcance
 					||
-					
-					
-					distanciaPuntoPunto(
-						objetivo.getVanguardiaSiniestra().x
-						,objetivo.getVanguardiaSiniestra().y
-						,xVI
-						,yVI
-					)
-					 <=  this.getMovimiento() * 2
-					
-					||
-					
-					distanciaPuntoPunto(
-						objetivo.getVanguardiaSiniestra().x
-						,objetivo.getVanguardiaSiniestra().y
-						,xVD
-						,yVD
-					)
-					 <=  this.getMovimiento() * 2
-					
-
-					||
-					
-					(
-						visionDirecta(
-							objetivo.getVanguardiaDiestra().x
-							,objetivo.getVanguardiaDiniestra().y
-						)
-						
-						&&
-						
-						distanciaPuntoRecta(
-							objetivo.getVanguardiaDiestra().x
-							,objetivo.getVanguardiaDiestra().y
-							,xVI
-							,yVI
-							,orientacion * 180/Math.PI
-						)
-						 <=  this.getMovimiento() * 2
-					)
-
-					||
-					
-					
-					distanciaPuntoPunto(
-						objetivo.getVanguardiaDiestra().x
-						,objetivo.getVanguardiaDiestra().y
-						,xVI
-						,yVI
-					)
-					 <=  this.getMovimiento() * 2
-					
-					||
-					
-					distanciaPuntoPunto(
-						objetivo.getVanguardiaDiestra().x
-						,objetivo.getVanguardiaDiestra().y
-						,xVD
-						,yVD
-					)
-					 <=  this.getMovimiento() * 2
+					this.distanciaFrentePunto(punto2) <= alcance
 				){
 					return true;
 				}
 				
-			break;
+				break;
 			
-			case 2://Cargar por el flanco izquierdo
+			//Siniestra
+			case 2:
+				//Definimos los puntos del frente
+				punto1 = objetivo.getVanguardiaSiniestra();
+				punto2 = objetivo.getRetaguardiaSiniestra();
+				
 				if(
-					(
-						visionDirecta(
-							objetivo.getVanguardiaSiniestra().x
-							,objetivo.getVanguardiaSiniestra().y
-						)
-						
-						&&
-						
-						distanciaPuntoRecta(
-							objetivo.getVanguardiaSiniestra().x
-							,objetivo.getVanguardiaSiniestra().y
-							,xVI
-							,yVI
-							,orientacion * 180/Math.PI
-						)
-						 <=  this.getMovimiento() * 2
-					)
-
+					this.distanciaFrentePunto(punto1) <= alcance
 					||
-						
-					distanciaPuntoPunto(
-						objetivo.getVanguardiaSiniestra().x
-						,objetivo.getVanguardiaSiniestra().y,xVI,yVI
-					)
-					 <=  this.getMovimiento() * 2
-					
-					||
-					
-					distanciaPuntoPunto(
-						objetivo.getVanguardiaSiniestra().x
-						,objetivo.getVanguardiaSiniestra().y
-						,xVD
-						,yVD
-					)
-					 <=  this.getMovimiento() * 2
-					
-					||
-					
-					(
-						visionDirecta(
-							objetivo.getRetaguardiaSiniestra().x
-							,objetivo.getRetaguardiaSiniestra().y
-						)
-						
-						&&
-						
-						distanciaPuntoRecta(
-							objetivo.getRetaguardiaSiniestra().x
-							,objetivo.getRetaguardiaSiniestra().y
-							,xVI
-							,yVI
-							,orientacion * 180/Math.PI
-						)
-						 <=  this.getMovimiento() * 2
-					)
-
-					||
-					
-					distanciaPuntoPunto(
-						objetivo.getRetaguardiaSiniestra().x
-						,objetivo.getRetaguardiaSiniestra().y
-						,xVI
-						,yVI
-					)
-					 <=  this.getMovimiento() * 2
-					
-					||
-					
-					distanciaPuntoPunto(
-						objetivo.getRetaguardiaSiniestra().x
-						,objetivo.getRetaguardiaSiniestra().y
-						,xVD
-						,yVD
-					)
-					 <=  this.getMovimiento() * 2
+					this.distanciaFrentePunto(punto2) <= alcance
 				){
 					return true;
 				}
 				
-			break;
+				break;
 			
-			case 3://Cargar por el flanco derecho
+			//Diestra
+			case 3:
+				//Definimos los puntos del frente
+				punto1 = objetivo.getVanguardiaDiestra();
+				punto2 = objetivo.getRetaguardiaDiestra();
+				
 				if(
-					(
-						visionDirecta(
-							objetivo.getVanguardiaDiestra().x
-							,objetivo.getVanguardiaDiestra().y
-						)
-						
-						&&
-						
-						distanciaPuntoRecta(
-							objetivo.getVanguardiaDiestra().x
-							,objetivo.getVanguardiaDiestra().y
-							,xVI
-							,yVI
-							,orientacion * 180/Math.PI
-						)  <=  this.getMovimiento() * 2
-					)
-
+					this.distanciaFrentePunto(punto1) <= alcance
 					||
-					
-					distanciaPuntoPunto(
-						objetivo.getVanguardiaDiestra().x
-						,objetivo.getVanguardiaDiestra().y
-						,xVI
-						,yVI
-					)
-					 <=  this.getMovimiento() * 2
-					
-					||
-					
-					distanciaPuntoPunto(
-						objetivo.getVanguardiaDiestra().x
-						,objetivo.getVanguardiaDiestra().y
-						,xVD
-						,yVD
-					)
-					 <=  this.getMovimiento() * 2
-
-					||
-					
-					(
-						visionDirecta(
-							objetivo.getRetaguardiaDiestra().x
-							,objetivo.getRetaguardiaDiestra().y
-						)
-						
-						&&
-						
-						distanciaPuntoRecta(
-							objetivo.getRetaguardiaDiestra().x
-							,objetivo.getRetaguardiaDiestra().y
-							,xVI
-							,yVI
-							,orientacion * 180/Math.PI
-						)
-						 <=  this.getMovimiento() * 2
-					)
-
-					||
-					
-					distanciaPuntoPunto(
-						objetivo.getRetaguardiaDiestra().x
-						,objetivo.getRetaguardiaDiestra().y
-						,xVI
-						,yVI
-					)
-					 <= this.getMovimiento() * 2
-					
-					||
-					
-					distanciaPuntoPunto(
-						objetivo.getRetaguardiaDiestra().x
-						,objetivo.getRetaguardiaDiestra().y
-						,xVD
-						,yVD
-					)
-					 <= this.getMovimiento() * 2
+					this.distanciaFrentePunto(punto2) <= alcance
 				){
 					return true;
 				}
 				
-			break;
+				break;
 			
-			case 4://Cargar por retaguardia
+			//Retaguardia
+			case 4:
+				//Definimos los puntos del frente
+				punto1 = objetivo.getRetaguardiaSiniestra();
+				punto2 = objetivo.getRetaguardiaDiestra();
+				
 				if(
-					(
-						visionDirecta(
-							objetivo.getRetaguardiaSiniestra().x
-							,objetivo.getRetaguardiaSiniestra().y
-						)
-						
-						&&
-						
-						distanciaPuntoRecta(
-							objetivo.getRetaguardiaSiniestra().x
-							,objetivo.getRetaguardiaSiniestra().y
-							,xVI
-							,yVI
-							,orientacion * 180/Math.PI
-						)
-						 <=  this.getMovimiento() * 2
-					)
-
+					this.distanciaFrentePunto(punto1) <= alcance
 					||
-					
-					distanciaPuntoPunto(
-						objetivo.getRetaguardiaSiniestra().x
-						,objetivo.getRetaguardiaSiniestra().y
-						,xVI
-						,yVI
-					)
-					 <=  this.getMovimiento() * 2
-					
-					||
-					
-					distanciaPuntoPunto(
-						objetivo.getRetaguardiaSiniestra().x
-						,objetivo.getRetaguardiaSiniestra().y
-						,xVD
-						,yVD
-					)
-					 <=  this.getMovimiento() * 2
-
-					||
-					
-					(
-						visionDirecta(
-							objetivo.getRetaguardiaDiestra().x
-							,objetivo.getRetaguardiaDiniestra().y
-						)
-						
-						&&
-					
-						distanciaPuntoRecta(
-							objetivo.getRetaguardiaDiestra().x
-							,objetivo.getRetaguardiaDiestra().y
-							,xVI
-							,yVI
-							,orientacion * 180/Math.PI
-						)
-						 <=  this.getMovimiento() * 2
-					)
-
-					||
-					
-					distanciaPuntoPunto(
-						objetivo.getRetaguardiaDiestra().x
-						,objetivo.getRetaguardiaDiestra().y
-						,xVI
-						,yVI
-					)
-					 <=  this.getMovimiento() * 2
-					
-					||
-					
-					distanciaPuntoPunto(
-						objetivo.getRetaguardiaDiestra().x
-						,objetivo.getRetaguardiaDiestra().y
-						,xVD
-						,yVD
-					)
-					 <=  this.getMovimiento() * 2
+					this.distanciaFrentePunto(punto2) <= alcance
 				){
 					return true;
 				}
 				
-			break;
+				break;
 		}
 		return false;
 	};
@@ -1764,21 +1534,25 @@ function Tropa(tropaId,panelOut){
 		var yVI = altitud;
 		var xVD = parseInt(latitud+dimensiones().ancho * Math.cos(orientacion));
 		var yVD = parseInt(altitud+dimensiones().ancho * Math.sin(orientacion));
+		
+		var distancia = null;
+		
 		if(visionDirecta(punto.x,punto.y)){
-			distanciaPuntoRecta(punto.x,punto.y,xVI,yVI,orientacion * 180/Math.PI);
+			distancia = distanciaPuntoRecta(punto.x,punto.y,xVI,yVI,orientacion * 180/Math.PI);
 		}
 		else{
 			if(
 				distanciaPuntoPunto(punto.x,punto.y,xVI,yVI) 
 				< distanciaPuntoPunto(punto.x,punto.y,xVD,yVD)
 			){
-				return distanciaPuntoPunto(punto.x,punto.y,xVI,yVI);
+				distancia = distanciaPuntoPunto(punto.x,punto.y,xVI,yVI);
 			}
 			
 			else{
-				return distanciaPuntoPunto(punto.x,punto.y,xVD,yVD);
+				distancia = distanciaPuntoPunto(punto.x,punto.y,xVD,yVD);
 			}
 		}
+		return distancia;
 	};
 	
 	
@@ -1790,7 +1564,6 @@ function Tropa(tropaId,panelOut){
 	  */
 	this.cargar = function(objetivo,frente){
 		document.getElementById("estado"+tropaId).innerHTML = "Cargando";
-		document.getElementById("estado"+objetivo.getId()).innerHTML = "Bajo carga";
 		document.getElementById("tropabajoataqueid"+tropaId).innerHTML = objetivo.getId();
 		
 		//Indicamos la carga
@@ -1804,7 +1577,7 @@ function Tropa(tropaId,panelOut){
 				//Posicionamos la tropa
 				document.getElementById("latitud"+tropaId).innerHTML = objetivo.getVanguardiaDiestra().x;
 				document.getElementById("altitud"+tropaId).innerHTML = objetivo.getVanguardiaDiestra().y;
-				document.getElementById("orientacion"+tropaId).innerHTML = ""+(parseInt(180)+objetivo.getOrientacion());
+				document.getElementById("orientacion"+tropaId).innerHTML = 180+objetivo.getOrientacion();
 				
 				//Actualizamos los datos
 				document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML = "Vanguardia";
@@ -1817,7 +1590,7 @@ function Tropa(tropaId,panelOut){
 				//Posicionamos la tropa
 				document.getElementById("latitud"+tropaId).innerHTML = objetivo.getVanguardiaSiniestra().x;
 				document.getElementById("altitud"+tropaId).innerHTML = objetivo.getVanguardiaSiniestra().y;
-				document.getElementById("orientacion"+tropaId).innerHTML = ""+(parseInt(90)+objetivo.getOrientacion());
+				document.getElementById("orientacion"+tropaId).innerHTML = 90+objetivo.getOrientacion();
 				
 				//Actualizamos los datos
 				document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML = "Siniestra";
@@ -1830,7 +1603,7 @@ function Tropa(tropaId,panelOut){
 				//Posicionamos la tropa
 				document.getElementById("latitud"+tropaId).innerHTML = objetivo.getRetaguardiaDiestra().x;
 				document.getElementById("altitud"+tropaId).innerHTML = objetivo.getRetaguardiaDiestra().y;
-				document.getElementById("orientacion"+tropaId).innerHTML = ""+(parseInt(270)+objetivo.getOrientacion());
+				document.getElementById("orientacion"+tropaId).innerHTML = 270+objetivo.getOrientacion();
 				
 				//Actualizamos los datos
 				document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML = "Diestra";
@@ -1843,7 +1616,7 @@ function Tropa(tropaId,panelOut){
 				//Posicionamos la tropa
 				document.getElementById("latitud"+tropaId).innerHTML = objetivo.getRetaguardiaSiniestra().x;
 				document.getElementById("altitud"+tropaId).innerHTML = objetivo.getRetaguardiaSiniestra().y;
-				document.getElementById("orientacion"+tropaId).innerHTML = ""+objetivo.getOrientacion();
+				document.getElementById("orientacion"+tropaId).innerHTML = objetivo.getOrientacion();
 				
 				//Actualizamos los datos
 				document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML = "Retaguardia";
@@ -1864,13 +1637,21 @@ function Tropa(tropaId,panelOut){
 	
 	
 	/**
+	  *  Método que actualiza una tropa cuando se recibe una carga.
+	  */
+	this.recibirCarga = function(){
+		document.getElementById("estado"+tropaId).innerHTML = "Bajo carga";
+		actualizar();
+	};
+	
+	
+	/**
 	  *  Método que actualiza una tropa cuando entra en combate.
 	  */
 	this.entrarEnCombate = function(){
 		document.getElementById("estado"+tropaId).innerHTML = "En combate";
 		actualizar();
 	};
-
 	
 	
 	/**
@@ -1885,7 +1666,7 @@ function Tropa(tropaId,panelOut){
 							Math.sin( 
 								(orientacion + direccion)
 							)
-						)  *  20 
+						)  *  UNIDAD_MOVIMIENTO 
 					)
 				);
 			
@@ -1896,7 +1677,7 @@ function Tropa(tropaId,panelOut){
 								(orientacion + direccion)
 							)
 						) 
-					)  *  20 
+					)  *  UNIDAD_MOVIMIENTO 
 				);
 			
 			

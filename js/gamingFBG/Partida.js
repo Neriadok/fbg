@@ -236,6 +236,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		tropasIniciar();
 		situacionConstruir();
 		console.log("Elementos actualizados.");
+		comprobarSituacion();
 	};
 	
 	
@@ -265,25 +266,88 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		}
 	};
 	
+	/**
+	 * Método que evalua si se pueden realizar acciones en esta fase,
+	 * realiza las acciones automáticas
+	 * y finaliza la fase de forma automática si fuera necesario.
+	 */
+	function comprobarSituacion(){
+		var finalizar = true;
+
+		
+		if(document.getElementById("finalizarFase") != null){
+			switch(fase){
+			
+				//Solo se necesitará reacionar ante cargas si ha habido cargas.
+				case "2":
+					for(var i=0; i<tropa.length; i++){
+						if(tropa[i].getUser() && tropa[i].getEstado() == "Bajo carga"){
+							finalizar = false;
+						}
+					}
+					break;
+					
+				//Solo se combatirá si hay tropas en combate.
+				case "4":
+					for(var i=0; i<tropa.length; i++){
+						if(tropa[i].getUser() && tropa[i].getEstado() == "En combate"){
+							finalizar = false;
+						}
+					}
+					break;
+					
+				//Solo se necesitara resolver combates si alguna tropa esta derrotada.
+				case "5":
+					for(var i=0; i<tropa.length; i++){
+						if(tropa[i].getUser() && tropa[i].getEstado() == "Derrotada"){
+							finalizar = false;
+						}
+					}
+					break;
+					
+				default: finalizar = false;
+			}
+			
+			if(finalizar){
+				finalizarFase(null);
+			}
+		}
+	};
+	
 	
 	/**
 	 * Método que finaliza una fase y registra los cambios en la base de datos.
 	 */
 	function finalizarFase(e){
-		e.preventDefault();
+		if(e != null) e.preventDefault();
 		
-		/**
-		 * Si estamos en la fase de despliegue no deberemos poder finalizarla hasta haber desplegado todas las tropas.
-		 * Suponemos que es así.
-		 */
+		
 		var viable = true;
-		if(fase == "0"){
-			for(var i=0; i<tropa.length; i++){
-				if(!tropa[i].getEnCampo()){
-					viable = false;
+		switch(fase){
+			/**
+			 * Si estamos en la fase de despliegue no deberemos poder finalizarla hasta haber desplegado todas las tropas.
+			 */
+			case "0":
+				for(var i=0; i<tropa.length; i++){
+					if(!tropa[i].getEnCampo()){
+						viable = false;
+					}
 				}
-			}
+				break;
+			
+			/**
+			 * En caso de que alguna tropa siga bajo carga no se podrá finalizar la fase de reaccion de cargas.
+			 */
+			case "2":
+				for(var i=0; i<tropa.length; i++){
+					if(tropa[i].getUser() && tropa[i].getEstado() == "Bajo carga"){
+						viable = false;
+					}
+				}
+				break;
+			default:
 		}
+				
 		
 		if(viable){
 			document.getElementById(panelOut).innerHTML = "<div class='enfasis'>Finalizando fase</div>";
@@ -300,8 +364,16 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			console.log("Finalizando fase");
 		}
 		else{
-			if(fase == "0"){
-				document.getElementById(panelOut).innerHTML = "<div class='error'>NO SE PUEDE FINALIZAR LA FASE<br/>Has de desplegar todas las tropas.</div>";
+			switch(fase){
+				case "0":
+					document.getElementById(panelOut).innerHTML = "<div class='error'>NO SE PUEDE FINALIZAR LA FASE<br/>Has de desplegar todas las tropas.</div>";
+					break;
+					
+				case "2":
+					document.getElementById(panelOut).innerHTML = "<div class='error'>NO SE PUEDE FINALIZAR LA FASE<br/>Alguna de tus tropas sigue en estado \"Bajo carga\".<br/> Por favor, reacciona a todas las cargas.</div>";
+					break;
+					
+				default:;
 			}
 		}
 	};
@@ -1586,115 +1658,130 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 					var tropaEnemiga = tropa[tropaBuscar(tropaSeleccionadaId)];
 				}
 				
-				var frenteVisiblePrioritario = tropaFrenteVer(tropaPropia, tropaEnemiga);
-				
-				switch(frenteVisiblePrioritario){
-					case 0:
-						contenido += "<p>";
-						contenido += "La tropa ";
-						
-						contenido += "<b>";
-						contenido += tropaPropia.getNombre();
-						contenido += "</b>";
-						
-						contenido += " no puede ver a la tropa enemiga ";
-							
-						contenido += "<b>";
-						contenido += tropaEnemiga.getNombre();
-						contenido += "</b>.";
-						
-						contenido += "</p>";
-						break;
-						
-					case 1:
-						contenido += "<p>";
-						contenido += "La tropa ";
-						
-						contenido += "<b>";
-						contenido += tropaPropia.getNombre();
-						contenido += "</b>";
-						
-						contenido += " ve a la tropa enemiga "
-							
-						contenido += "<b>";
-						contenido += tropaEnemiga.getNombre();
-						contenido += "</b>";
-						
-						contenido += " por su vanguardia.";
-						
-						contenido += "</p>";
-						break;
-						
-					case 2:
-
-						contenido += "<p>";
-						contenido += "La tropa ";
-						
-						contenido += "<b>";
-						contenido += tropaPropia.getNombre();
-						contenido += "</b>";
-						
-						contenido += " ve a la tropa enemiga "
-							
-						contenido += "<b>";
-						contenido += tropaEnemiga.getNombre();
-						contenido += "</b>";
-						
-						contenido += " por su flanco izquierdo.";
-						
-						contenido += "</p>";
-						break;
-						
-					case 3:
-
-						contenido += "<p>";
-						contenido += "La tropa ";
-						
-						contenido += "<b>";
-						contenido += tropaPropia.getNombre();
-						contenido += "</b>";
-						
-						contenido += " ve a la tropa enemiga "
-							
-						contenido += "<b>";
-						contenido += tropaEnemiga.getNombre();
-						contenido += "</b>";
-						
-						contenido += " por su flanco derecho. ";
-						
-						contenido += "</p>";
-						break;
-						
-					case 4:
-
-						contenido += "<p>";
-						contenido += "La tropa ";
-						
-						contenido += "<b>";
-						contenido += tropaPropia.getNombre();
-						contenido += "</b>";
-						
-						contenido += " ve a la tropa enemiga "
-							
-						contenido += "<b>";
-						contenido += tropaEnemiga.getNombre();
-						contenido += "</b>";
-						
-						contenido += " por su retaguardia.";
-						
-						contenido += "</p>";
-						break;
-						
-					default:
-						contenido += "La tropa <b>"+tropaPropia.getNombre()+"</b> no puede ver a la tropa enemiga <b>"+tropaEnemiga.getNombre()+"</b>. ";
+				if(tropaPropia.getOcupada()){
+					contenido += "<p>";
+					contenido += "La tropa ";
+					
+					contenido += "<b>";
+					contenido += tropaPropia.getNombre();
+					contenido += "</b>";
+					
+					contenido += " ya realizo una acción este turno y por lo tanto no puede realizar ninguna otra.";
+					
+					contenido += "</p>";
 				}
 				
-				
-				if(frenteVisiblePrioritario != 0){
-					contenido += "<div colspan='2' class='alignCenter'>";
-					contenido += "¿Deseas cargar?<br/>";
-					contenido += "<div id='accionFase' class='boton'><img src='src/botones/desafiar.png'/></div>";
-					contenido += "</div>";
+				else{
+					var frenteVisiblePrioritario = tropaFrenteVer(tropaPropia, tropaEnemiga);
+					
+					switch(frenteVisiblePrioritario){
+						case 0:
+							contenido += "<p>";
+							contenido += "La tropa ";
+							
+							contenido += "<b>";
+							contenido += tropaPropia.getNombre();
+							contenido += "</b>";
+							
+							contenido += " no puede ver a la tropa enemiga ";
+								
+							contenido += "<b>";
+							contenido += tropaEnemiga.getNombre();
+							contenido += "</b>.";
+							
+							contenido += "</p>";
+							break;
+							
+						case 1:
+							contenido += "<p>";
+							contenido += "La tropa ";
+							
+							contenido += "<b>";
+							contenido += tropaPropia.getNombre();
+							contenido += "</b>";
+							
+							contenido += " ve a la tropa enemiga "
+								
+							contenido += "<b>";
+							contenido += tropaEnemiga.getNombre();
+							contenido += "</b>";
+							
+							contenido += " por su vanguardia.";
+							
+							contenido += "</p>";
+							break;
+							
+						case 2:
+
+							contenido += "<p>";
+							contenido += "La tropa ";
+							
+							contenido += "<b>";
+							contenido += tropaPropia.getNombre();
+							contenido += "</b>";
+							
+							contenido += " ve a la tropa enemiga "
+								
+							contenido += "<b>";
+							contenido += tropaEnemiga.getNombre();
+							contenido += "</b>";
+							
+							contenido += " por su flanco izquierdo.";
+							
+							contenido += "</p>";
+							break;
+							
+						case 3:
+
+							contenido += "<p>";
+							contenido += "La tropa ";
+							
+							contenido += "<b>";
+							contenido += tropaPropia.getNombre();
+							contenido += "</b>";
+							
+							contenido += " ve a la tropa enemiga "
+								
+							contenido += "<b>";
+							contenido += tropaEnemiga.getNombre();
+							contenido += "</b>";
+							
+							contenido += " por su flanco derecho. ";
+							
+							contenido += "</p>";
+							break;
+							
+						case 4:
+
+							contenido += "<p>";
+							contenido += "La tropa ";
+							
+							contenido += "<b>";
+							contenido += tropaPropia.getNombre();
+							contenido += "</b>";
+							
+							contenido += " ve a la tropa enemiga "
+								
+							contenido += "<b>";
+							contenido += tropaEnemiga.getNombre();
+							contenido += "</b>";
+							
+							contenido += " por su retaguardia.";
+							
+							contenido += "</p>";
+							break;
+							
+						default:
+							contenido += "La tropa <b>"+tropaPropia.getNombre()+"</b> no puede ver a la tropa enemiga <b>"+tropaEnemiga.getNombre()+"</b>. ";
+					}
+					
+					
+					if(frenteVisiblePrioritario != 0){
+						contenido += "<div colspan='2' class='alignCenter'>";
+						contenido += "¿Deseas cargar?<br/>";
+						contenido += "<div id='accionFase' class='boton'><img src='src/botones/desafiar.png'/></div>";
+						contenido += "</div>";
+					}
 				}
 			}
 			/**Si ambas tropas pertenecen al usuario*/
@@ -2067,23 +2154,33 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	 * Método que gestiona las acciones de la fase de declaracion de cargas.
 	 */
 	function accionFaseDeclaracionCargas(){
-		
-		if(tropaSeleccionadaId != -1 && tropaSeleccionadaPreviaId != -1){
-			/**Caso en que la tropa seleccionada pertenece al usuario*/
-			if(tropa[tropaBuscar(tropaSeleccionadaId)].getUser() && !tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser()){
-				/**Evaluamos si la tropa del usuario ve a la del adversario*/
-				var frenteDeCarga = tropaFrenteVer(tropa[tropaBuscar(tropaSeleccionadaId)],tropa[tropaBuscar(tropaSeleccionadaPreviaId)]);
-				switch(frenteDeCarga){
-					default: alert(frenteDeCarga);
+		var tropaPropia = null;
+		var tropaEnemiga = null;
+	
+		if(tropaSeleccionadaId != -1){
+			if(tropa[tropaBuscar(tropaSeleccionadaId)].getUser()){
+				tropaPropia = tropa[tropaBuscar(tropaSeleccionadaId)];
+				tropaEnemiga = tropa[tropaBuscar(tropaSeleccionadaPreviaId)];
+			}
+			else if(tropaSeleccionadaPreviaId != -1){
+				if(tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser()){
+					tropaPropia = tropa[tropaBuscar(tropaSeleccionadaPreviaId)];
+					tropaEnemiga = tropa[tropaBuscar(tropaSeleccionadaId)];
 				}
 			}
-			/**Caso en que la anterior tropa seleccionada pertenece al usuario*/
-			if(!tropa[tropaBuscar(tropaSeleccionadaId)].getUser() && tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser()){
-				/**Evaluamos si la tropa del usuario ve a la del adversario*/
-				var frenteDeCarga = tropaFrenteVer(tropa[tropaBuscar(tropaSeleccionadaPreviaId)],tropa[tropaBuscar(tropaSeleccionadaId)]);
-				switch(frenteDeCarga){
-					default: alert(frenteDeCarga);
-				}
+		}
+		
+		if(tropaPropia != -1){
+			/**Evaluamos si la tropa del usuario ve a la del adversario*/
+			var frenteDeCarga = tropaFrenteVer(tropaPropia,tropaEnemiga);
+			
+			/**Verificamos si la tropa tiene movimiento suficiente para cargar.**/
+			if(frenteDeCarga != 0 && tropaPropia.alcanceCarga(tropaEnemiga, frenteDeCarga)){
+				tropaPropia.cargar(tropaEnemiga, frenteDeCarga);
+				tropaEnemiga.recibirCarga();
+			}
+			else{
+				tropaPropia.cargaFallida();
 			}
 		}
 	};
