@@ -607,3 +607,7 @@ legend{
 	color:white;
 	text-shadow:2px 2px 2px #F9FF45;
 }
+
+.width100{
+	width:100%;
+}

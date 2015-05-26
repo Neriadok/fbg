@@ -345,6 +345,18 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 					}
 				}
 				break;
+			
+			/**
+			 * Al finalizar la ultima fase del jugador, todas las tropas que hubiesen movido se declaran como "En Campo".
+			 */
+			case "5":
+				for(var i=0; i<tropa.length; i++){
+					if(tropa[i].getUser() && tropa[i].getEstado() == "Desplazada"){
+						tropa[i].desocupar();
+					}
+				}
+				break;
+			
 			default:
 		}
 				
@@ -370,7 +382,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 					break;
 					
 				case "2":
-					document.getElementById(panelOut).innerHTML = "<div class='error'>NO SE PUEDE FINALIZAR LA FASE<br/>Alguna de tus tropas sigue en estado \"Bajo carga\".<br/> Por favor, reacciona a todas las cargas.</div>";
+					document.getElementById(panelOut).innerHTML = "<div class='error'>NO SE PUEDE FINALIZAR LA FASE<br/>Alguna de tus tropas sigue en estado \"Bajo carga\".</div>";
 					break;
 					
 				default:;
@@ -519,6 +531,10 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 				
 				case "1":
 					contenido = panelFaseDeclaracionCargas(contenido);
+					break;
+				
+				case "2":
+					contenido = panelFaseReaccionCargas(contenido);
 					break;
 				
 				case "3":
@@ -805,8 +821,18 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	function tropaColision(tropaId){
 		var colision = false;
 		for(var i=0;i<tropa.length;i++){
-			/**Si la tropa est� en campo, comparamos los puntos de ambas tropas.*/
-			if(tropa[i].getEnCampo() && i!=tropaBuscar(tropaId)){
+			/**
+			 * Si la tropa est� en campo,
+			 * no se trata de la misma tropa
+			 * ni estan en combate entre ellas
+			 * comparamos los puntos de ambas tropas.
+			 */
+			if(
+				tropa[i].getEnCampo()
+				&& i!= tropaBuscar(tropaId) 
+				&& tropa[tropaBuscar(tropaId)].getTropaBajoAtaque().id != tropa[i].getId()
+				&& tropa[i].getTropaBajoAtaque().id != tropa[tropaBuscar(tropaId)].getId()
+			){
 				if(tropa[i].colision(
 						tropa[tropaBuscar(tropaId)].getVanguardiaSiniestra().x
 						,tropa[tropaBuscar(tropaId)].getVanguardiaSiniestra().y
@@ -969,17 +995,18 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		var t2RD=tropa2.getRetaguardiaDiestra();
 		
 		/**Suponemos que la tropa 1 no ve ning�n punto de la tropa 2*/
-		var verVS=false;
-		var verVD=false;
-		var verRS=false;
-		var verRD=false;
+		var visible = [];
+		visible['vs'] = false;
+		visible['vd'] = false;
+		visible['rs'] = false;
+		visible['rd'] = false;
 		
 		/**Comprobamos si la tropa1 ve el punto de Vanguardia Siniestra de la tropa2*/
 		if(tropa1.lineaVision(t2VS.x,t2VS.y)){
 			/**Si el punto est� en la linea de visi�n ver�ficamos que ningun elemento bloquee la linea de visi�n*/
 			if(lineaLibre(t1VS,t2VS,t1ID,t2ID) || lineaLibre(t1VD,t2VS,t1ID,t2ID)){
 				/**Para que se bloquee la visi�n ambos puntos, VS y VD, han de carecer de visi�n*/
-				verVS=true;
+				visible['vs']=true;
 			}
 		}
 		
@@ -988,7 +1015,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			/**Si el punto est� en la linea de visi�n ver�ficamos que ningun elemento bloquee la linea de visi�n*/
 			if(lineaLibre(t1VS,t2VD,t1ID,t2ID) || lineaLibre(t1VD,t2VD,t1ID,t2ID)){
 				/**Para que se bloquee la visi�n ambos puntos, VS y VD, han de carecer de visi�n*/
-				verVD=true;
+				visible['vd']=true;
 			}
 		}
 		
@@ -997,7 +1024,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			/**Si el punto est� en la linea de visi�n ver�ficamos que ningun elemento bloquee la linea de visi�n*/
 			if(lineaLibre(t1VS,t2RS,t1ID,t2ID) || lineaLibre(t1VD,t2RS,t1ID,t2ID)){
 				/**Para que se bloquee la visi�n ambos puntos, VS y VD, han de carecer de visi�n*/
-				verRS=true;
+				visible['rs']=true;
 			}
 		}
 		
@@ -1006,35 +1033,41 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			/**Si el punto est� en la linea de visi�n ver�ficamos que ningun elemento bloquee la linea de visi�n*/
 			if(lineaLibre(t1VS,t2RD,t1ID,t2ID) || lineaLibre(t1VD,t2RD,t1ID,t2ID)){
 				/**Para que se bloquee la visi�n ambos puntos, VS y VD, han de carecer de visi�n*/
-				verRD=true;
+				visible['rd']=true;
 			}
 		}
 		
 		/**Comprobamos cual es el punto m�s pr�ximo*/
 		/**En funcion de si vemos otros puntos de la tropa designamos el frente de carga*/
 		/**Por utilidad tiene preferencia la retaguardia sobre los flancos y los flancos sobre la vanguardia*/
-		switch(tropaPuntoProximoFrente(tropa1,tropa2)){
-			case "vs":
-				if(verRS) return 2;
-				if(verVD) return 1;
-				break;
-				
-			case "vd":
-				if(verRD) return 3;
-				if(verVD) return 1;
-				break;
-				
-			case "rs":
-				if(verRD) return 4;
-				if(verVS) return 2;
-				break;
-				
-			case "rd":
-				if(verRS) return 4;
-				if(verVD) return 3;
-				break;
+		
+		if(
+			!visible['vs']
+			&& !visible['vd']
+			&& !visible['rs']
+			&& !visible['rd']
+		){
+			return 0;
 		}
-		return 0;
+		else{
+			switch(tropaFrenteProximo(tropa1,tropa2,visible)){
+				case "v":
+					return 1;
+					break;
+					
+				case "s":
+					return 2;
+					break;
+					
+				case "d":
+					return 3;
+					break;
+					
+				case "r":
+					return 4;
+					break;
+			}
+		}
 	};
 	
 		
@@ -1045,7 +1078,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	 * @param tropa2 tropa objetivo.
 	 * @return devolver� un String que representa las siglas de uno de los 4 puntos de una tropa.
 	 */
-	function tropaPuntoProximoFrente(tropa1,tropa2){
+	function tropaFrenteProximo(tropa1,tropa2,visible){
 		/**Establecemos las Id de las tropas*/
 		var t1ID=tropa1.getId();
 		var t2ID=tropa2.getId();
@@ -1055,43 +1088,132 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 		var t2RS=tropa2.getRetaguardiaSiniestra();
 		var t2RD=tropa2.getRetaguardiaDiestra();
 		
-		/**Establecemos el nombre de los frentes,*/
-		var frente = [];
-		frente[0] = "vs";
-		frente[1] = "vd";
-		frente[2] = "rs";
-		frente[3] = "rd";
+		/**
+		 * Establecemos el nombre de los frentes
+		 * Se puede apreciar que los frentes estan organizados
+		 * para dar prioridad a las cargas por la retaguardia
+		 */
+		var punto = [];
+		punto[0] = "rd";
+		punto[1] = "rs";
+		punto[2] = "vd";
+		punto[3] = "vs";
 		
-		/**Establecemos las distancias desde el frente de la tropa 1 a cada uno de los puntos*/
+		/**
+		 * Establecemos las distancias desde el frente de la tropa 1 a cada uno de los puntos
+		 * Si uno de los puntos no es visible, definimos que la distancia a ese punto es infinita,
+		 * para asegurarnos de que no será seleccionado.
+		 */
 		var distancia = [];
-		distancia[0] = tropa1.distanciaFrentePunto(tropa2.getVanguardiaSiniestra());
-		distancia[1] = tropa1.distanciaFrentePunto(tropa2.getVanguardiaDiestra());
-		distancia[2] = tropa1.distanciaFrentePunto(tropa2.getRetaguardiaSiniestra());
-		distancia[3] = tropa1.distanciaFrentePunto(tropa2.getRetaguardiaDiestra());
+
+		if(visible['rd']){
+			distancia[0] = tropa1.distanciaFrentePunto(tropa2.getRetaguardiaDiestra());
+		}
+		else{
+			distancia[0] = Number.MAX_VALUE;
+		}
+
+		if(visible['rs']){
+			distancia[1] = tropa1.distanciaFrentePunto(tropa2.getRetaguardiaSiniestra());
+		}
+		else{
+			distancia[1] = Number.MAX_VALUE;
+		}
+
+		if(visible['vd']){
+			distancia[2] = tropa1.distanciaFrentePunto(tropa2.getVanguardiaDiestra());
+		}
+		else{
+			distancia[2] = Number.MAX_VALUE;
+		}
+		
+		if(visible['vs']){
+			distancia[3] = tropa1.distanciaFrentePunto(tropa2.getVanguardiaSiniestra());
+		}
+		else{
+			distancia[3] = Number.MAX_VALUE;
+		}
 		
 		/**Ordenamos de menor a mayor las distancias y los nombres asociados de forma paralela*/
 		/**Recurrimos al metodo de la burbuja con interruptor para una m�xima eficiencia*/
-		var cambios=true;
-		for(var i=1;i<distancia.length-1 && cambios;i++){
-			cambios=false;
-			for(var j=1;j<distancia.length-i-1;j++){
-				if(distancia[i]<distancia[i-1]){
+		var cambios = true;
+		for(var i = 0; i < distancia.length-1 && cambios; i++){
+			cambios = false;
+			for(var j = 0; j < distancia.length-i-1; j++){
+				if(distancia[j] > distancia[j+1]){
 					cambios=true;
 					
-					var auxDistancia = distancia[i];
-					distancia[i] = distancia[i-1];
-					distancia[i-1] = auxDistancia;
+					var auxDistancia = distancia[j];
+					distancia[j] = distancia[j+1];
+					distancia[j+1] = auxDistancia;
 					
-					var auxFrente = frente[i];
-					frente[i] = frente[i-1];
-					frente[i-1] = auxFrente;
+					var auxPunto = punto[j];
+					punto[j] = punto[j+1];
+					punto[j+1] = auxPunto;
 				}
 			}
 		}
 		
-		return frente[0];
+		console.log("Distancias a los puntos enemigos de menor a mayor:")
+		for(var i=0; i<punto.length; i++){
+			console.log(punto[i]+" - "+distancia[i]);
+		}
+		
+		/**
+		 * Comprobamos los dos puntos de menor distancia
+		 * para verificar a que frente pertenecen.
+		 */
+		if(
+			punto[0] == "vs" && punto[1] == "vd"
+			||
+			punto[1] == "vs" && punto[0] == "vd"
+		){
+			return "v";
+		} 
+		
+		if(
+			punto[0] == "vs" && punto[1] == "rs"
+			||
+			punto[1] == "vs" && punto[0] == "rs"
+		){
+			return "s";
+		} 
+		
+		if(
+			punto[0] == "vd" && punto[1] == "rd"
+			||
+			punto[1] == "vd" && punto[0] == "rd"
+		){
+			return "d";
+		} 
+		
+		if(
+			punto[0] == "rs" && punto[1] == "rd"
+			||
+			punto[1] == "rs" && punto[0] == "rd"
+		){
+			return "r";
+		} 
 	};
 	
+	
+	/**
+	 * Método que identifica que tropas están cargando a una tropa dada.
+	 * En caso de que ninguna la esté cargando retornará un array vacío.
+	 * 
+	 * @param tropaBajoCarga integer - Id de la tropa que está recibiendo la carga.
+	 */
+	function tropasCargando(tropaBajoCargaId){
+		var tropasEnemigas = [];
+		
+		for(var i=0; i<tropa.length; i++){
+			if(tropa[i].getTropaBajoAtaque().id == tropaBajoCargaId){
+				tropasEnemigas.push(tropa[i]);
+			}
+		}
+		
+		return tropasEnemigas;
+	};
 		
 	
 	
@@ -1805,7 +1927,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	
 
 	/**
-	 * Método que construye el contenido para el panel de fase de despliegue
+	 * Método que construye el contenido para el panel de fase de movimiento
 	 * 
 	 * @param contenido String - String al que se le añadirá el nuevo contenido.
 	 * @return Retornará un String que asignar al innerHTML.
@@ -1987,6 +2109,67 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	};
 	
 	
+
+	/**
+	 * Método que construye el contenido para el panel de reaccion de cargas
+	 * 
+	 * @param contenido String - String al que se le añadirá el nuevo contenido.
+	 * @return Retornará un String que asignar al innerHTML.
+	 */
+	function panelFaseReaccionCargas(contenido){
+		if(tropaSeleccionadaId != -1){
+			if(tropa[tropaBuscar(tropaSeleccionadaId)].getUser()){
+				if(tropa[tropaBuscar(tropaSeleccionadaId)].getEstado() == "Bajo carga"){
+					
+					//Comprobamos que tropas están atacando a la tropa seleccionada.
+					var enemigos = tropasCargando(tropaSeleccionadaId);
+					var cargaV = false;
+					var cargaS = false;
+					var cargaD = false;
+					var cargaR = false;
+					var direccionHuida = null;
+					
+					contenido += "La tropa está siendo atacada";
+					for(var i=0; i<enemigos.length; i++){
+						var flanco = enemigos[i].getTropaBajoAtaque().flanco;
+						contenido += "<br/>por la tropa <b>";
+						contenido += enemigos[i].getNombre();
+						contenido += "</b> por la ";
+						contenido += flanco;
+						
+						switch(flanco){
+						case "Vanguardia":
+							cargaV = true;
+							break;
+						case "Siniestra":
+							cargaS = true;
+							break;
+						case "Diestra":
+							cargaD = true;
+							break;
+						case "Retaguardia":
+							cargaR = true;
+							break;
+						}
+					}
+					
+				}
+				else{
+					contenido += "<p>Esta tropa no está recibiendo ninguna carga.<br/> Elige una tropa que te pertenezca y esté recibiendo una carga.</p>";
+				}
+			}
+			else{
+				contenido += "<p>Tropa enemiga.<br/> Elige una tropa que te pertenezca y esté recibiendo una carga.</p>";
+			}
+		}
+		else{
+			contenido += "<p>Por favor, elija una tropa \"Bajo carga\".</p>";
+		}
+		
+		return contenido;
+	};
+	
+	
 	
 	/**MÉTODOS CON LAS ACCIONES DE CADA FASE**/
 	/*****************************************************************************************************************/
@@ -2014,8 +2197,8 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 				var tropaPadre = -1;
 				
 				if (
-						tropa[tropaBuscar(tropaSeleccionadaId)].getUnidades() == 1
-						&& tropa[tropaBuscar(tropaSeleccionadaId)].getRangoAlto() >= 6
+					tropa[tropaBuscar(tropaSeleccionadaId)].getUnidades() == 1
+					&& tropa[tropaBuscar(tropaSeleccionadaId)].getRangoAlto() >= 6
 					&& tropaSeleccionadaPreviaId != -1 
 					&& tropaSeleccionadaPreviaId != tropaSeleccionadaId 
 					&& tropa[tropaBuscar(tropaSeleccionadaPreviaId)].getUser()
@@ -2100,7 +2283,16 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 						angle = 0;
 					}
 				}
-				tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(posicionCursor(e).x,posicionCursor(e).y,angle,5,CAMPO_ANCHO,CAMPO_ALTO,userOrder,fase);
+				tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(
+					posicionCursor(e).x
+					,posicionCursor(e).y
+					,angle
+					,5
+					,CAMPO_ANCHO
+					,CAMPO_ALTO
+					,userOrder
+					,fase
+				);
 				
 				/**Si la tropa choca con otra, la retiramos.*/
 				if(tropaColision(tropaSeleccionadaId)){
@@ -2123,13 +2315,29 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 				if(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML != ""){
 					tropa[tropaBuscar(document.getElementById("tropaadoptivaid"+tropaSeleccionadaId).innerHTML)].sacar(tropaSeleccionadaId);
 				}
-				tropa[tropaBuscar(tropaSeleccionadaId)].arrastrar(
+				
+				var angle = tropa[tropaBuscar(tropaSeleccionadaId)].getOrientacion();
+				
+				if(isNaN(angle)){
+					if(userOrder == "Desafiador"){
+						angle = 180;
+					}
+					else{
+						angle = 0;
+					}
+				}
+				
+				tropa[tropaBuscar(tropaSeleccionadaId)].desplegar(
 					posicionCursor(e).x
 					,posicionCursor(e).y
+					,angle
+					,5
 					,CAMPO_ANCHO
 					,CAMPO_ALTO
 					,userOrder
+					,fase
 				);
+				
 				situacionConstruir();
 			}
 		}
@@ -2176,8 +2384,29 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			
 			/**Verificamos si la tropa tiene movimiento suficiente para cargar.**/
 			if(frenteDeCarga != 0 && tropaPropia.alcanceCarga(tropaEnemiga, frenteDeCarga)){
+				//Anotamos la posicion original por si la carga fuera inviable.
+				var orientacionOriginal = tropaPropia.getOrientacion();
+				var posicionOriginal = tropaPropia.getVanguardiaSiniestra();
+				
 				tropaPropia.cargar(tropaEnemiga, frenteDeCarga);
-				tropaEnemiga.recibirCarga();
+				
+				if(tropaColision(tropaPropia.getId())){
+					tropaPropia.desplegar(
+						posicionOriginal.x
+						,posicionOriginal.y
+						,orientacionOriginal
+						,null
+						,CAMPO_ANCHO
+						,CAMPO_ALTO
+						,userOrder
+						,fase
+					);
+					
+					tropaPropia.cargaFallida();
+				}
+				else{
+					tropaEnemiga.recibirCarga();
+				}
 			}
 			else{
 				tropaPropia.cargaFallida();

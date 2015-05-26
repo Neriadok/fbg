@@ -21,7 +21,6 @@ function Tropa(tropaId,panelOut){
 	
 	//Situacion
 	var selected = false;
-	var movida = false;
 	var estado = document.getElementById("estado"+tropaId).innerHTML;
 	var heridas = document.getElementById("heridas"+tropaId).innerHTML;
 	var latitud = parseInt(document.getElementById("latitud"+tropaId).innerHTML);
@@ -93,7 +92,8 @@ function Tropa(tropaId,panelOut){
 	  *  @return true si la tropa no puede realizar acciones.
 	  */
 	this.getMovida = function(){
-		return movida;
+		if(estado == "Desplazada") return true;
+		else return false;
 	};
 	
 	/**
@@ -651,6 +651,7 @@ function Tropa(tropaId,panelOut){
 	  */
 	this.desplegar = function(x,y,angle,ancho,campoAncho,campoAlto,userOrder,fase){
 		if(estado != "Eliminada"){
+			//Tratamos las coordenadas
 			if(x<10){
 				x=10;
 			}
@@ -667,7 +668,7 @@ function Tropa(tropaId,panelOut){
 				y=campoAlto-40;
 			}
 			
-			if(fase == 0){
+			if(fase == "0"){
 				if(userOrder=="Desafiador"){
 					if(y>campoAlto/4){
 						y=campoAlto/4;
@@ -680,70 +681,38 @@ function Tropa(tropaId,panelOut){
 				}
 			}
 			
-			if(ancho > unidad.length){
-				ancho = unidad.length;
-			}
-			
-			if(unidad.length<5){
-				ancho=unidad.length;
-			}
-			
-			while(angle >= 360){
-				angle-=360;
-			}
-			
 			document.getElementById("latitud"+tropaId).innerHTML = x;
 			document.getElementById("altitud"+tropaId).innerHTML = y;
-			document.getElementById("orientacion"+tropaId).innerHTML = angle;
+			
+			//Tratamos el ancho
+			if(ancho != null){
+				if(ancho > unidad.length){
+					ancho = unidad.length;
+				}
+				
+				if(unidad.length<5){
+					ancho=unidad.length;
+				}
+				document.getElementById("unidadesfila"+tropaId).innerHTML = ancho;
+			}
+			
+			
+			//Tratamos el angulo
+			if(angle != null){
+				while(angle >= 360){
+					angle-=360;
+				}
+				document.getElementById("orientacion"+tropaId).innerHTML = angle;
+			}
+			
+			
+			//Realizamos las ultimas actualizaciones.
 			document.getElementById("estado"+tropaId).innerHTML = "En juego";
-			document.getElementById("unidadesfila"+tropaId).innerHTML = ancho;
 			document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "";
 			actualizar();
 			
 			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" desplegada en "+latitud+"x "+altitud+"y.<br/>Orientacion: "+parseInt(orientacion * 180/Math.PI);
 			console.log("Tropa "+nombre+" desplegada en "+latitud+"x "+altitud+"y.<br/>Orientacion: "+parseInt(orientacion * 180/Math.PI));
-		}
-	};
-	
-	
-	/**
-	  *  Método que arrastra una tropa sin alterar su orientacion
-	  */
-	this.arrastrar = function(x,y,campoAncho,campoAlto,userOrder){
-		if(estado != "Eliminada"){
-			if(x<10){
-				x=10;
-			}
-			
-			if(x>campoAncho-40){
-				x=campoAncho-40;
-			}
-			
-			if(y<10){
-				y=10;
-			}
-			
-			if(y>campoAlto-40){
-				y=campoAlto-40;
-			}
-			
-			if(userOrder=="Desafiador"){
-				if(y>campoAlto/4){
-					y=campoAlto/4;
-				}
-			}
-			else{
-				if(y<campoAlto-campoAlto/4){
-					y=campoAlto-campoAlto/4;
-				}
-			}
-
-			document.getElementById("latitud"+tropaId).innerHTML = x;
-			document.getElementById("altitud"+tropaId).innerHTML = y;
-			document.getElementById("estado"+tropaId).innerHTML = "En juego";
-			document.getElementById("tropaadoptivaid"+tropaId).innerHTML = "";
-			actualizar();
-			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" movida a "+latitud+"x "+altitud+"y. ";
 		}
 	};
 	
@@ -1655,10 +1624,19 @@ function Tropa(tropaId,panelOut){
 	
 	
 	/**
+	  *  Método que actualiza una tropa para indicar que dejo de estar ocupada.
+	  */
+	this.desocupar = function(){
+		document.getElementById("estado"+tropaId).innerHTML = "En juego";
+		actualizar();
+	};
+	
+	
+	/**
 	  *  
 	  */
 	this.mover = function(distancia, direccion, campoAncho, campoAlto, movimiento){
-		if(estado != "En campo"){
+		if(this.getEnCampo()){
 			direccion = (direccion) * Math.PI/180;
 			var x = parseInt( 
 					latitud + (
@@ -1697,7 +1675,7 @@ function Tropa(tropaId,panelOut){
 				y=campoAlto-40;
 			}
 			
-			movida = movimiento;
+			document.getElementById("estado"+tropaId).innerHTML = "Desplazada";
 			document.getElementById("latitud"+tropaId).innerHTML = x;
 			document.getElementById("altitud"+tropaId).innerHTML = y;
 			actualizar();
@@ -1710,7 +1688,7 @@ function Tropa(tropaId,panelOut){
 	  *  
 	  */
 	this.reorientar = function(incremento, campoAncho, campoAlto, movimiento){
-		if(estado != "En campo"){
+		if(this.getEnCampo()){
 			var angle = orientacion + incremento  *  Math.PI/180;
 			
 			var ejeX = this.getCentro().x;
@@ -1743,7 +1721,7 @@ function Tropa(tropaId,panelOut){
 				angle-=360;
 			}
 			
-			movida = movimiento;
+			document.getElementById("estado"+tropaId).innerHTML = "Desplazada";
 			document.getElementById("latitud"+tropaId).innerHTML = x;
 			document.getElementById("altitud"+tropaId).innerHTML = y;
 			document.getElementById("orientacion"+tropaId).innerHTML = angle;

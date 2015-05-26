@@ -493,96 +493,107 @@
 			$row = 0;
 			foreach($tropaNombre as $tropaId => $tropa){
 				$row++;
-				echo "<tr class='";
-				
-				if($tropaEjercito[$tropaId]){
-					if($row%2==0){
-						echo " alyPairRow";
+				if($tropa != null){
+					echo "<tr class='";
+					
+					if($tropaEjercito[$tropaId]){
+						if($row%2==0){
+							echo " alyPairRow";
+						}
+						else{
+							echo " alyInpairRow";
+						}
 					}
 					else{
-						echo " alyInpairRow";
+						if($row%2==0){
+							echo " enemyPairRow";
+						}
+						else{
+							echo " enemyInpairRow";
+						}
 					}
-				}
-				else{
-					if($row%2==0){
-						echo " enemyPairRow";
+				
+					echo "
+						'>
+							<td class='subtitle columnaUnidades alignRight'>$tropaUnidades[$tropaId] x</td>
+							<td id='selectortropa$tropaId' class='alignCenter selectorTropa larger'>$tropa</td>
+							<td class='oculto'>
+								<div id='tropa$tropaId' class='oculto tropa
+					";
+					if($tropaEjercito[$tropaId]){
+						echo " tropapropia";
 					}
 					else{
-						echo " enemyInpairRow";
+						echo " tropaenemiga";
 					}
-				}
-			
-				echo "
-					'>
-						<td class='subtitle columnaUnidades alignRight'>$tropaUnidades[$tropaId] x</td>
-						<td id='selectortropa$tropaId' class='alignCenter selectorTropa larger'>$tropa</td>
-						<td class='oculto'>
-							<div id='tropa$tropaId' class='oculto tropa
-				";
-				if($tropaEjercito[$tropaId]){
-					echo " tropapropia";
-				}
-				else{
-					echo " tropaenemiga";
-				}
-				echo "
-					'>
-						<div id='tropaDatos$tropaId' class='scrollingBox'>
-							<div id='tropaDatos".$tropaId."Content' class='scrollingBoxContent'>
-								<h3 id='nombretropa$tropaId' class='enfasis tropaContent'>$tropa</h3>
-				";
-				partida_unidadesTropa($conexion, $tropaId);
-				echo "
-								<table>
-									<tr>
-										<td class='subtitle alignRight'>Latitud: </td>
-										<td class='white alignLeft' id='latitudtropa$tropaId'>$tropaLatitud[$tropaId]</td>
-										<td class='subtitle alignRight'>Altitud: </td>
-										<td class='white alignLeft' id='altitudtropa$tropaId'>$tropaAltitud[$tropaId]</td>
-										<td class='subtitle alignRight'>Orientacion: </td>
-										<td class='white alignLeft' id='orientaciontropa$tropaId'>$tropaOrientacion[$tropaId]</td>
-									</tr>
-								</table>
-								<table class='tropaContent'>
-									<tr>
-				";
-				
-				partida_datosGeneralesTropa(
-						$tropaId
-						, $tropaUnidades[$tropaId]
-						, $tropaPts[$tropaId]
-						, $tropaRango[$tropaId]
-						, $tropaGen[$tropaId]
-						, $tropaBEst[$tropaId]
-						, $tropaChamp[$tropaId]
-						, $tropaEst[$tropaId]
-						, $tropaMusico[$tropaId]
-						, $tropaEjercito[$tropaId]
-				);
-				
-				partida_datosConcretosTropa(
-						$tropaId
-						, $tropaHeridas[$tropaId]
-						, $tropaEstado[$tropaId]
-						, $tropaUnidadesFila[$tropaId]
-						, $tropaTropaAdoptivaId[$tropaId]
-						, $tropaTropaBajoAtaqueId[$tropaId]
-						, $tropaTropaBajoAtaqueFlanco[$tropaId]
-				);
-				echo "
-											</tr>
-										</table>
+					echo "
+						'>
+							<div id='tropaDatos$tropaId' class='scrollingBox'>
+								<div id='tropaDatos".$tropaId."Content' class='scrollingBoxContent'>
+									<table class='width100'>
+										<tr>
+											<td class='alignLeft'>
+												<h3 id='nombretropa$tropaId' class='enfasis tropaContent'>$tropa</h3>
+											</td>
+											<td class='alignRight'>
+												<span class='subtitle'>Estado: </span>
+												<span class='white' id='estadotropa$tropaId'>$tropaEstado[$tropaId]</span>
+											</td>
+										</tr>
+									</table>
+					";
+					partida_unidadesTropa($conexion, $tropaId);
+					echo "
+									<table class='width100'>
+										<tr>
+											<td class='subtitle alignRight'>Latitud: </td>
+											<td class='white alignLeft' id='latitudtropa$tropaId'>$tropaLatitud[$tropaId]</td>
+											<td class='subtitle alignRight'>Altitud: </td>
+											<td class='white alignLeft' id='altitudtropa$tropaId'>$tropaAltitud[$tropaId]</td>
+											<td class='subtitle alignRight'>Orientacion: </td>
+											<td class='white alignLeft' id='orientaciontropa$tropaId'>$tropaOrientacion[$tropaId]</td>
+										</tr>
+									</table>
+									<table class='tropaContent width100'>
+										<tr>
+					";
+					
+					partida_datosGeneralesTropa(
+							$tropaId
+							, $tropaUnidades[$tropaId]
+							, $tropaPts[$tropaId]
+							, $tropaRango[$tropaId]
+							, $tropaGen[$tropaId]
+							, $tropaBEst[$tropaId]
+							, $tropaChamp[$tropaId]
+							, $tropaEst[$tropaId]
+							, $tropaMusico[$tropaId]
+							, $tropaEjercito[$tropaId]
+					);
+					
+					partida_datosConcretosTropa(
+							$tropaId
+							, $tropaHeridas[$tropaId]
+							, $tropaUnidadesFila[$tropaId]
+							, $tropaTropaAdoptivaId[$tropaId]
+							, $tropaTropaBajoAtaqueId[$tropaId]
+							, $tropaTropaBajoAtaqueFlanco[$tropaId]
+					);
+					echo "
+												</tr>
+											</table>
+										</div>
+									</div>
+									<div id='tropaDatos".$tropaId."Moving' class='scrollingBoxMoving'>
+										<div id='tropaDatos".$tropaId."MovingUp' class='scrollingBoxMovingUp'></div>
+										<div id='tropaDatos".$tropaId."MovingBar' class='scrollingBoxMovingBar'></div>
+										<div id='tropaDatos".$tropaId."MovingDown' class='scrollingBoxMovingDown'></div>
 									</div>
 								</div>
-								<div id='tropaDatos".$tropaId."Moving' class='scrollingBoxMoving'>
-									<div id='tropaDatos".$tropaId."MovingUp' class='scrollingBoxMovingUp'></div>
-									<div id='tropaDatos".$tropaId."MovingBar' class='scrollingBoxMovingBar'></div>
-									<div id='tropaDatos".$tropaId."MovingDown' class='scrollingBoxMovingDown'></div>
-								</div>
-							</div>
-						</td>
-					</tr>
-				";
+							</td>
+						</tr>
+					";
+				}
 			}
 		}
 		echo "
@@ -607,7 +618,7 @@
 	 */
 	function partida_unidadesTropa($conexion,$tropaId){
 		echo "
-			<div class='tropaContent'>
+			<div class='tropaContent width100'>
 				<table>
 					<tr>
 						<td class='atributoComponente'></td>
@@ -850,7 +861,6 @@
 	function partida_datosConcretosTropa(
 			$tropaId
 			, $tropaHeridas
-			, $tropaEstado
 			, $tropaUnidadesFila
 			, $tropaTropaAdoptivaId
 			, $tropaTropaBajoAtaqueId
@@ -872,10 +882,6 @@
 		echo "
 			<td class='halfWidth'>
 				
-				<span class='subtitle'>Estado: </span>
-				<span class='white' id='estadotropa$tropaId'>$tropaEstado</span>
-				<br/>
-				
 				<span class='subtitle'>Heridas: </span>
 				<span class='white' id='heridastropa$tropaId'>$tropaHeridas</span>
 				<br/>
@@ -890,13 +896,15 @@
 				
 				<span class='subtitle'>Tropa Bajo ataque: (pendiente)</span>
 				<br/>
-				<span class='subtitle'>Flanco Atacado: (pendiente)</span>
+				
+				<span class='subtitle'>Flanco Atacado:</span>
+				<span class='white' id='tropabajoataqueflancotropa$tropaId'>$tropaTropaBajoAtaqueFlanco</span>
 					
 				
 				<p class='oculto'>
 					<span id='tropaadoptivaidtropa$tropaId'>$tropaTropaAdoptivaId</span>
 					<span class='white' id='tropabajoataqueidtropa$tropaId'>$tropaTropaBajoAtaqueId</span>
-					<span class='white' id='tropabajoataqueflancotropa$tropaId'>$tropaTropaBajoAtaqueFlanco</span>
+					
 				</p>
 			</td>
 		";
@@ -993,7 +1001,7 @@
 		}
 		
 		//Tropa Bajo Ataque Flanco
-		$tropaBajoAtaqueFlanco = preg_replace("/[^0-9]+/", "", $tropa['tropaBajoAtaqueFlanco']);
+		$tropaBajoAtaqueFlanco = preg_replace("/[^0-9a-zA-Z]+/", "", $tropa['tropaBajoAtaqueFlanco']);
 		if($tropaBajoAtaqueFlanco == ""){
 			$query .= "null,";
 		}
