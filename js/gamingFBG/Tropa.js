@@ -17,12 +17,15 @@ function Tropa(tropaId,panelOut){
 	var nombre = document.getElementById("nombre"+tropaId).innerHTML;
 	var miembros = parseInt(document.getElementById("miembros"+tropaId).innerHTML);
 	var user = document.getElementById("user"+tropaId).value;
+	var champ = document.getElementById("champ"+tropaId).value;
+	var est = document.getElementById("est"+tropaId).value;
+	var musico = document.getElementById("musico"+tropaId).value;
 	var larga = false;
 	
 	//Situacion
 	var selected = false;
 	var estado = document.getElementById("estado"+tropaId).innerHTML;
-	var heridas = document.getElementById("heridas"+tropaId).innerHTML;
+	var heridas = parseInt(document.getElementById("heridas"+tropaId).innerHTML);
 	var latitud = parseInt(document.getElementById("latitud"+tropaId).innerHTML);
 	var altitud = parseInt(document.getElementById("altitud"+tropaId).innerHTML);
 	var orientacion = parseInt(document.getElementById("orientacion"+tropaId).innerHTML) * Math.PI/180;
@@ -47,6 +50,7 @@ function Tropa(tropaId,panelOut){
 		return id;
 	};
 	
+	
 	/**
 	  *  Método get del atributo nombre.
 	  *  
@@ -55,6 +59,7 @@ function Tropa(tropaId,panelOut){
 	this.getNombre = function(){
 		return nombre;
 	};
+	
 	
 	/**
 	  *  Método get del atributo user.
@@ -66,6 +71,31 @@ function Tropa(tropaId,panelOut){
 		else return false;
 	};
 	
+	
+	/**
+	  *  Método get del atributo user.
+	  *  
+	  *  @return true si user == "si".
+	  */
+	this.getGrupoDeMando = function(){
+		var cantidad = 0;
+		if(champ == "si") cantidad++;
+		if(est == "si") cantidad++;
+		if(musico == "si") cantidad++;
+		return cantidad
+	};
+	
+	
+	/**
+	  *  Método get que retorna el estado.
+	  *  
+	  *  @return devuelve un integer
+	  */
+	this.getEstado = function(){
+		return estado;
+	};
+	
+	
 	/**
 	  *  Método que comprueba si una tropa está en el campo.
 	  *  
@@ -75,6 +105,7 @@ function Tropa(tropaId,panelOut){
 		if(estado != "Eliminada" && estado != "Sin desplegar") return true;
 		else return false;
 	};
+	
 	
 	/**
 	  *  Método que comprueba si una tropa está realizando alguna acción o no esta en juego, de modo que no pueda realizar acciones.
@@ -86,6 +117,7 @@ function Tropa(tropaId,panelOut){
 		else return false;
 	};
 	
+	
 	/**
 	  *  Método que comprueba si una tropa movio esta fase.
 	  *  
@@ -95,6 +127,35 @@ function Tropa(tropaId,panelOut){
 		if(estado == "Desplazada") return true;
 		else return false;
 	};
+	
+	
+	/**
+	  *  Método get que retorna el numero de heridas.
+	  *  
+	  *  @return devuelve un integer
+	  */
+	this.getHeridas = function(){
+		return heridas;
+	};
+	
+	
+	/**
+	  *  Método get que retorna el id de la tropa adoptiva.
+	  *  
+	  *  @return devuelve un integer
+	  */
+	this.getTropaAdoptiva = function(){
+		return tropaAdoptivaId;
+	};
+	
+	
+	/**
+	  *  Método get que retorna el id de la unidad bajo ataque y el flanco que se encuentra bajo ataque.
+	  */
+	this.getTropaBajoAtaque = function(){
+		return {id: tropaBajoAtaqueId, flanco: tropaBajoAtaqueFlanco};
+	};
+	
 	
 	/**
 	  *  Método get que retorna el rango mas bajo de las unidades
@@ -110,6 +171,23 @@ function Tropa(tropaId,panelOut){
 		}
 		return min;
 	};
+	
+	
+	/**
+	  *  Método get que retorna el rango mas alto de las unidades
+	  *  
+	  *  @return rango mas alto.
+	  */
+	this.getRangoAlto = function(){
+		var max=0;
+		for(var i=0;i<unidad.length;i++){
+			if(unidad[i].getRango()>max){
+				max=unidad[i].getRango();
+			}
+		}
+		return max;
+	};
+	
 	
 	/**
 	  *  Método get que retorna el rango mas bajo de las unidades
@@ -130,20 +208,6 @@ function Tropa(tropaId,panelOut){
 		return maquinaria;
 	};
 	
-	/**
-	  *  Método get que retorna el rango mas alto de las unidades
-	  *  
-	  *  @return rango mas alto.
-	  */
-	this.getRangoAlto = function(){
-		var max=0;
-		for(var i=0;i<unidad.length;i++){
-			if(unidad[i].getRango()>max){
-				max=unidad[i].getRango();
-			}
-		}
-		return max;
-	};
 	
 	/**
 	  *  Método get que retorna las coordenadas del punto vanguardiaSiniestra.
@@ -160,6 +224,7 @@ function Tropa(tropaId,panelOut){
 		}
 		return coor;
 	};
+	
 	
 	/**
 	  *  Método get que retorna las coordenadas del punto vanguardiaDiestra.
@@ -181,6 +246,7 @@ function Tropa(tropaId,panelOut){
 		return coor;
 	};
 	
+	
 	/**
 	  *  Método get que retorna las coordenadas del punto vanguardiaDiestra.
 	  *  
@@ -200,6 +266,7 @@ function Tropa(tropaId,panelOut){
 		}
 		return coor;
 	};
+	
 	
 	/**
 	  *  Método get que retorna las coordenadas del punto retaguardiaDiestra.
@@ -273,44 +340,6 @@ function Tropa(tropaId,panelOut){
 	
 	
 	/**
-	  *  Método get que retorna el numero de heridas.
-	  *  
-	  *  @return devuelve un integer
-	  */
-	this.getHeridas = function(){
-		return heridas;
-	};
-	
-	
-	/**
-	  *  Método get que retorna el estado.
-	  *  
-	  *  @return devuelve un integer
-	  */
-	this.getEstado = function(){
-		return estado;
-	};
-	
-	
-	/**
-	  *  Método get que retorna el numero de heridas.
-	  *  
-	  *  @return devuelve un integer
-	  */
-	this.getTropaAdoptiva = function(){
-		return tropaAdoptivaId;
-	};
-	
-	
-	/**
-	  *  Método get que retorna el id de la unidad bajo ataque y el flanco que se encuentra bajo ataque.
-	  */
-	this.getTropaBajoAtaque = function(){
-		return {id: tropaBajoAtaqueId, flanco: tropaBajoAtaqueFlanco};
-	};
-	
-	
-	/**
 	  *  Método get que retorna el numero de filas no completas de la tropa.
 	  *  
 	  *  @return numero de filas incompletas.
@@ -328,6 +357,16 @@ function Tropa(tropaId,panelOut){
 	};
 	
 	
+	/**
+	  *  Método para devolver el ancho y el alto de la tropa.
+	  *  
+	  *  @return dimension del alto y dimension del ancho.
+	  */
+	this.getDimensiones = dimensiones();
+	
+	
+	
+	/** GETTERS DE LOS ATRIBUTOS **/
 	/**
 	  *  Método get que retorna el movimiento de la tropa.
 	  *  Una tropa mueve tanto como el mas lento de sus integrantes.
@@ -351,11 +390,126 @@ function Tropa(tropaId,panelOut){
 	
 	
 	/**
-	  *  Método para devolver el ancho y el alto de la tropa.
-	  *  
-	  *  @return dimension del alto y dimension del ancho.
-	  */
-	this.getDimensiones = dimensiones();
+	 * 
+	 */
+	this.getAtributoMaxValue = function(atributo){
+		//Declaramos el minimo como el valor m�ximo permitido
+		var valor = 0;
+		
+		for(var i=0; i<unidad.length; i++){
+			//Obtenemos el array de atributos de la unidad.
+			var atributosUnidad = unidad[i].getAtributo(atributo);
+			
+			//Comparamos cada uno de los atributos con el valor actual
+			for(var j=0 ; j<atributosUnidad.length; j++){
+				
+				if(atributosUnidad[j]>valor){
+					valor = atributosUnidad[j];
+				}
+			}
+		}
+		
+		return parseInt(valor);
+	};
+	
+	
+	/**
+	 * 
+	 */
+	this.getAtributoMinValue = function(atributo){
+		//Declaramos el minimo como el valor m�ximo permitido
+		var valor = 10;
+		
+		for(var i=0;i<unidad.length;i++){
+			//Obtenemos el array de atributos de la unidad.
+			var atributosUnidad = unidad[i].getAtributo(atributo);
+			
+			//Comparamos cada uno de los atributos con el valor actual
+			for(var j=0 ; j<atributosUnidad.length; j++){
+				
+				if(atributosUnidad[j]<valor){
+					valor = atributosUnidad[j];
+				}
+			}
+		}
+		
+		return parseInt(valor);
+	};
+	
+	
+	/**
+	 * 
+	 */
+	this.getAtributoSum = function(atributo){
+		//Declaramos el minimo como el valor m�ximo permitido
+		var valor = 0;
+		
+		for(var i=0;i<unidad.length;i++){
+			//Obtenemos el array de atributos de la unidad.
+			var atributosUnidad = unidad[i].getAtributo(atributo);
+			
+			//Comparamos cada uno de los atributos con el valor actual
+			for(var j=0 ; j<atributosUnidad.length; j++){
+				valor += atributosUnidad[j];
+			}
+		}
+		
+		return parseInt(valor);
+	};
+	
+	
+	/**
+	 * 
+	 */
+	this.getAtributoAverage = function(atributo){
+		//Declaramos el minimo como el valor m�ximo permitido
+		var valor = this.getAtributoSum(atributo);
+		var numeroComponentes = 0;
+
+		
+		for(var i=0;i<unidad.length;i++){
+			//Obtenemos el array de atributos de la unidad.
+			numeroComponentes += unidad[i].getAtributo(atributo).length;
+		}
+		
+		
+		return parseInt(valor/numeroComponentes);
+	};
+	
+	
+	/**
+	 * Función que retorna un valor aleatorio entre el menor y al mayor valor de un atributo
+	 */
+	this.getAtributoRandomAverage = function(atributo){
+		var rangoValores = this.getAtributoMaxValue(atributo) - this.getAtributoMinValue(atributo);
+		var valor = (rangoValores * Math.random() + this.getAtributoMinValue(atributo));
+		
+		return parseInt(valor);
+	};
+	
+	/**
+	 * Función que devuelve un array de todos los ataques que realiza una tropa.¡
+	 * 
+	 * @return Retorna un array de objetos Ataque
+	 */
+	this.getAtaques = function(){
+		//Definimos un array de los ataques que se realizaran.
+		var ataquesTropa = [];
+		
+		for(var i=0; i< unidad.length; i++){
+			var ataquesUnidad = unidad[i].getAtaques()
+			for(var j=0; j<ataquesUnidad.length; j++){
+				//Añadimos al ataque un objetivo, en este caso la tropa bajo ataque
+				ataquesUnidad[j].setObjetivo(tropaBajoAtaqueId);
+				ataquesUnidad[j].setTropa(tropaId);
+				
+				//Añadimos el ataque al array.
+				ataquesTropa.push(ataquesUnidad[j]);
+			}
+		}
+		
+		return ataquesTropa;
+	};
 		
 	
 	/** M�TODOS INTERNOS */
@@ -365,6 +519,7 @@ function Tropa(tropaId,panelOut){
 	  */
 	function actualizar(){
 		estado = document.getElementById("estado"+tropaId).innerHTML;
+		heridas = parseInt(document.getElementById("heridas"+tropaId).innerHTML);
 		latitud = parseInt(document.getElementById("latitud"+tropaId).innerHTML);
 		altitud = parseInt(document.getElementById("altitud"+tropaId).innerHTML);
 		orientacion = parseInt(document.getElementById("orientacion"+tropaId).innerHTML) * Math.PI/180;
@@ -372,7 +527,10 @@ function Tropa(tropaId,panelOut){
 		tropaAdoptivaId = document.getElementById("tropaadoptivaid"+tropaId).innerHTML;
 		tropaBajoAtaqueId = document.getElementById("tropabajoataqueid"+tropaId).innerHTML;
 		tropaBajoAtaqueFlanco = document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML;
-		iniciarUnidades();
+		
+		if(estado != "Eliminada"){
+			iniciarUnidades();
+		}
 	};
 	
 	
@@ -433,7 +591,47 @@ function Tropa(tropaId,panelOut){
 		  *  vamos retirando en orden las de menor rango
 		  *  en función de las heridas de la tropa.
 		  */
-		//retirarUnidades();
+		retirarUnidades();
+	};
+	
+	/**
+	 * Método que retira las unidades muertas de la tropa.
+	 */
+	function retirarUnidades(){
+		//Vamos contando el número de heridas que vamos realizando.
+		var heridasContadas = 0;
+		
+		//Procedemos mientras queden unidades y el numero de heridas que hemos contado sea inferior a las realizadas.
+		for(var i=unidad.length-1; i>=0 && heridasContadas<heridas; i--){
+			var psUnidad = 0;
+			
+			for(var j=0; j<unidad[i].getAtributo("PS").length; j++){
+				psUnidad += unidad[i].getAtributo("PS")[j];
+			}
+			
+			//Si la unidad tiene menos heridas que las que aun nos quedan por contar
+			if(heridas-heridasContadas > psUnidad){
+				//Contamos las heridas que se realizaron a la unidad
+				heridasContadas += psUnidad;
+				
+				//Eliminamos la unidad del array.
+				unidad.pop();
+			}
+			
+			//Si la unidad tiene mas puntos de salud que heridas por realizar nos quedan
+			//contamos las que nos quedan para salir del bucle.
+			else{
+				heridasContadas = heridas;
+			}
+		}
+		
+		//Si no quedasen unidades vivas, eliminamos la tropa.
+		if(unidad.length == 0){
+			document.getElementById("estado"+tropaId).innerHTML = "Eliminada";
+			console.log("Tropa "+nombre+" eliminada.");
+			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" eliminada a causa de las heridas.";
+			actualizar();
+		}
 	};
 	
 	
@@ -504,6 +702,15 @@ function Tropa(tropaId,panelOut){
 		return dim;
 	};
 	
+	
+	/**
+	 * Función que simula un dado de ciertas caras.
+	 * 
+	 * @param caras integer - numero de caras del dado.
+	 */
+	function dado(caras){
+		return parseInt(Math.random()*caras+1);
+	};
 	
 	/**
 	  *  Método que comprueba que un punto est� contenido en una recta,
@@ -1794,5 +2001,114 @@ function Tropa(tropaId,panelOut){
 			console.log("Tropa "+nombre+" girada "+incremento+" grados.");
 			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" girada "+incremento+" grados.";
 		}
+	};
+	
+	
+	/**
+	  *  Método que realiza un chequeo con el liderazgo
+	  *  @param 
+	  */
+	this.chequear = function(penalizacion){
+		return true;
+	};
+	
+	/**
+	 * Función que indica a que tropa se va atacar en el combate.
+	 */
+	this.atacar = function(objetivo){
+		if(objetivo != null){
+			document.getElementById("tropabajoataqueid"+tropaId).innerHTML = objetivo.getId();
+			document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML = "Vanguardia";
+			actualizar();
+			console.log("Tropa "+nombre+" ataca a tropa "+objetivo.getNombre());
+			document.getElementById(panelOut).innerHTML = "La tropa "+nombre+" va a atacar a la tropa "+objetivo.getNombre();
+		}
+		else{
+			document.getElementById("tropabajoataqueid"+tropaId).innerHTML = "";
+			document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML = "";
+		}
+	};
+	
+	/**
+	 * Función que determina si un ataque logra herir a la tropa.
+	 */
+	this.recibirAtaque = function(haAtacante, fAtacante){
+		//Definimos los valores aleatorios
+		var haDefensor = this.getAtributoRandomAverage("HA");
+		var rDefensor = this.getAtributoAverage("R");
+		var tiradaImpacto = dado(6);
+		var tiradaHerir = dado(6);
+		
+		//Suponemos una dificultad imposible y que el ataque falla
+		var dificultadImpacto = 7;
+		var dificultadHerir = 7;
+		var impacta = false;
+		
+		//Comparamos las habilidades de armas
+		
+		//Si la habilidad del atacante es mayor que la del defensor, impactamos a 3
+		if(haAtacante > haDefensor){
+			dificultadImpacto = 3;
+		}
+		
+		//Si la habilidad del defensor no llega a ser mayor que el doble de la del atacante, impactamos a 4
+		else if(haAtacante * 2 > haDefensor){
+			dificultadImpacto = 4;
+		}
+		
+		//Si la habilidad del atacante no es 0
+		else if(haAtacante != 0){
+			dificultadImpacto = 5;
+		}
+		
+		console.log(tiradaImpacto+" : a"+haAtacante+" - d"+haDefensor);
+		console.log(tiradaHerir+" : f"+fAtacante+" - r"+rDefensor);
+		
+		//Verificamos que la dificultad de impacto es menor que la tirada de impacto obtenida
+		if(dificultadImpacto < tiradaImpacto){
+			console.log("Un ataque impacta en "+nombre);
+			
+			//Comparamos la fuerza del atacante y la resistencia del defensor.
+			//Si la fuerza del atacante menos uno es mayor que la resitencia del defensor
+			if(fAtacante > rDefensor+1){
+				dificultadHerir = 2;
+			}
+			
+			//si la fuerza del atacante menos uno es igual a la resistencia del defensor.
+			else if(fAtacante == rDefensor+1){
+				dificultadHerir = 3;
+			}
+			
+			//si la fuerza del atacante es igual a la resistencia del defensor.
+			else if(fAtacante == rDefensor){
+				dificultadHerir = 4;
+			}
+			
+			//si la fuerza del atacante es igual a la resistencia del defensor.
+			else if(fAtacante == rDefensor-1){
+				dificultadHerir = 5;
+			}
+			
+			//si la fuerza del atacante es igual a la resistencia del defensor.
+			else if(fAtacante >= rDefensor-3){
+				dificultadHerir = 6;
+			}
+			
+			//Verificamos que la dificultad de herir es menor que la tirada para herir obtenida
+			if(dificultadHerir < tiradaHerir){
+				//En caso afirmativo aumentamos una herida
+				document.getElementById("heridas"+tropaId).innerHTML = (parseInt(heridas)+1);
+				console.log("Un impacto hiere en "+nombre);
+			}
+			else{
+				console.log("Un impacto no logra herir en "+nombre);
+			}
+			
+		}
+		else{
+			console.log("Un ataque fallido en "+nombre);
+		}
+		
+		actualizar();
 	};
 };

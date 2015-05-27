@@ -13,6 +13,9 @@ function Componente(fichaReferencia, tipo){
 	var rango = parseInt(document.getElementById("rango"+fichaReferencia).innerHTML);
 	var representada = document.getElementById("representada"+fichaReferencia).innerHTML;
 	var peana = 40;
+	if(rango >= 6 || tipo == "Montura-Tiro" || tipo == "Maquinaria-Carro"){
+		peana = 45;
+	}
 	
 	//Atributos
 	var m = document.getElementById("movimiento"+fichaReferencia).innerHTML;
@@ -25,13 +28,44 @@ function Componente(fichaReferencia, tipo){
 	var a = document.getElementById("a"+fichaReferencia).innerHTML;
 	var l = document.getElementById("l"+fichaReferencia).innerHTML;
 	
-	if(rango >= 6 || tipo == "Montura-Tiro" || tipo == "Maquinaria-Carro"){
-		peana = 45;
-	}
-	
 	
 	
 	/*GETTERS*/
+	
+	/**Getters para los atributos**/
+	
+	this.getHA = function(){
+		return parseInt(ha);
+	}
+	
+	this.getHP = function(){
+		return parseInt(hp);
+	}
+	
+	this.getF = function(){
+		return parseInt(f);
+	}
+	
+	this.getR = function(){
+		return parseInt(r);
+	}
+	
+	this.getPS = function(){
+		return parseInt(ps);
+	}
+	
+	this.getI = function(){
+		return parseInt(i);
+	}
+	
+	this.getA = function(){
+		return parseInt(a);
+	}
+	
+	this.getL = function(){
+		return parseInt(l);
+	}
+	
 	/**
 	 * Método getter para el atributo peana.
 	 * 
@@ -92,6 +126,10 @@ function Componente(fichaReferencia, tipo){
 		return movimiento;
 	};
 	
+	
+	this.getAtaques = function(){
+		return new Ataque(a, i, ha, f);
+	}
 	/*M�TODOS INTERNOS*/
 	
 		

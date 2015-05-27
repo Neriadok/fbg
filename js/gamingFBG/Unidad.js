@@ -77,7 +77,7 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 	};
 	
 	/**
-	 * 
+	 * Método que retorna el movimiento de una unidad.
 	 */
 	this.getMovimiento = function(){
 		/**
@@ -102,12 +102,56 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 		return movimiento;
 	};
 	
+	/**
+	 * Método que retorna un array
+	 * con los atributos de sus componentes.
+	 */
+	this.getAtributo = function(atributo){
+		var atributos = [];
+		
+		for(var i=0; i<componente.length; i++){
+			switch(atributo){
+				case "HA":  atributos[i] = componente[i].getHA(); break;
+				
+				case "HP":  atributos[i] = componente[i].getHP(); break;
+				
+				case "F":  atributos[i] = componente[i].getF(); break;
+				
+				case "R":  atributos[i] = componente[i].getR(); break;
+				
+				case "PS":  atributos[i] = componente[i].getPS(); break;
+				
+				case "I":  atributos[i] = componente[i].getI(); break;
+				
+				case "A":  atributos[i] = componente[i].getA(); break;
+				
+				case "L":  atributos[i] = componente[i].getL(); break;
+			}
+		}
+		
+		return atributos;
+	};
+	
+	
+	/**
+	 * Método que retorna los ataques realizados por una unidad.
+	 */
+	this.getAtaques = function(){
+		var ataquesUnidad = [];
+		
+		for(var i=0; i<componente.length; i++){
+			ataquesUnidad.push(componente[i].getAtaques());
+		}
+		
+		return ataquesUnidad;
+	};
+	
 	/*M�TODOS INTERNOS*/
 	function iniciarComponentes(){
 		for(var i=0 ; i<fichasComponentes.length ; i++){
 			componente[i] = new Componente("componente"+fichasComponentes[i].innerHTML+tropaId, fichasComponentes[i].innerHTML);
 		}
-	}
+	};
 		
 	
 	/*METODOS DE INTERACTUACION*/
@@ -132,5 +176,5 @@ function Unidad(tropaId, classNameFichas, selected, indice, subirRango){
 			situacion.fillRect(x, y, this.getPeana().peana*zoom, this.getPeana().peana*zoom);
 			situacion.strokeRect(x, y, this.getPeana().peana*zoom, this.getPeana().peana*zoom);
 		}
-	}
+	};
 };

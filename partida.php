@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="js/jFBG/MostrarMensaje.js"></script>
 		<script type="text/javascript" src="js/jFBG/Submit.js"></script>
 		<script type="text/JavaScript" src="js/jFBG/PreventTextSelect.js"></script>
+		<script type="text/javascript" src="js/gamingFBG/Ataque.js"></script>
 		<script type="text/javascript" src="js/gamingFBG/Componente.js"></script>
 		<script type="text/javascript" src="js/gamingFBG/Unidad.js"></script>
 		<script type="text/javascript" src="js/gamingFBG/Tropa.js"></script>
