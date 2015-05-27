@@ -82,7 +82,7 @@ function Tropa(tropaId,panelOut){
 	  *  @return true si la tropa no puede realizar acciones.
 	  */
 	this.getOcupada = function(){
-		if(estado != "En juego") return true;
+		if(estado != "En juego" && estado != "Adoptada") return true;
 		else return false;
 	};
 	
@@ -778,6 +778,16 @@ function Tropa(tropaId,panelOut){
 				grd.addColorStop(0, "red");
 				grd.addColorStop(1, "transparent");
 			}
+			
+			else if(estado == "Desorganizada"){
+				tamanioCono = 40;
+				
+				//Establecemos un gradiente para indicar dirección de visión.
+				grd = situacion.createLinearGradient(0, 0, 0, -tamanioCono*zoom);
+				grd.addColorStop(0, color1);
+				grd.addColorStop(1, "transparent");
+			}
+			
 			else{
 				tamanioCono = 160;
 				
@@ -826,7 +836,7 @@ function Tropa(tropaId,panelOut){
 		document.getElementById("latitud"+tropaId).innerHTML = "--";
 		document.getElementById("altitud"+tropaId).innerHTML = "--";
 		document.getElementById("orientacion"+tropaId).innerHTML = "--";
-		document.getElementById("estado"+tropaId).innerHTML = "En juego";
+		document.getElementById("estado"+tropaId).innerHTML = "Adoptada";
 		document.getElementById("unidadesfila"+tropaId).innerHTML = "--";
 		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = tropaPadre;
 		actualizar();
@@ -1027,7 +1037,7 @@ function Tropa(tropaId,panelOut){
 			}
 		}
 		
-		if(angleCen>270 && angleCen < 315){
+		if(angleCen >= 270 && angleCen < 315){
 			if(
 				posicionPuntoRecta(x,y,xIzq,yIzq,angleIzq)  <=  0 
 				&& posicionPuntoRecta(x,y,xIzq,yIzq,angleCen)  <=  0 
@@ -1536,6 +1546,7 @@ function Tropa(tropaId,panelOut){
 		document.getElementById("tropabajoataqueid"+tropaId).innerHTML = objetivo.getId();
 		
 		//Indicamos la carga
+		console.log("Tropa "+nombre+" carga contra "+objetivo.getNombre());
 		document.getElementById(panelOut).innerHTML = "La tropa "+nombre+" carga contra "+objetivo.getNombre();
 		
 		switch(frente){
@@ -1601,6 +1612,7 @@ function Tropa(tropaId,panelOut){
 	this.cargaFallida = function(){
 		document.getElementById("estado"+tropaId).innerHTML = "Desplazada";
 		document.getElementById(panelOut).innerHTML = "Carga fallida.";
+		console.log("Tropa "+nombre+" falla carga.");
 		actualizar();
 	};
 	
@@ -1609,7 +1621,22 @@ function Tropa(tropaId,panelOut){
 	  *  Método que actualiza una tropa cuando se recibe una carga.
 	  */
 	this.recibirCarga = function(){
-		document.getElementById("estado"+tropaId).innerHTML = "Bajo carga";
+		if(estado == "Desorganizada"){
+			this.eliminar();
+		}
+		else{
+			document.getElementById("estado"+tropaId).innerHTML = "Bajo carga";
+			console.log("Tropa "+nombre+" recibe carga.");
+			actualizar();
+		}
+	};
+	
+	
+	/**
+	  *  Método que actualiza una tropa cuando entra en combate.
+	  */
+	this.desocupar = function(){
+		document.getElementById("estado"+tropaId).innerHTML = "En juego";
 		actualizar();
 	};
 	
@@ -1619,6 +1646,7 @@ function Tropa(tropaId,panelOut){
 	  */
 	this.entrarEnCombate = function(){
 		document.getElementById("estado"+tropaId).innerHTML = "En combate";
+		console.log("Tropa "+nombre+" entra en combate");
 		actualizar();
 	};
 	
@@ -1626,8 +1654,35 @@ function Tropa(tropaId,panelOut){
 	/**
 	  *  Método que actualiza una tropa para indicar que dejo de estar ocupada.
 	  */
-	this.desocupar = function(){
-		document.getElementById("estado"+tropaId).innerHTML = "En juego";
+	this.salirDeCombate = function(){
+		document.getElementById("tropabajoataqueid"+tropaId).innerHTML= "";
+		document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML= "--";
+		document.getElementById("estado"+tropaId).innerHTML = "Desplazada";
+		console.log("Tropa "+nombre+" desocupada y en juego.");
+		actualizar();
+	};
+	
+	
+	/**
+	  *  Método que actualiza una tropa para indicar que dejo de estar ocupada.
+	  */
+	this.desorganizar = function(){
+		document.getElementById("tropabajoataqueid"+tropaId).innerHTML= "";
+		document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML= "--";
+		document.getElementById("estado"+tropaId).innerHTML = "Desorganizada";
+		console.log("Tropa "+nombre+" desorganizada");
+		document.getElementById(panelOut).innerHTML = "<div>La tropa "+nombre+" se ha desorganizado y quizá sea inutil por un tiempo.</div>";
+		actualizar();
+	};
+	
+	
+	/**
+	  *  Método que actualiza una tropa para indicar que dejo de estar ocupada.
+	  */
+	this.eliminar = function(){
+		document.getElementById("estado"+tropaId).innerHTML = "Eliminada";
+		console.log("Tropa "+nombre+" eliminada.");
+		document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" eliminada.";
 		actualizar();
 	};
 	
@@ -1675,10 +1730,17 @@ function Tropa(tropaId,panelOut){
 				y=campoAlto-40;
 			}
 			
-			document.getElementById("estado"+tropaId).innerHTML = "Desplazada";
+			if(movimiento){
+				document.getElementById("estado"+tropaId).innerHTML = "Desplazada";
+			}
+			else{
+				document.getElementById("estado"+tropaId).innerHTML = "En juego";
+			}
+			
 			document.getElementById("latitud"+tropaId).innerHTML = x;
 			document.getElementById("altitud"+tropaId).innerHTML = y;
 			actualizar();
+			console.log("Tropa "+nombre+" mueve a "+latitud+"x "+altitud+"y.");
 			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" mueve a "+latitud+"x "+altitud+"y.";
 		}
 	};
@@ -1721,11 +1783,15 @@ function Tropa(tropaId,panelOut){
 				angle-=360;
 			}
 			
-			document.getElementById("estado"+tropaId).innerHTML = "Desplazada";
+			if(movimiento){
+				document.getElementById("estado"+tropaId).innerHTML = "Desplazada";
+			}
+			
 			document.getElementById("latitud"+tropaId).innerHTML = x;
 			document.getElementById("altitud"+tropaId).innerHTML = y;
 			document.getElementById("orientacion"+tropaId).innerHTML = angle;
 			actualizar();
+			console.log("Tropa "+nombre+" girada "+incremento+" grados.");
 			document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" girada "+incremento+" grados.";
 		}
 	};

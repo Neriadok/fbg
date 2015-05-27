@@ -493,7 +493,7 @@
 			$row = 0;
 			foreach($tropaNombre as $tropaId => $tropa){
 				$row++;
-				if($tropa != null){
+				if($tropa != null && $tropaEstado[$tropaId] != "Eliminada"){
 					echo "<tr class='";
 					
 					if($tropaEjercito[$tropaId]){
