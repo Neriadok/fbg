@@ -107,6 +107,7 @@
 					$ejercitoId
 					,$usuario
 					,$partidaId
+					,$fechaFin
 					,$orden
 					,$nickEnemigo
 					,$ejercitoEnemigoId
@@ -128,7 +129,7 @@
 			}
 			
 			/** Comprobamos que el usuario tiene permiso para acceder a estos datos**/
-			if($usuario == $_SESSION['userId']){
+			if($usuario == $_SESSION['userId'] && $fechaFin == null){
 				echo "
 					<tr>
 						<td colspan='2' class='enfasis' id='ejercitoNombre'>$ejercitoNombre</td>
@@ -491,8 +492,9 @@
 	
 		if($tropaNombre != null){
 			$row = 0;
+			
 			foreach($tropaNombre as $tropaId => $tropa){
-				if($tropa != null && $tropaEstado[$tropaId] != "Eliminada"){
+				if($tropaNombre != null){
 					$row++;
 					echo "<tr class='";
 					
@@ -951,11 +953,52 @@
 				,$ordenJugador
 		);
 		
+		
 		//Para cada tropa prepararemos un registro de la misma en persistencia de datos.
 		foreach($datos['tropas'] as $tropa){
 			partida_registrarSituacionTropa($conexion, $ejercito, $tropa, false);
 			if($ordenFase != 0 || $ordenJugador != 1){
 				partida_registrarSituacionTropa($conexion, $ejercitoEnemigo, $tropa, true);
+			}
+		}
+		
+		//Tras registrar todas las tropas verificamos si se ha producido una masacre
+		if($ordenFase != 0){
+			$tropasPropiasCount = 0;
+			$tropasPropiasEliminadas = 0;
+			$tropasEnemigasCount = 0;
+			$tropasEnemigasEliminadas = 0;
+			
+			foreach($datos['tropas'] as $tropa){
+				//Verificamos si la tropa es aliada
+				if($tropa['aliada']){
+					$tropasPropiasCount++;
+					if($tropa['estado'] == "Eliminada"){
+						$tropasPropiasEliminadas++;
+					}
+				}
+				else{
+					$tropasEnemigasCount++;
+					if($tropa['estado'] == "Eliminada"){
+						$tropasEnemigasEliminadas++;
+					}
+				}
+			}
+			
+			//Si el total de tropas eliminadas es iguales al total de tropas, finalizamos partida con una masacre
+			if($tropasEnemigasEliminadas == $tropasEnemigasCount){
+				echo $tropasEnemigasEliminadas." ".$tropasEnemigasCount;
+				$sentencia = $conexion -> prepare("CALL proceso_ejercitoMasacrador(?,true)");
+				$sentencia -> bind_param('i', $ejercito);
+				$sentencia -> execute();
+				$sentencia -> close();
+			}
+			else if($tropasPropiasEliminadas == $tropasPropiasCount){
+				echo $tropasPropiasEliminadas." ".$tropasPropiasCount;
+				$sentencia = $conexion -> prepare("CALL proceso_ejercitoMasacrador(?,false)");
+				$sentencia -> bind_param('i', $ejercito);
+				$sentencia -> execute();
+				$sentencia -> close();
 			}
 		}
 	}
@@ -1047,7 +1090,7 @@
 		$conexion, $partida, $ejercito, $ejercitoEnemigo, $turno, $fase, $ordenFase, $ordenJugador
 	){
 		//Constante
-		$MAXTURNOS = 20;
+		$MAXTURNOS = 6;
 		
 		//Lo primero que hacemos es finalizar la fase actual. 
 		$sentencia = $conexion -> prepare("CALL proceso_finalizarFase(?,?)");
@@ -1056,11 +1099,104 @@
 		$sentencia -> close();
 		
 		//Comprobamos que no se trata de la fase de chequeos del segundo jugador en el ultimo turno
-		if($turno == $MAXTURNOS && $ordenJugador == 2 && $fase == 5){
+		if($turno >= $MAXTURNOS && $ordenJugador == 2 && $ordenFase == 4){
 			//Si ese es el caso, comprobamos quien es el vencedor.
+			$puntuacionDesafiado = 0;
+			$puntuacionDesafiador = 0;
+			
+			//Evaluamos la ultima fase de juego
+			$query = "CALL proceso_tropasEjercito(?,?,?)";
+			$sentencia = $conexion -> prepare($query);
+			$sentencia -> bind_param('iii', $partida, $ejercito, $fase);
+			$sentencia -> execute();
+			$sentencia -> store_result();
+			$sentencia -> bind_result(
+					$tId
+					, $tNombre
+					, $tPts
+					, $tGen
+					, $tBEst
+					, $tChamp
+					, $tMusico
+					, $tEst
+					, $tRango
+					, $tUnidades
+					, $tHeridas
+					, $tEjercito
+					, $tEstado
+					, $tLatitud
+					, $tAltitud
+					, $tOrientacion
+					, $tUnidadesFila
+					, $tTropaAdoptivaId
+					, $tTropaBajoAtaqueId
+					, $tTropaBajoAtaqueFlanco
+			);
+			
+			//No necesitamos guardar todos los datos.
+			$tropaPts = null;
+			$tropaGen = null;
+			$tropaBEst = null;
+			$tropaHeridas = null;
+			$tropaEjercito = null;
+			$tropaEstado = null;
+				
+			while($sentencia -> fetch()){
+				$tropaPts[$tId] = $tPts;
+				$tropaGen[$tId] = $tGen;
+				$tropaBEst[$tId] = $tBEst;
+				$tropaHeridas[$tId] = $tHeridas;
+				$tropaEjercito[$tId] = $tEjercito;
+				$tropaEstado[$tId] = $tEstado;
+			}
+			$sentencia -> close();
+			
+			if($tropaPts != null){
+				foreach($tropaPts as $tropaId => $ptsTropa){
+					
+					if($tropaEstado[$tropaId] != "Eliminada"){
+						//Si las tropas estan vivas sumamos su puntuacion a la obtenida por el jugador en cuestion
+						if($tropaEjercito[$tropaId]){
+							$puntuacionDesafiado += $ptsTropa - $tHeridas[$tropaId];
+						}
+						else{
+							$puntuacionDesafiador += $ptsTropa - $tHeridas[$tropaId];
+						}
+					}
+					else{
+						//Si las tropas estan muertas verificamos el impacto negativo que pudieran tener
+						if($tropaEjercito[$tropaId]){
+							//La ventaja estratégica de los personajes de alto rango se suple con la desventaja de perderlos.
+							if($tropaGen[$tropaId]) $puntuacionDesafiado -= 100;
+							if($tropaBEst[$tropaId]) $puntuacionDesafiado -= 50;
+						}
+						else{
+							//La ventaja estratégica de los personajes de alto rango se suple con la desventaja de perderlos.
+							if($tropaGen[$tropaId]) $puntuacionDesafiador -= 100;
+							if($tropaBEst[$tropaId]) $puntuacionDesafiador -= 50;
+						}
+					}
+				}
+			}
 			
 			//Despues finalizamos la partida.
+			$ejercitoVencedor;
+			$puntuacionFinal;
 			
+			//Solo si la puntuacion del desafiador es mayor, este ganara la partida.
+			if($puntuacionDesafiador > $puntuacionDesafiado){
+				$ejercitoVencedor = $ejercitoEnemigo;
+				$puntuacionFinal = intval(($puntuacionDesafiador - $puntuacionDesafiado)/50);
+			}
+			else{
+				$ejercitoVencedor = $ejercito;
+				$puntuacionFinal = intval(($puntuacionDesafiado - $puntuacionDesafiador)/50);
+			}
+			
+			$sentencia = $conexion -> prepare("CALL proceso_finalizarPartida(?,?)");
+			$sentencia -> bind_param('ii', $ejercitoVencedor, $puntuacionFinal);
+			$sentencia -> execute();
+			$sentencia -> close();
 		}
 		else{
 			//En caso contrario comprobamos de que jugador se trata.

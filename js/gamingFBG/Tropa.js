@@ -1073,13 +1073,13 @@ function Tropa(tropaId,panelOut){
 		  *  y por debajo de la recta 2,
 		  *  dada por el punto S y el angulo horizontal.
 		  */
-		if(posicionPuntoRecta(x,y,xR,yR,anguloHorizontal) >= 0 && posicionPuntoRecta(x,y,xS,yS,anguloHorizontal) <= 0){
+		if(posicionPuntoRecta(x,y,xR,yR,anguloHorizontal) > 0 && posicionPuntoRecta(x,y,xS,yS,anguloHorizontal) < 0){
 			colisionVertical=true;
 		}
 		/**
 		  *  comprobamos que este por debajo de la recta 1 y por encima de la recta 2.
 		  */
-		if(posicionPuntoRecta(x,y,xR,yR,anguloHorizontal) <= 0 && posicionPuntoRecta(x,y,xS,yS,anguloHorizontal) >= 0){
+		if(posicionPuntoRecta(x,y,xR,yR,anguloHorizontal) < 0 && posicionPuntoRecta(x,y,xS,yS,anguloHorizontal) > 0){
 			colisionVertical=true;
 		}
 		
@@ -1089,13 +1089,13 @@ function Tropa(tropaId,panelOut){
 		  *  y por debajo de la recta 4,
 		  *  dada por el punto S y el angulo vertical.
 		  */
-		if(posicionPuntoRecta(x,y,xR,yR,anguloVertical) >= 0 && posicionPuntoRecta(x,y,xS,yS,anguloVertical) <= 0){
+		if(posicionPuntoRecta(x,y,xR,yR,anguloVertical) > 0 && posicionPuntoRecta(x,y,xS,yS,anguloVertical) < 0){
 			colisionHorizontal=true;
 		}
 		/**
 		  *  Comprobamos que este por encima de la recta 3 y por debajo de la recta 4.
 		  */
-		if(posicionPuntoRecta(x,y,xR,yR,anguloVertical) <= 0 && posicionPuntoRecta(x,y,xS,yS,anguloVertical) >= 0){
+		if(posicionPuntoRecta(x,y,xR,yR,anguloVertical) < 0 && posicionPuntoRecta(x,y,xS,yS,anguloVertical) > 0){
 			colisionHorizontal=true;
 		}
 		

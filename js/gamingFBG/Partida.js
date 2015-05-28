@@ -1539,14 +1539,17 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 	 * Función que se ejecuta cuando una tropa va a ser eliminada.
 	 */
 	function tropaEliminar(tropaEliminada){
+		//La tropa es eliminada.
+		tropaEliminada.eliminar();
+		
 		for(var i=0; i<tropa.length; i++){
 			//Las tropas que estuviesen atacando a la tropa en cuestion son desocupadas si pudiesen.
 			if(tropa[i].getTropaBajoAtaque().id == tropaEliminada.getId()){
 				if(tropasCargando(tropa[i].getId()).length == 0){
-					atacantes[i].salirDeCombate();
+					tropa[i].salirDeCombate();
 				}
 				else{
-					atacantes[i].atacar(null);
+					tropa[i].atacar(null);
 				}
 			}
 			
@@ -1555,9 +1558,6 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 				tropa[i].eliminar();
 			}
 		}
-		
-		//La tropa es eliminada.
-		tropaEliminada.eliminar();
 	};
 	
 	
