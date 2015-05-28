@@ -528,6 +528,10 @@ function Tropa(tropaId,panelOut){
 		tropaBajoAtaqueId = document.getElementById("tropabajoataqueid"+tropaId).innerHTML;
 		tropaBajoAtaqueFlanco = document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML;
 		
+		if(tropaBajoAtaqueId != ""){
+			document.getElementById("tropabajoataquenombre"+tropaId).innerHTML = document.getElementById("nombre"+tropaBajoAtaqueId).innerHTML;
+		}
+		
 		if(estado != "Eliminada"){
 			iniciarUnidades();
 		}
@@ -610,7 +614,7 @@ function Tropa(tropaId,panelOut){
 			}
 			
 			//Si la unidad tiene menos heridas que las que aun nos quedan por contar
-			if(heridas-heridasContadas > psUnidad){
+			if(heridas-heridasContadas >= psUnidad){
 				//Contamos las heridas que se realizaron a la unidad
 				heridasContadas += psUnidad;
 				
@@ -1031,59 +1035,6 @@ function Tropa(tropaId,panelOut){
 			situacion.rotate(orientacion * (-1));
 			situacion.translate(latitud * zoom * (-1),altitud * zoom * (-1));
 		}
-	};
-	
-	
-	/**
-	  *  Método para incorporarse a una tropa.
-	  *  
-	  *  @param id de la tropa a que se incorpora.
-	  */
-	this.incorporar = function(tropaPadre){
-		document.getElementById("latitud"+tropaId).innerHTML = "--";
-		document.getElementById("altitud"+tropaId).innerHTML = "--";
-		document.getElementById("orientacion"+tropaId).innerHTML = "--";
-		document.getElementById("estado"+tropaId).innerHTML = "Adoptada";
-		document.getElementById("unidadesfila"+tropaId).innerHTML = "--";
-		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = tropaPadre;
-		actualizar();
-		console.log("Tropa "+nombre+" incorporada exitosamente. ");
-	};
-	
-	
-	/**
-	  *  Método para incorporar unidades a la tropa.
-	  *  
-	  *  @param id de la tropa a incorporar.
-	  */
-	this.adoptar = function(tropaAdoptandoId){
-		var noExiste=true;
-		for(var i=0;i<tropaAdoptadaId.length;i++){
-			if(tropaAdoptadaId[i]==tropaAdoptandoId){
-				noExiste=false;
-			};
-		}
-		if(noExiste){
-			tropaAdoptadaId.push(tropaAdoptandoId);
-			actualizar();
-		}
-	};
-	
-	
-	/**
-	  *  Método para sacar unidades de la tropa.
-	  *  
-	  *  @param id de la tropa a separar.
-	  */
-	this.sacar = function(tropaSacandoId){
-		var aux = [];
-		for(var i=0;i<tropaAdoptadaId.length;i++){
-			if(tropaAdoptadaId[i]!=tropaSacandoId){
-				aux.push(tropaAdoptadaId[i]);
-			};
-		}
-		tropaAdoptadaId = aux;
-		actualizar();
 	};
 	
 	
@@ -1814,9 +1765,65 @@ function Tropa(tropaId,panelOut){
 	
 	
 	/**
+	  *  Método para incorporarse a una tropa.
+	  *  
+	  *  @param id de la tropa a que se incorpora.
+	  */
+	this.incorporar = function(tropaPadre){
+		document.getElementById("latitud"+tropaId).innerHTML = "--";
+		document.getElementById("altitud"+tropaId).innerHTML = "--";
+		document.getElementById("orientacion"+tropaId).innerHTML = "--";
+		document.getElementById("estado"+tropaId).innerHTML = "Adoptada";
+		document.getElementById("unidadesfila"+tropaId).innerHTML = "--";
+		document.getElementById("tropaadoptivaid"+tropaId).innerHTML = tropaPadre;
+		actualizar();
+		console.log("Tropa "+nombre+" incorporada exitosamente. ");
+	};
+	
+	
+	/**
+	  *  Método para incorporar unidades a la tropa.
+	  *  
+	  *  @param id de la tropa a incorporar.
+	  */
+	this.adoptar = function(tropaAdoptandoId){
+		var noExiste=true;
+		for(var i=0;i<tropaAdoptadaId.length;i++){
+			if(tropaAdoptadaId[i]==tropaAdoptandoId){
+				noExiste=false;
+			};
+		}
+		if(noExiste){
+			tropaAdoptadaId.push(tropaAdoptandoId);
+			actualizar();
+		}
+	};
+	
+	
+	/**
+	  *  Método para sacar unidades de la tropa.
+	  *  
+	  *  @param id de la tropa a separar.
+	  */
+	this.sacar = function(tropaSacandoId){
+		var aux = [];
+		for(var i=0;i<tropaAdoptadaId.length;i++){
+			if(tropaAdoptadaId[i]!=tropaSacandoId){
+				aux.push(tropaAdoptadaId[i]);
+			};
+		}
+		tropaAdoptadaId = aux;
+		actualizar();
+	};
+	
+	
+	/**
 	  *  Método que actualiza una tropa cuando falla una carga.
 	  */
 	this.cargaFallida = function(){
+		document.getElementById("tropabajoataqueid"+tropaId).innerHTML= "";
+		document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML= "--";
+		document.getElementById("tropabajoataquenombre"+tropaId).innerHTML = "--";
 		document.getElementById("estado"+tropaId).innerHTML = "Desplazada";
 		document.getElementById(panelOut).innerHTML = "Carga fallida.";
 		console.log("Tropa "+nombre+" falla carga.");
@@ -1827,12 +1834,14 @@ function Tropa(tropaId,panelOut){
 	/**
 	  *  Método que actualiza una tropa cuando se recibe una carga.
 	  */
-	this.recibirCarga = function(){
+	this.recibirCarga = function(atacante){
 		if(estado == "Desorganizada"){
 			this.eliminar();
 		}
 		else{
 			document.getElementById("estado"+tropaId).innerHTML = "Bajo carga";
+			document.getElementById("tropabajoataqueid"+tropaId).innerHTML = atacante.getId();
+			document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML = "Vanguardia";
 			console.log("Tropa "+nombre+" recibe carga.");
 			actualizar();
 		}
@@ -1864,6 +1873,7 @@ function Tropa(tropaId,panelOut){
 	this.salirDeCombate = function(){
 		document.getElementById("tropabajoataqueid"+tropaId).innerHTML= "";
 		document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML= "--";
+		document.getElementById("tropabajoataquenombre"+tropaId).innerHTML = "--";
 		document.getElementById("estado"+tropaId).innerHTML = "Desplazada";
 		console.log("Tropa "+nombre+" desocupada y en juego.");
 		actualizar();
@@ -1887,6 +1897,10 @@ function Tropa(tropaId,panelOut){
 	  *  Método que actualiza una tropa para indicar que dejo de estar ocupada.
 	  */
 	this.eliminar = function(){
+		document.getElementById("tropabajoataqueid"+tropaId).innerHTML= "";
+		document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML= "--";
+		document.getElementById("tropabajoataquenombre"+tropaId).innerHTML = "--";
+		document.getElementById("tropaadoptiva"+tropaId).innerHTML = "--";
 		document.getElementById("estado"+tropaId).innerHTML = "Eliminada";
 		console.log("Tropa "+nombre+" eliminada.");
 		document.getElementById(panelOut).innerHTML = "Tropa "+nombre+" eliminada.";
@@ -2009,7 +2023,23 @@ function Tropa(tropaId,panelOut){
 	  *  @param 
 	  */
 	this.chequear = function(penalizacion){
-		return true;
+		var liderazgo = this.getAtributoMaxValue("L");
+		var tirada = dado(6)+dado(6);
+		
+		console.log("Chequeo "+nombre);
+		console.log("penalizacion "+penalizacion);
+		console.log("tirada "+tirada);
+		console.log("liderazgo "+liderazgo);
+		
+		if(tirada == 2){
+			return true;
+		}
+		else if(tirada <= liderazgo+penalizacion){
+			return true;
+		}
+		else{
+			return false;
+		}
 	};
 	
 	/**
@@ -2017,9 +2047,11 @@ function Tropa(tropaId,panelOut){
 	 */
 	this.atacar = function(objetivo){
 		if(objetivo != null){
-			document.getElementById("tropabajoataqueid"+tropaId).innerHTML = objetivo.getId();
-			document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML = "Vanguardia";
-			actualizar();
+			if(tropaBajoAtaqueId != objetivo.getId()){
+				document.getElementById("tropabajoataqueid"+tropaId).innerHTML = objetivo.getId();
+				document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML = "Vanguardia";
+				document.getElementById("tropabajoataquenombre"+tropaId).innerHTML = objetivo.getNombre();
+			}
 			console.log("Tropa "+nombre+" ataca a tropa "+objetivo.getNombre());
 			document.getElementById(panelOut).innerHTML = "La tropa "+nombre+" va a atacar a la tropa "+objetivo.getNombre();
 		}
@@ -2027,6 +2059,7 @@ function Tropa(tropaId,panelOut){
 			document.getElementById("tropabajoataqueid"+tropaId).innerHTML = "";
 			document.getElementById("tropabajoataqueflanco"+tropaId).innerHTML = "";
 		}
+		actualizar();
 	};
 	
 	/**

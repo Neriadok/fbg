@@ -492,8 +492,8 @@
 		if($tropaNombre != null){
 			$row = 0;
 			foreach($tropaNombre as $tropaId => $tropa){
-				$row++;
 				if($tropa != null && $tropaEstado[$tropaId] != "Eliminada"){
+					$row++;
 					echo "<tr class='";
 					
 					if($tropaEjercito[$tropaId]){
@@ -894,7 +894,8 @@
 				<span class='white' id='tropaadoptivatropa$tropaId'>--</span>
 				<br/>
 				
-				<span class='subtitle'>Tropa Bajo ataque: (pendiente)</span>
+				<span class='subtitle'>Tropa Bajo ataque:</span>
+				<span class='white' id='tropabajoataquenombretropa$tropaId'>--</span>
 				<br/>
 				
 				<span class='subtitle'>Flanco Atacado:</span>
@@ -1102,6 +1103,7 @@
 						$sentencia -> execute();
 						$sentencia -> close();
 						break;
+						
 					case 2:
 						/**
 						 * Al finalizar la fase de reaccion de cargas del primer jugador
@@ -1112,6 +1114,7 @@
 						$sentencia -> execute();
 						$sentencia -> close();
 						break;
+						
 					case 3:
 						/**
 						 * Al finalizar la fase de movimiento del primer jugador
@@ -1122,30 +1125,15 @@
 						$sentencia -> execute();
 						$sentencia -> close();
 						break;
+						
 					case 4:
 						/**
-						 * Al finalizar la fase de combate del primer jugador
-						 * se pasa a la fase de chequeo del segundo.
+						 * Al finalizar la fase de movimiento del segundo jugador
+						 * Tras ello se pasa a la fase de combate del segundo.
 						 */
-						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(5,?)");
-						$sentencia -> bind_param('i',$ejercitoEnemigo);
-						$sentencia -> execute();
-						$sentencia -> close();
-						break;
-					case 5:
-						/**
-						 * Al finalizar la dase de chequeo del primer jugador
-						 * Tras ello se pasa a la fase de declaracion de cargas del mismo.
-						 * se finaliza el turno y se empieza uno nuevo.
-						 */
-						$turno++;
-						$sentencia = $conexion -> prepare("CALL proceso_nuevoTurno(?,?)");
-						$sentencia -> bind_param('ii',$turno,$ejercito);
-						$sentencia -> execute();
-						$sentencia -> close();
 						
-						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(1,?)");
-						$sentencia -> bind_param('i',$ejercito);
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(4,?)");
+						$sentencia -> bind_param('i',$ejercitoEnemigo);
 						$sentencia -> execute();
 						$sentencia -> close();
 						break;
@@ -1164,6 +1152,7 @@
 						$sentencia -> execute();
 						$sentencia -> close();
 						break;
+						
 					case 1:
 						/**
 						 * Al finalizar la fase de declaracion de cargas del segundo jugador
@@ -1174,6 +1163,7 @@
 						$sentencia -> execute();
 						$sentencia -> close();
 						break;
+						
 					case 2:
 						/**
 						 * Al finalizar la fase de reaccion de cargas del segundo jugador
@@ -1184,6 +1174,7 @@
 						$sentencia -> execute();
 						$sentencia -> close();
 						break;
+						
 					case 3:
 						/**
 						 * Al finalizar la fase de movimiento del segundo jugador
@@ -1197,20 +1188,16 @@
 					case 4:
 						/**
 						 * Al finalizar la fase de combate del segundo jugador
-						 * se pasa a la de chequeo del primero.
+						 * se pasa a la primera fase del turno del primero.
 						 */
-						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(5,?)");
-						$sentencia -> bind_param('i',$ejercitoEnemigo);
+						$turno++;
+						$sentencia = $conexion -> prepare("CALL proceso_nuevoTurno(?,?)");
+						$sentencia -> bind_param('ii',$turno,$ejercitoEnemigo);
 						$sentencia -> execute();
 						$sentencia -> close();
-						break;
-					case 5:
-						/**
-						 * Al finalizar la dase de chequeo del segundo jugador
-						 * se pasa a la de combate del mismo.
-						 */
-						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(4,?)");
-						$sentencia -> bind_param('i',$ejercito);
+						
+						$sentencia = $conexion -> prepare("CALL proceso_nuevaFase(1,?)");
+						$sentencia -> bind_param('i',$ejercitoEnemigo);
 						$sentencia -> execute();
 						$sentencia -> close();
 						break;
