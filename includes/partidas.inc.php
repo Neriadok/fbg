@@ -13,7 +13,7 @@
 	 */
 	function partidas($conexion){
 		echo "<div id='contenido' class='contenedor left column'>";
-		echo "OPCIONES<br/>AVATAR<br/>NICK<br/>RENOMBRE<br/>PARTIDAS<br/>VICTORIAS<br/>DERROTAS";
+		partidas_datosUsuario($conexion);
 		echo "</div>";
 		
 		echo "
@@ -207,5 +207,93 @@
 		$sentencia -> bind_param('i', $ejercito);
 		$sentencia -> execute();
 		$sentencia -> close();
+	}
+	
+	/**
+	 * FUNCIÓN DE CONTENIDO
+	 * Función que muestra algunos detalles del usuario referentes a las partidas.
+	 */
+	function partidas_datosUsuario($conexion){
+		
+		$sentencia = $conexion -> prepare("CALL proceso_datosUsers()");
+		$sentencia -> execute();
+		$sentencia -> store_result();
+		$sentencia -> bind_result(
+			$uId
+			,$unickname
+			,$avatar
+			,$mail
+			,$utipo
+			,$urenombre
+			,$uregdate
+			,$ubandate
+			,$ufaltas
+			,$ufirma
+			,$umensajes
+			,$utemas
+			,$ugrito
+			,$upartidas
+			,$uvictorias
+		);
+		
+		while($sentencia -> fetch()){
+			if($uId == $_SESSION['userId']){
+				echo "
+					<table class='width100'>
+						<tr>
+							<td colspan='2' class='alignCenter'>
+				";
+			
+				//Si no hay avatar mostramos el avatar por defecto.
+				if($avatar != null){
+					echo "<img class='avatarUser' src='$avatar'/>";
+				}
+				else{
+					echo "<img class='avatarUser' src='src/avatares/default.jpg'/>";
+				}
+			
+				echo "
+						</td>
+					</tr>
+					<tr>
+						<td colspan='2' class='perfilCell alignCenter
+				";
+			
+				//Los colores cambian en función del tipo de usuario.
+				switch($utipo){
+					case 0: echo " uBanned"; break;
+					case 1: echo " uSimple"; break;
+					case 2: echo " uModerador"; break;
+					case 3: echo " uAdmin"; break;
+				}
+			
+				//Mostramos el nick del usuario.
+				echo "
+					'>$unickname
+				";
+			
+				//A continuacion mostramos datos y estadisticas.
+				echo "
+						</td>
+					</tr>
+					<tr>
+						<td colspan='2' class='alignCenter grito'>$ugrito</td>
+					</tr>
+					<tr>
+						<td class='alignRight'>Renombre:</td>
+						<td class='alignLeft white'>$urenombre</td>
+					</tr>
+					<tr>
+						<td class='alignRight'>Partidas:</td>
+						<td class='alignLeft white'>$upartidas</td>
+					</tr>
+					<tr>
+						<td class='alignRight'>Victorias:</td>
+						<td class='alignLeft white'>$uvictorias</td>
+					</tr>
+				</table>
+				";
+			}
+		}
 	}
 ?>

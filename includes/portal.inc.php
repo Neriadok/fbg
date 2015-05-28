@@ -29,18 +29,9 @@
 		
 		//Contenido derecha superior
 		echo "
-			<div class='contenedor right top box'>
+			<div class='contenedor right column'>
 		";
-		portal_contenidoSD($conexion);
-		echo "
-			</div>
-		";
-		
-		//Contenido derecha inferior
-		echo "
-			<div class='contenedor right bot box'>
-		";
-		portal_contenidoID($conexion);
+		portal_contenidoD($conexion);
 		echo "
 			</div>
 		";
@@ -78,7 +69,7 @@
 	 * funcion que nos genera el contenido inferior izquierdo del portal
 	 * @param $conexion Mysqli - Conexion a base de datos.
 	 */
-	function portal_contenidoII($conexion){
+	function portal_contenidoD($conexion){
 		amigos($conexion,true);
 	}
 	
@@ -88,19 +79,9 @@
 	 * funcion que nos genera el contenido superior derecho del portal
 	 * @param $conexion Mysqli - Conexion a base de datos.
 	 */
-	function portal_contenidoSD($conexion){
+	function portal_contenidoII($conexion){
 		echo "<p class='enfasis'>Buzón</p>";
 		$uv = ultimaVisita($conexion);
 		buzon_portalInbox($conexion,$uv);
-	}
-	
-	
-	/**
-	 * FUNCION DE CONTENIDO
-	 * funcion que nos genera el contenido inferior derecho del portal
-	 * @param $conexion Mysqli - Conexion a base de datos.
-	 */
-	function portal_contenidoID($conexion){
-		echo "temas mas activos";
 	}
 ?>
