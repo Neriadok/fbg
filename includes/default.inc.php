@@ -196,7 +196,7 @@
 			}
 		}
 		
-		//echo "<td><a href='faq.php'>Preguntas Frecuentes</a></td>";
+		echo "<td><a href='faq.php'>Preguntas Frecuentes</a></td>";
 	}
 
 

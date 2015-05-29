@@ -1464,8 +1464,8 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 				 * sacamos del combate a todas las tropas que la estuviesen atacando
 				 * y que no esten siendo atacadas por otras tropas.
 				 */
-				if(defensor.getEstado == "Eliminada"){
-					tropaEliminada();
+				if(defensor.getEstado() == "Eliminada"){
+					tropaEliminar(defensor);
 				}
 			}
 		}
@@ -3093,7 +3093,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 					tropaEnemiga.recibirCarga(tropaPropia);
 					
 					if(tropaEnemiga.getEstado() == "Eliminada"){
-						tropaEliminar(tropaEnemiga.getEstado());
+						tropaEliminar(tropaEnemiga);
 					}
 				}
 			}

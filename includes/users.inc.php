@@ -491,7 +491,7 @@
 				
 				
 				echo "
-					<div class='contenedor right column'>
+					<div class='contenedor right top box'>
 						<div class='userOptions botonsBar' id='userOptions$uId'>
 				";
 				if($uId == $_SESSION['userId']){

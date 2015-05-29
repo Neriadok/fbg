@@ -108,6 +108,7 @@
 					,$usuario
 					,$partidaId
 					,$fechaFin
+					,$nickVencedor
 					,$orden
 					,$nickEnemigo
 					,$ejercitoEnemigoId
@@ -129,7 +130,7 @@
 			}
 			
 			/** Comprobamos que el usuario tiene permiso para acceder a estos datos**/
-			if($usuario == $_SESSION['userId'] && $fechaFin == null){
+			if($usuario == $_SESSION['userId']){
 				echo "
 					<tr>
 						<td colspan='2' class='enfasis' id='ejercitoNombre'>$ejercitoNombre</td>
@@ -167,7 +168,7 @@
 						<td colspan='2'>
 				";
 				/**Si la fase está activa mostramos el boton para finalizarla*/
-				if($fase != null && $faseFinalizada){
+				if($fase != null && $faseFinalizada  && $fechaFin == null){
 					echo "
 						<div id='actualizarSituacion' class='actualizarSituacion'>
 							Actualizar
@@ -175,13 +176,25 @@
 						</div>
 					";
 				}
-				else if($fase != null){
+				
+				else if($fase != null && $fechaFin == null){
 					echo "
 						<div id='finalizarFase' class='finalizarFase'>
 							FINALIZAR
 							<br/>FASE
 							<br/><img src='src/botones/desafiar.png'/>
 						</div>
+					";
+				}
+				
+				else if($fechaFin != null){
+					echo "
+						<tr>
+							<td colspan='2' CLASS='enfasis'>PARTIDA TERMINADA</td>
+						</tr>
+						<tr>
+							<td colspan='2' CLASS='enfasis'>VENCEDOR: $nickVencedor</td>
+						</tr>
 					";
 				}
 				
@@ -200,7 +213,7 @@
 					</tr>
 				";
 			}
-
+	
 			$sentencia -> close();
 		}
 		
@@ -494,7 +507,7 @@
 			$row = 0;
 			
 			foreach($tropaNombre as $tropaId => $tropa){
-				if($tropaNombre != null){
+				if($tropa != null && $tropaEstado[$tropaId] != "Eliminada"){
 					$row++;
 					echo "<tr class='";
 					
@@ -987,14 +1000,12 @@
 			
 			//Si el total de tropas eliminadas es iguales al total de tropas, finalizamos partida con una masacre
 			if($tropasEnemigasEliminadas == $tropasEnemigasCount){
-				echo $tropasEnemigasEliminadas." ".$tropasEnemigasCount;
 				$sentencia = $conexion -> prepare("CALL proceso_ejercitoMasacrador(?,true)");
 				$sentencia -> bind_param('i', $ejercito);
 				$sentencia -> execute();
 				$sentencia -> close();
 			}
 			else if($tropasPropiasEliminadas == $tropasPropiasCount){
-				echo $tropasPropiasEliminadas." ".$tropasPropiasCount;
 				$sentencia = $conexion -> prepare("CALL proceso_ejercitoMasacrador(?,false)");
 				$sentencia -> bind_param('i', $ejercito);
 				$sentencia -> execute();
@@ -1090,7 +1101,7 @@
 		$conexion, $partida, $ejercito, $ejercitoEnemigo, $turno, $fase, $ordenFase, $ordenJugador
 	){
 		//Constante
-		$MAXTURNOS = 6;
+		$MAXTURNOS = 7;
 		
 		//Lo primero que hacemos es finalizar la fase actual. 
 		$sentencia = $conexion -> prepare("CALL proceso_finalizarFase(?,?)");
@@ -1099,7 +1110,7 @@
 		$sentencia -> close();
 		
 		//Comprobamos que no se trata de la fase de chequeos del segundo jugador en el ultimo turno
-		if($turno >= $MAXTURNOS && $ordenJugador == 2 && $ordenFase == 4){
+		if($turno >= $MAXTURNOS){
 			//Si ese es el caso, comprobamos quien es el vencedor.
 			$puntuacionDesafiado = 0;
 			$puntuacionDesafiador = 0;

@@ -8,16 +8,9 @@
 	 */
 	function listas($conexion){
 		listas_navegacion($conexion);
-		echo "<div id='contenido' class='contenedor mid column'>";
+		echo "<div id='contenido' class='contenedor big column'>";
 		listas_contenido($conexion,null);
-		echo "</div>
-			<div class='contenedor right top box'>
-				Listas mas usadas
-			</div>
-			<div class='contenedor right bot box'>
-				Listas mas exitosas
-			</div>
-		";
+		echo "</div>";
 	}
 	
 	/**
@@ -164,7 +157,7 @@
 				</div>
 				<div id='tropas' class='scrollingBox'>
 					<div id='tropasContent' class='scrollingBoxContent'>
-						<table class='listDetails'>
+						<table class='listDetails width100'>
 							<tr>
 								<td>Puntos: $lPts</td>
 								<td>Raza: $lRaza</td>
@@ -172,7 +165,7 @@
 								<td>Nº Unidades: $lUnidades</td>
 							</tr>
 						</table>
-						<table>
+						<table class='width100'>
 							
 			";
 			$sentencia = $conexion -> prepare("CALL proceso_componentesLista(?)");
@@ -318,7 +311,7 @@
 			</table>
 			<form id='formulariolista' class='scrollingBox' action='$urle' method='POST'>
 				<div id='formulariolistaContent' class='scrollingBoxContet'>
-					<table class='tablehead'>
+					<table class='tablehead width100'>
 						<tr>
 							<td>
 								<label for='nombreLista'>Nombre de la Lista</label>
@@ -331,7 +324,7 @@
 							</td>
 						</tr>
 					</table>
-					<table>
+					<table class='width100'>
 						<thead class='tablehead'>
 							<tr>
 								<td colspan='6'>Personajes</td>
@@ -349,7 +342,7 @@
 							
 						</tbody>
 					</table>
-					<table>
+					<table class='width100'>
 						<thead class='tablehead'>
 							<tr>
 								<td colspan='6'>Tropas</td>
@@ -410,7 +403,7 @@
 				<form id='formulariolista' class='scrollingBox' action='$urle' method='POST'>
 					<div class='oculto' id='listaActual'>$lista</div>
 					<div id='formulariolistaContent' class='scrollingBoxContet'>
-						<table class='tablehead'>
+						<table class='tablehead width100'>
 							<tr>
 								<td>
 									Puntos Previos:
@@ -426,7 +419,7 @@
 								</td>
 							</tr>
 						</table>
-						<table>
+						<table class='width100'>
 							<thead class='tablehead'>
 								<tr>
 									<td colspan='6'>Personajes</td>
@@ -621,7 +614,7 @@
 			echo "
 								</tbody>
 							</table>
-							<table>
+							<table  class='width100'>
 								<thead class='tablehead'>
 									<tr>
 										<td colspan='6'>Tropas</td>

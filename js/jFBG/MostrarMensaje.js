@@ -280,7 +280,7 @@ function MostrarMensaje(mensajesOcultosClass,expositor,tipo,ca){
 				contenido += "</form>";
 				
 				contenido += "<form class='submit' id='surrender'>";
-				contenido += "<img src='src/botones/eliminar.png'/>";
+				contenido += "<img src='src/botones/rendir.png'/>";
 				contenido += "<input type='hidden' name='surrender' value='"+elemento.id+"'/>";
 				contenido += "</form>";
 				break;
