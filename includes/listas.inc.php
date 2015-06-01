@@ -492,7 +492,7 @@
 					}
 					echo"
 						 '>
-							<td class='col1'>$personaje Personaje ".($n+1)."</td>
+							<td class='col1'>Personaje ".($n+1)."</td>
 							<td class='col2'>
 								<select class='rangoPersonaje' name='rangoPersonaje[".$n."]'>
 					";
@@ -833,7 +833,7 @@
 					}
 					echo"
 						'>
-							<td class='col1'>$tropa Tropa ".($n+1)."</td>
+							<td class='col1'>Tropa ".($n+1)."</td>
 							<td class='col2'>
 								<select class='unidadesTropa' name='unidadesTropa[".$n."]'>
 										<option value='".$tMiembros[$n]."' checked='checked'>".$tMiembros[$n]." x</option>
