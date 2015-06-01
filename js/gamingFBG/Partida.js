@@ -1253,6 +1253,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			
 			//Tras posicionarla la desplazamos a la izquierda su ancho mas 3 puntos, siempre teniendo en cuenta el zoom.
 			var desplazamiento = parseInt(tropa[tropaBuscar(tropaSeleccionadaId)].getDimensiones().ancho + 10)*zoom/5;
+			console.log(desplazamiento)
 			tropa[tropaBuscar(tropaSeleccionadaId)].mover(
 				desplazamiento
 				, 270
@@ -1261,6 +1262,15 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 				,false
 			);
 		}
+		
+		if(tropaColision(tropaSeleccionadaId)){
+			tropa[tropaBuscar(tropaPadre)].adoptar(tropaSeleccionadaId);
+			tropa[tropaBuscar(tropaSeleccionadaId)].incorporar(tropaPadre);
+			document.getElementById("tropaadoptiva"+tropaSeleccionadaId).innerHTML = tropa[tropaBuscar(tropaPadre)].getNombre();
+			tropaSeleccionar(tropaPadre);
+			document.getElementById(panelOut).innerHTML += "<div class='error'>No puedes separar las tropas, la tropa choca con otras unidades.</div>";
+		}
+		
 	};
 	
 	
@@ -1451,10 +1461,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			var defensor = tropa[tropaBuscar(ataques[i].getObjetivo())];
 			var atacante = tropa[tropaBuscar(ataques[i].getTropa())];
 			
-			if(
-				atacante.getEstado != "Eliminada"
-				&& defensor.getEstado != "Eliminada"
-			){
+			if(atacante.getEstado() != "Eliminada"){
 				for(var j=0; j < ataques[i].a(); j++){
 					defensor.recibirAtaque(ataques[i].ha(), ataques[i].f());
 				}
@@ -1468,36 +1475,52 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 					tropaEliminar(defensor);
 				}
 			}
+			else{
+				tropaEliminar(atacante);
+			}
 		}
 		
 		/**
 		 * Tras realizar todos los combates procedemos a evaluar los resultados.
 		 */
 		for(var i=0; i<resultados.length; i++){
+			
 			var puntuacion = 0;
-			//Las tropas perderan tanta puntuación como daño hayan recibido
-			puntuacion -= (tropa[tropaBuscar(resultados[i].id)].getHeridas() - resultados[i].heridasOriginales);
-			
-			console.log("Sufre - "+(tropa[tropaBuscar(resultados[i].id)].getHeridas() - tropa[tropaBuscar(resultados[i].id)].getHeridas()));
-			
-			//Además por cada tropa que la esté atacando por el flanco perderá 1 más y por 2 más por la vanguarda.
-			var atacantes = tropasCargando(resultados[i].id);
-			
-			for(var j=0; j<atacantes.length; j++){
-				if(atacantes[j].getTropaBajoAtaque().flanco == "Retaguardia"){
-					puntuacion -= 2;
-				}
-				else if(atacantes[j].getTropaBajoAtaque().flanco != "Vanguardia"){
-					puntuacion -= 1;
-				}
+			/**
+			 * Si la tropa es eliminada,
+			 * sacamos del combate a todas las tropas que la estuviesen atacando
+			 * y que no esten siendo atacadas por otras tropas.
+			 * Además definimos la puntuación como -100
+			 */
+			if(tropa[tropaBuscar(resultados[i].id)].getEstado() == "Eliminada"){
+				tropaEliminar(tropa[tropaBuscar(resultados[i].id)]);
+				puntuacion = -100;
 			}
-			
-			//Si la tropa tiene miembros del grupo de mando sumara un punto por cada uno.
-			puntuacion += tropa[tropaBuscar(resultados[i].id)].getGrupoDeMando();
-			
-			//Por cada punto que el rango sea mayor que 6, la tropa obtendrá un ùnto adicional
-			if(parseInt(tropa[tropaBuscar(resultados[i].id)].getRangoAlto()) > 6){
-				puntuacion += parseInt(tropa[tropaBuscar(resultados[i].id)].getRangoAlto())-6;
+			else{
+				//Las tropas perderan tanta puntuación como daño hayan recibido
+				puntuacion -= (tropa[tropaBuscar(resultados[i].id)].getHeridas() - resultados[i].heridasOriginales);
+				
+				console.log("Sufre - "+(tropa[tropaBuscar(resultados[i].id)].getHeridas() - tropa[tropaBuscar(resultados[i].id)].getHeridas()));
+				
+				//Además por cada tropa que la esté atacando por el flanco perderá 1 más y por 2 más por la vanguarda.
+				var atacantes = tropasCargando(resultados[i].id);
+				
+				for(var j=0; j<atacantes.length; j++){
+					if(atacantes[j].getTropaBajoAtaque().flanco == "Retaguardia"){
+						puntuacion -= 2;
+					}
+					else if(atacantes[j].getTropaBajoAtaque().flanco != "Vanguardia"){
+						puntuacion -= 1;
+					}
+				}
+				
+				//Si la tropa tiene miembros del grupo de mando sumara un punto por cada uno.
+				puntuacion += tropa[tropaBuscar(resultados[i].id)].getGrupoDeMando();
+				
+				//Por cada punto que el rango sea mayor que 6, la tropa obtendrá un ùnto adicional
+				if(parseInt(tropa[tropaBuscar(resultados[i].id)].getRangoAlto()) > 6){
+					puntuacion += parseInt(tropa[tropaBuscar(resultados[i].id)].getRangoAlto())-6;
+				}
 			}
 			
 			console.log("Puntuacion "+tropa[tropaBuscar(resultados[i].id)].getNombre()+": "+puntuacion);
@@ -1555,7 +1578,7 @@ function Partida(ejercitoId, batallaId, terrenoId, panelIn, panelOut, panelFase,
 			
 			//Las tropas adoptadas tambien son eliminadas
 			if(tropa[i].getTropaAdoptiva() == tropaEliminada.getId()){
-				tropa[i].eliminar();
+				tropaEliminar(tropa[i]);
 			}
 		}
 	};

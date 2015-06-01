@@ -362,7 +362,9 @@ function Tropa(tropaId,panelOut){
 	  *  
 	  *  @return dimension del alto y dimension del ancho.
 	  */
-	this.getDimensiones = dimensiones();
+	this.getDimensiones = function(){
+		return dimensiones();
+	};
 	
 	
 	

@@ -492,12 +492,12 @@
 					}
 					echo"
 						 '>
-							<td class='col1'>Personaje ".($n+1)."</td>
+							<td class='col1'>$personaje Personaje ".($n+1)."</td>
 							<td class='col2'>
 								<select class='rangoPersonaje' name='rangoPersonaje[".$n."]'>
 					";
 					switch($pRango[$n]){
-						case 6: echo "<option value='6' checked='checked'>Heroe</option>" ; break;
+						case 6: echo "<option value='6' selected='selected'>Heroe</option>" ; break;
 						case 7: echo "<option value='7' checked='checked'>Comandante</option>" ; break;
 						case 8: echo "<option value='8' checked='checked'>Portaestandarte de Batalla</option>" ; break;
 						case 9: echo "<option value='9' checked='checked'>General</option>" ; break;
@@ -545,13 +545,39 @@
 					$sentencia -> bind_param('ii', $personaje, $pRango[$n]);
 					$sentencia -> execute();
 					$sentencia -> store_result();
-					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
+					$sentencia -> bind_result($tipo,$rango,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
 					if($sentencia -> num_rows == 1){
-						formularioTropa("Personaje", "Personaje", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
+						formularioTropa(
+							"Personaje"
+							, "Personaje"
+							, $n
+							, $mov
+							, $ha
+							, $hp
+							, $f
+							, $r
+							, $ps
+							, $in
+							, $a
+							, $l
+						);
 					}
 					else{
-						formularioTropa("Personaje", "Personaje", $n, null, null, null, null, null, null, null, null, null);
+						formularioTropa(
+							"Personaje"
+							, "Personaje"
+							, $n
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+						);
 					}
 					$sentencia -> close();
 					
@@ -560,13 +586,52 @@
 					$sentencia -> bind_param('i', $personaje);
 					$sentencia -> execute();
 					$sentencia -> store_result();
-					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
+					$sentencia -> bind_result($tipo,$rango,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
 					if($sentencia -> num_rows == 1){
-						formularioTropa("<label for='monturaPersonaje".$n."'>Montura-Bestias de Tiro</label> <input type='checkbox' id='monturaPersonaje".$n."' class='monturaPersonaje' name='monturaPersonaje[".$n."]' checked='checked'/>", "MonturaPersonaje", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
+						formularioTropa(
+							"<label for='dotacionPersonaje".$n."'>Dotacion</label>
+							<input 
+								type='checkbox' 
+								id='dotacionPersonaje".$n."' 
+								class='dotacionPersonaje' 
+								name='dotacionPersonaje[".$n."]' 
+								checked='checked'
+							/>"
+							,"DotacionPersonaje"
+							, $n
+							, $mov
+							, $ha
+							, $hp
+							, $f
+							, $r
+							, $ps
+							, $in
+							, $a
+							, $l
+						);
 					}
 					else{
-						formularioTropa("<label for='monturaPersonaje".$n."'>Montura-Bestias de Tiro</label> <input type='checkbox' id='monturaPersonaje".$n."' class='monturaPersonaje' name='monturaPersonaje[".$n."]'/>", "MonturaPersonaje", $n, null, null, null, null, null, null, null, null, null);
+						formularioTropa(
+							"<label for='dotacionPersonaje".$n."'>Dotacion</label>
+							<input 
+								type='checkbox' 
+								id='dotacionPersonaje".$n."' 
+								class='dotacionPersonaje' 
+								name='dotacionPersonaje[".$n."]'
+							/>"
+							,"DotacionPersonaje"
+							, $n
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+						);
 					}
 					$sentencia -> close();
 				
@@ -576,13 +641,52 @@
 					$sentencia -> bind_param('i', $personaje);
 					$sentencia -> execute();
 					$sentencia -> store_result();
-					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
+					$sentencia -> bind_result($tipo,$rango,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
 					if($sentencia -> num_rows == 1){
-						formularioTropa("<label for='maquinaPersonaje".$n."'>Maquinaria-Carro</label> <input type='checkbox' id='maquinaPersonaje".$n."' class='maquinaPersonaje' name='maquinaPersonaje[".$n."]' checked='checked'/>","MaquinariaPersonaje", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
+						formularioTropa(
+							"<label for='monturaPersonaje".$n."'>Montura-Bestias de Tiro</label>
+							<input 
+								type='checkbox'
+								id='monturaPersonaje".$n."'
+								class='monturaPersonaje'
+								name='monturaPersonaje[".$n."]'
+								checked='checked'
+							/>"
+							, "MonturaPersonaje"
+							, $n
+							, $mov
+							, $ha
+							, $hp
+							, $f
+							, $r
+							, $ps
+							, $in
+							, $a
+							, $l
+						);
 					}
 					else{
-						formularioTropa("<label for='maquinaPersonaje".$n."'>Maquinaria-Carro</label> <input type='checkbox' id='maquinaPersonaje".$n."' class='maquinaPersonaje' name='maquinaPersonaje[".$n."]'/>","MaquinariaPersonaje", $n, null, null, null, null, null, null, null, null, null);
+						formularioTropa(
+							"<label for='monturaPersonaje".$n."'>Montura-Bestias de Tiro</label>
+							<input 
+								type='checkbox'
+								id='monturaPersonaje".$n."' 
+								class='monturaPersonaje' 
+								name='monturaPersonaje[".$n."]'
+							/>"
+							, "MonturaPersonaje"
+							, $n
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+						);
 					}
 					$sentencia -> close();
 				
@@ -592,13 +696,52 @@
 					$sentencia -> bind_param('i', $personaje);
 					$sentencia -> execute();
 					$sentencia -> store_result();
-					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
+					$sentencia -> bind_result($tipo,$rango,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
 					if($sentencia -> num_rows == 1){
-						formularioTropa("<label for='dotacionPersonaje".$n."'>Dotacion</label> <input type='checkbox' id='dotacionPersonaje".$n."' class='dotacionPersonaje' name='dotacionPersonaje[".$n."]' checked='checked'/>","DotacionPersonaje", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
+						formularioTropa(
+							"<label for='maquinaPersonaje".$n."'>Maquinaria-Carro</label>
+							<input 
+								type='checkbox' 
+								id='maquinaPersonaje".$n."' 
+								class='maquinaPersonaje' 
+								name='maquinaPersonaje[".$n."]' 
+								checked='checked'
+							/>"
+							,"MaquinariaPersonaje"
+							, $n
+							, $mov
+							, $ha
+							, $hp
+							, $f
+							, $r
+							, $ps
+							, $in
+							, $a
+							, $l
+						);
 					}
 					else{
-						formularioTropa("<label for='dotacionPersonaje".$n."'>Dotacion</label> <input type='checkbox' id='dotacionPersonaje".$n."' class='dotacionPersonaje' name='dotacionPersonaje[".$n."]'/>","DotacionPersonaje", $n, null, null, null, null, null, null, null, null, null);
+						formularioTropa(
+							"<label for='maquinaPersonaje".$n."'>Maquinaria-Carro</label>
+							<input 
+								type='checkbox' 
+								id='maquinaPersonaje".$n."'
+								class='maquinaPersonaje' 
+								name='maquinaPersonaje[".$n."]'
+							/>"
+							,"MaquinariaPersonaje"
+							, $n
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+						);
 					}
 					$sentencia -> close();
 
@@ -690,7 +833,7 @@
 					}
 					echo"
 						'>
-							<td class='col1'>Tropa ".($n+1)."</td>
+							<td class='col1'>$tropa Tropa ".($n+1)."</td>
 							<td class='col2'>
 								<select class='unidadesTropa' name='unidadesTropa[".$n."]'>
 										<option value='".$tMiembros[$n]."' checked='checked'>".$tMiembros[$n]." x</option>
@@ -761,14 +904,41 @@
 					$sentencia -> bind_param('i', $tropa);
 					$sentencia -> execute();
 					$sentencia -> store_result();
-					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
+					$sentencia -> bind_result($tipo,$rango,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
 					if($sentencia -> num_rows == 1){
-						formularioTropa("Miembros-Dotacion","Tropa", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
+						formularioTropa(
+							"Miembros-Dotacion"
+							,"Tropa"
+							, $n
+							, $mov
+							, $ha
+							, $hp
+							, $f
+							, $r
+							, $ps
+							, $in
+							, $a
+							, $l
+						);
 					}
 					else{
-						formularioTropa("Miembros-Dotacion","Tropa", $n, null, null, null, null, null, null, null, null, null);
+						formularioTropa(
+							"Miembros-Dotacion"
+							,"Tropa"
+							, $n
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+						);
 					};
+					
 					$sentencia -> close();
 					
 					
@@ -777,13 +947,52 @@
 					$sentencia -> bind_param('i', $tropa);
 					$sentencia -> execute();
 					$sentencia -> store_result();
-					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
+					$sentencia -> bind_result($tipo,$rango,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
 					if($sentencia -> num_rows == 1){
-						formularioTropa("<label for='monturaTropa".$n."'>Montura-Bestias de Tiro</label> <input type='checkbox' id='monturaTropa".$n."' class='monturaTropa' name='monturaTropa[".$n."]' checked='checked'/>","MonturaTropa", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
+						formularioTropa(
+							"<label for='monturaTropa".$n."'>Montura-Bestias de Tiro</label>
+							<input 
+								type='checkbox' 
+								id='monturaTropa".$n."' 
+								class='monturaTropa' 
+								name='monturaTropa[".$n."]' 
+								checked='checked'
+							/>"
+							,"MonturaTropa"
+							, $n
+							, $mov
+							, $ha
+							, $hp
+							, $f
+							, $r
+							, $ps
+							, $in
+							, $a
+							, $l
+						);
 					}
 					else{
-						formularioTropa("<label for='monturaTropa".$n."'>Montura-Bestias de Tiro</label> <input type='checkbox' id='monturaTropa".$n."' class='monturaTropa' name='monturaTropa[".$n."]'/>","MonturaTropa", $n, null, null, null, null, null, null, null, null, null);
+						formularioTropa(
+							"<label for='monturaTropa".$n."'>Montura-Bestias de Tiro</label>
+							<input 
+								type='checkbox' 
+								id='monturaTropa".$n."' 
+								class='monturaTropa' 
+								name='monturaTropa[".$n."]'
+							/>"
+							,"MonturaTropa"
+							, $n
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+						);
 					}
 					$sentencia -> close();
 					
@@ -793,13 +1002,52 @@
 					$sentencia -> bind_param('i', $tropa);
 					$sentencia -> execute();
 					$sentencia -> store_result();
-					$sentencia -> bind_result($tipo,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
+					$sentencia -> bind_result($tipo,$rango,$mov,$ha,$hp,$f,$r,$ps,$in,$a,$l);
 					$sentencia -> fetch();
 					if($sentencia -> num_rows == 1){
-						formularioTropa("<label for='maquinaTropa".$n."'>Maquinaria-Carro</label> <input type='checkbox' id='maquinaTropa".$n."' class='maquinaTropa' name='maquinaTropa[".$n."]' checked='checked'/>","MaquinariaTropa", $n, $mov, $ha, $hp, $f, $r, $ps, $in, $a, $l);
+						formularioTropa(
+							"<label for='maquinaTropa".$n."'>Maquinaria-Carro</label>
+							<input 
+							type='checkbox' 
+							id='maquinaTropa".$n."' 
+							class='maquinaTropa' 
+							name='maquinaTropa[".$n."]' 
+							checked='checked'
+							/>"
+							,"MaquinariaTropa"
+							, $n
+							, $mov
+							, $ha
+							, $hp
+							, $f
+							, $r
+							, $ps
+							, $in
+							, $a
+							, $l
+						);
 					}
 					else{
-						formularioTropa("<label for='maquinaTropa".$n."'>Maquinaria-Carro</label> <input type='checkbox' id='maquinaTropa".$n."' class='maquinaTropa' name='maquinaTropa[".$n."]'/>","MaquinariaTropa", $n, null, null, null, null, null, null, null, null, null);
+						formularioTropa(
+							"<label for='maquinaTropa".$n."'>Maquinaria-Carro</label>
+							<input 
+								type='checkbox'
+								id='maquinaTropa".$n."' 
+								class='maquinaTropa' 
+								name='maquinaTropa[".$n."]'
+							/>"
+							,"MaquinariaTropa"
+							, $n
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+							, null
+						);
 					}
 					$sentencia -> close();
 				
@@ -1773,204 +2021,130 @@
 		//Los atributos tienen un valor máximo de 10
 		$maxA = 10;
 		
-		if($mov!=null && $ha!=null && $hp!=null && $f!=null && $r!=null && $ps!=null && $in!=null && $a!=null && $l){
-			echo "
-				<tr class='atributos'>
-					<td class='tipoUTD'>$text</td>
-					<td class='atributoMovTD'>
-						<select class='movimiento".$componente."' name='movimiento".$componente."[".$n."]'>
-							<option value='$mov' checked='checked'>".$mov."cm</option>
-							<option value='0'>0cm</option>
-							<option value='3'>3cm</option>
-							<option value='5'>5cm</option>
-							<option value='8'>8cm</option>
-							<option value='10'>10cm</option>
-							<option value='12'>12cm</option>
-							<option value='15'>15cm</option>
-							<option value='18'>18cm</option>
-							<option value='20'>20cm</option>
-							<option value='22'>22cm</option>
-							<option value='25'>25cm</option>
-							<option value='30'>30cm</option>
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='ha".$componente."' name='ha".$componente."[".$n."]'>
-							<option value='".$ha."' checked='checked'>".$ha."</option>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='hp".$componente."' name='hp".$componente."[".$n."]'>
-							<option value='".$hp."' checked='checked'>".$hp."</option>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='f".$componente."' name='f".$componente."[".$n."]'>
-							<option value='".$f."' checked='checked'>".$f."</option>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='r".$componente."' name='r".$componente."[".$n."]'>
-							<option value='".$r."' checked='checked'>".$r."</option>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='ps".$componente."' name='ps".$componente."[".$n."]'>
-							<option value='".$ps."' checked='checked'>".$ps."</option>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='i".$componente."' name='i".$componente."[".$n."]'>
-							<option value='".$in."' checked='checked'>".$in."</option>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='a".$componente."' name='a".$componente."[".$n."]'>
-							<option value='".$a."' checked='checked'>".$a."</option>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='l".$componente."' name='l".$componente."[".$n."]'>
-							<option value='".$l."' checked='checked'>".$l."</option>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-				</tr>
-			";
+		echo "
+			<tr class='atributos'>
+				<td class='tipoUTD'>$text</td>
+				<td class='atributoMovTD'>
+					<select class='movimiento".$componente."' name='movimiento".$componente."[".$n."]'>
+		";
+		
+		if($mov != null) echo "<option value='".$mov."' selected='selected'>".$mov."cm</option>";
+		
+		echo "
+						<option value='0'>0cm</option>
+						<option value='3'>3cm</option>
+						<option value='5'>5cm</option>
+						<option value='8'>8cm</option>
+						<option value='10'>10cm</option>
+						<option value='12'>12cm</option>
+						<option value='15'>15cm</option>
+						<option value='18'>18cm</option>
+						<option value='20'>20cm</option>
+						<option value='22'>22cm</option>
+						<option value='25'>25cm</option>
+						<option value='30'>30cm</option>
+					</select>
+				</td>
+				<td class='atributoTD'>
+					<select class='ha".$componente."' name='ha".$componente."[".$n."]'>
+		";
+		
+		if($ha != null) echo "<option value='".$ha."' selected='selected'>".$ha."</option>";
+		
+		for($i=0;$i<=$maxA;$i++){
+			echo "<option value='".$i."'>".$i."</option>";
 		}
-		else{
-			echo "
-				<tr class='atributos'>
-					<td class='tipoUTD'>$text</td>
-					<td class='atributoMovTD'>
-						<select class='movimiento".$componente."' name='movimiento".$componente."[".$n."]'>
-							<option value='0'>0cm</option>
-							<option value='3'>3cm</option>
-							<option value='5'>5cm</option>
-							<option value='8'>8cm</option>
-							<option value='10'>10cm</option>
-							<option value='12'>12cm</option>
-							<option value='15'>15cm</option>
-							<option value='18'>18cm</option>
-							<option value='20'>20cm</option>
-							<option value='22'>22cm</option>
-							<option value='25'>25cm</option>
-							<option value='30'>30cm</option>
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='ha".$componente."' name='ha".$componente."[".$n."]'>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='hp".$componente."' name='hp".$componente."[".$n."]'>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='f".$componente."' name='f".$componente."[".$n."]'>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='r".$componente."' name='r".$componente."[".$n."]'>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='ps".$componente."' name='ps".$componente."[".$n."]'>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='i".$componente."' name='i".$componente."[".$n."]'>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='a".$componente."' name='a".$componente."[".$n."]'>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-					<td class='atributoTD'>
-						<select class='l".$componente."' name='l".$componente."[".$n."]'>
-			";
-			for($i=0;$i<=$maxA;$i++){
-				echo "<option value='".$i."'>".$i."</option>";
-			}
-			echo "
-						</select>
-					</td>
-				</tr>
-			";
+		echo "
+					</select>
+				</td>
+				<td class='atributoTD'>
+					<select class='hp".$componente."' name='hp".$componente."[".$n."]'>
+		";
+		
+		if($hp != null) echo "<option value='".$hp."' selected='selected'>".$hp."</option>";
+		
+		
+		for($i=0;$i<=$maxA;$i++){
+			echo "<option value='".$i."'>".$i."</option>";
 		}
+		echo "
+					</select>
+				</td>
+				<td class='atributoTD'>
+					<select class='f".$componente."' name='f".$componente."[".$n."]'>
+		";
+		
+		if($f != null) echo "<option value='".$f."' selected='selected'>".$f."</option>";
+		
+		
+		for($i=0;$i<=$maxA;$i++){
+			echo "<option value='".$i."'>".$i."</option>";
+		}
+		echo "
+					</select>
+				</td>
+				<td class='atributoTD'>
+					<select class='r".$componente."' name='r".$componente."[".$n."]'>
+		";
+		
+		if($r != null) echo "<option value='".$r."' selected='selected'>".$r."</option>";
+		
+		for($i=0;$i<=$maxA;$i++){
+			echo "<option value='".$i."'>".$i."</option>";
+		}
+		echo "
+					</select>
+				</td>
+				<td class='atributoTD'>
+					<select class='ps".$componente."' name='ps".$componente."[".$n."]'>
+		";
+		
+		if($ps != null) echo "<option value='".$ps."' selected='selected'>".$ps."</option>";
+		
+		for($i=0;$i<=$maxA;$i++){
+			echo "<option value='".$i."'>".$i."</option>";
+		}
+		echo "
+					</select>
+				</td>
+				<td class='atributoTD'>
+					<select class='i".$componente."' name='i".$componente."[".$n."]'>
+		";
+		
+		if($in != null) echo "<option value='".$in."' selected='selected'>".$in."</option>";
+		
+		for($i=0;$i<=$maxA;$i++){
+			echo "<option value='".$i."'>".$i."</option>";
+		}
+		echo "
+					</select>
+				</td>
+				<td class='atributoTD'>
+					<select class='a".$componente."' name='a".$componente."[".$n."]'>
+		";
+		
+		if($a != null) echo "<option value='".$a."' selected='selected'>".$a."</option>";
+		
+		for($i=0;$i<=$maxA;$i++){
+			echo "<option value='".$i."'>".$i."</option>";
+		}
+		echo "
+					</select>
+				</td>
+				<td class='atributoTD'>
+					<select class='l".$componente."' name='l".$componente."[".$n."]'>
+		";
+		
+		if($l != null) echo "<option value='".$l."' checked='checked'>".$l."</option>";
+		
+		for($i=0;$i<=$maxA;$i++){
+			echo "<option value='".$i."'>".$i."</option>";
+		}
+		echo "
+					</select>
+				</td>
+			</tr>
+		";
+		
 	}
 ?>
