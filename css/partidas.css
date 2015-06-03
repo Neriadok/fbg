@@ -1,0 +1,21 @@
+@CHARSET "UTF-8";
+
+/**
+*#000030:Azul realmente -oscuro
+*#0C1D54:Azul Oscuro
+*#8FFFFF:Azul Enfático
+*#4057A3:Azul Cielo
+*#C1D0E3:Gris Nube
+*#F9FF45:Amarillo Brillante
+*#CBD126:Amarillo Oscuro
+*#AD661A:Marron Oscur
+*/
+
+/**FORMATO Y ASPECTO**/
+
+.partida{
+	width:98%;
+	height: auto;
+	margin:2px;
+	padding:4px;
+}

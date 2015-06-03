@@ -306,10 +306,23 @@
 				<div class='sendingFormContent'>
 					<textarea id='topicContent' name='topicContent' class='bigColumnTArea' maxlength='1023'></textarea>
 				</div>
+		";
+		if($_SESSION["tipoUser"] > 1){
+			echo "
 				<div class='sendingFormOpciones'>
 					<label for='topicAsNoticia'>Enviar tema como noticia:</label>
 					<input id='topicAsNoticia' name='topicAsNoticia' type='checkbox'/>
 				</div>
+			";
+		}
+		else{
+			echo "
+				<div class='sendingFormOpciones oculto'>
+					<input id='topicAsNoticia' name='topicAsNoticia' type='checkbox'/>
+				</div>
+			";
+		}
+		echo "
 			</form>
 		";
 	}
@@ -394,7 +407,8 @@
 					</div>
 				</div>
 			";
-		
+		}
+		if($_SESSION['tipoUser']>1){
 			if($temaAbierto){
 				echo "
 					<div id='cerrarBoton' class='botonVentana'><img src='src/botones/close.png'/></div>

@@ -4,7 +4,8 @@
 	include_once '../includes/default.inc.php';
 	include_once '../includes/buzon.inc.php';
 	include_once '../includes/users.inc.php';
-	
+	include_once '../includes/partidas.inc.php';
+	 
 	sesion_segura();
 
 	$datos = json_decode(file_get_contents('php://input'),true);
@@ -12,6 +13,9 @@
 	$urle=esc_url($_SERVER['PHP_SELF']);
 	
 	if (login_check($conexion)){
+		//Registramos que el usuario esta activo
+		actividad($conexion);
+		
 		//Se elimina un correo.
 		if(isset($datos['deleteCorreo'])){
 			//Filtramos los datos
@@ -41,6 +45,26 @@
 			$uId = preg_replace("/[^0-9]+/", "", $datos['denegarAmistad']);
 			//Denegamos la peticion de amistad
 			denegarAmistad($conexion,$uId);
+		}
+		
+		//Se acepta un desafio.
+		else if(isset($datos['aceptarDesafio'])){
+			//Filtramos los datos
+			$desafio = preg_replace("/[^0-9]+/", "", $datos['aceptarDesafio']);
+			
+			//Aceptamos el desafio
+			aceptarDesafio($conexion,$desafio);
+			buzon($conexion);
+		}
+		
+		//Se acepta un desafio.
+		else if(isset($datos['denegarDesafio'])){
+			//Filtramos los datos
+			$desafio = preg_replace("/[^0-9]+/", "", $datos['denegarDesafio']);
+			
+			//Aceptamos el desafio
+			denegarDesafio($conexion,$desafio);
+			buzon($conexion);
 		}
 		
 		//Por defecto siempre mostraremos el contenido del buzón para evitar posibles "extraños" en el funcionamiento.

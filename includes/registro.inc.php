@@ -33,7 +33,7 @@
 			$sentencia -> close();
 		}
 		else {
-			$msgR .= "Error en la base de datos.<br/>";
+			$msgR .= "Error en la base de datos al comprobar el nick.<br/>";
 			$sentencia -> close();
 		}
 	
@@ -57,7 +57,7 @@
 			
 		}
 		else {
-			$msgR .= "Error en la base de datos.<br/>";
+			$msgR .= "Error en la base de datos al comprobar el email.<br/>";
 			$sentencia -> close();
 		}
 	

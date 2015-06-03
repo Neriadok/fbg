@@ -38,7 +38,12 @@ function AsinCronos(peticionesURL){
 			document.getElementById(en).innerHTML="<h1 class='error'>ERROR 404</h1> <p class='error'>Página no encontrada.<br/>Prueba a recargar la página.</p>";
 		}
 		else{
-			document.getElementById(en).innerHTML="<div class='contenedorTransparente mid column enfasis'><div class='esferaLoading'><img src='src/sol.gif'/></div>Cargando...</div>";
+			if(peticionesURL == "contenidos/partida.con.php"){
+				document.getElementById(en).innerHTML="<div class='contenedorTransparente enfasis'><div class='esferaLoading'><img src='src/sol.gif'/></div>Cargando...</div>";
+			}
+			else{
+				document.getElementById(en).innerHTML="<div class='contenedorTransparente mid column enfasis'><div class='esferaLoading'><img src='src/sol.gif'/></div>Cargando...</div>";
+			}
     	}
     };
 

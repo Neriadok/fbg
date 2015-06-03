@@ -9,6 +9,8 @@
 	$urle=esc_url($_SERVER['PHP_SELF']);
 	
 	if (login_check($conexion)){
+		//Registramos que el usuario esta activo
+		actividad($conexion);
 		//Solamente los usuarios con rango 3 pueden acceder a esta sección.
 		if($_SESSION['tipoUser'] == 3){
 			admin_actualizarContenido($conexion);

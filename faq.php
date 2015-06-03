@@ -2,7 +2,6 @@
 	include_once 'includes/db_connect.php';
 	include_once 'includes/functions.php';
 	include_once 'includes/default.inc.php';
-	include_once 'includes/partidas.inc.php';
 	
 	sesion_segura();
 ?>
@@ -10,30 +9,18 @@
 <html>
 	<head>
 		<meta charset='UTF8'>
-		<title>FBG - Partidas</title>
+		<title>FBG - FAQ</title>
 		<link rel='shortcut icon' href='src/dragon.ico'/>
 		<link rel='stylesheet' type='text/css' href='css/default.css' />
-		<link rel='stylesheet' type='text/css' href='css/partidas.css' />
 		<script type="text/JavaScript" src="js/sha512.js"></script>
 		<script type="text/JavaScript" src="js/jFBG/AsinCronos.js"></script>
 		<script type="text/JavaScript" src="js/jFBG/Submit.js"></script>
 		<script type="text/JavaScript" src="js/jFBG/Yggdrasil.js"></script>
 		<script type="text/JavaScript" src="js/jFBG/ItemDesplegable.js"></script>
-		<script type="text/JavaScript" src="js/jFBG/ventana.js"></script>
-		<script type="text/JavaScript" src="js/jFBG/Scrolling.js"></script>
-		<script type="text/JavaScript" src="js/jFBG/MostrarMensaje.js"></script>
 		<script type="text/JavaScript" src="js/jFBG/PreventTextSelect.js"></script>
 		<script>
         	function inicio(){
-            	var ca = new AsinCronos("contenidos/partidas.con.php");
 				tratarElementos();
-				
-            	setInterval(
-                    function(){
-                        if(ca.check())tratarElementos();
-                    }
-                  	,500
-                 );
                 
 
                 /**Funciones generadas al inicio**/
@@ -49,45 +36,6 @@
     				d1d = new ItemDesplegable(document.getElementById("desplegable1D"),"D",1);
     				d2d = new ItemDesplegable(document.getElementById("desplegable2D"),"D",2);
     				d3d = new ItemDesplegable(document.getElementById("desplegable3D"),"D",3);
-
-                	/**Prevenimos la selección de texto*/
-                	var preventTextSelect = new PreventTextSelect();
-					
-	            	
-					/**Genereamos el objeto Submit para registrarnos si este existiese.**/
-					if(document.getElementById("registrar") != null){
-	            		var registrar = new Submit(2, "registrar", document.getElementById("regForm"), ca);
-					}
-	
-					/**Genereamos el objeto Submit para registrarnos si este existiese.**/
-					if(document.getElementById("loguear") != null){
-	            		var loguear = new Submit(1, "loguear", document.getElementById("logForm"), ca);
-					}
-    				
-
-    				/**Generamos los objetos ventana si los hubiese.**/
-                	var ventanas = document.getElementsByClassName("ventana");
-
-                	if(ventanas != null){
-                		for(var i=0;i<ventanas.length;i++){
-                			ventanas[i] = new Ventana(ventanas[i].id);
-    					}
-                	}
-                	
-
-    				/**Si existiesen elementos de clase scrollingBox, generariamos objetos Scrolling para un movimiento dinámico**/
-    				var scrollings = document.getElementsByClassName("scrollingBox");
-
-                	if(scrollings != null){
-                    	for(var i=0;i<scrollings.length;i++){
-                    		scrollings[i] = new Scrolling(scrollings[i]);
-                		}
-    				}
-                	
-                	/**Generamos el objeto MostrarMensaje.js **/
-                	if(document.getElementById("expositor") != null){
-						var mostrar = new MostrarMensaje("partida", document.getElementById("expositor"),2,ca);
-                	}
             	};
         	}
         </script>
@@ -101,17 +49,24 @@
 			</div>
 	
 			<div id='tronco'>
+				<div class='contenedor mid top box'>
+					<a href='https://mega.co.nz/#!IY5ywD5S!qkDGc3h5TNKEpvz5pTUXCeEBd90lCO6PKFJ4I-Q5zhc'>Pulsa este link para descargar la <b>Guía para el Usuario</b></a>
+				</div>
 				<?php 
 					
 					$urle=esc_url($_SERVER['PHP_SELF']);
 					if (login_check($conexion)){
 						//Registramos que el usuario esta activo
 						actividad($conexion);
-		
-						partidas($conexion);
-					}
-					else {
-						defaultContent();
+				
+						if($_SESSION['tipoUser'] == 3){
+							echo "
+								<div class='contenedor mid  bot box'>
+									<a href='https://mega.co.nz/#!wVIWGYrY!2Ogamfj3EssgOIOrdg6x8LBGuKBUmnpvwchTagCmVKE'>Pulsa este link para descargar la <b>Guía para el Administrador</b></a>
+								</div>
+							";
+						}
+						
 					}
 				?>
 			</div>

@@ -1,5 +1,6 @@
 <?php
 	include_once "users.inc.php";
+	include_once 'partidas.inc.php';
 	
 	/**
 	 * FUNCIÓN DE ESTRUCTURA
@@ -25,15 +26,19 @@
 		
 		echo "
 			</div>
-			<div id='contenido' class='contenedor big column'>
+			<div id='contenido' class='contenedor mid column'>
 		";
 		
 		ranking_contenido($conexion);
 		
 		echo "
 			</div>
+			<div id='contenido' class='contenedor right column'>
 		";
-		
+		amigos($conexion,false);
+		echo "
+			</div>
+		";
 	}
 
 	/**
@@ -101,7 +106,23 @@
 		$sentencia = $conexion -> prepare("CALL proceso_datosUsers()");
 		$sentencia -> execute();
 		$sentencia -> store_result();
-		$sentencia -> bind_result($uId,$unickname,$avatar,$mail,$utipo,$urenombre,$uregdate,$ubandate,$ufaltas,$ufirma,$umensajes,$utemas,$ugrito,$upartidas,$uvictorias);//Añadir visitas y mensajes totales
+		$sentencia -> bind_result(
+				$uId
+				,$unickname
+				,$avatar
+				,$mail
+				,$utipo
+				,$urenombre
+				,$uregdate
+				,$ubandate
+				,$ufaltas
+				,$ufirma
+				,$umensajes
+				,$utemas
+				,$ugrito
+				,$upartidas
+				,$uvictorias
+			);//Añadir visitas y mensajes totales
 		$i=0;
 		
 		while($sentencia -> fetch()){

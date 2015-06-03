@@ -10,6 +10,9 @@
 	
 	
 	if (login_check($conexion)){
+		//Registramos que el usuario esta activo
+		actividad($conexion);
+		
 		foro_contenido($conexion);
 	}
 

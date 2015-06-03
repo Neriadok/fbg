@@ -15,15 +15,17 @@
 		<link rel='stylesheet' type='text/css' href='css/default.css' />
 		<link rel='stylesheet' type='text/css' href='css/foros.css' />
 		<script type="text/JavaScript" src="js/sha512.js"></script>
-		<script type="text/JavaScript" src="jFBG/AsinCronos.js"></script>
-		<script type="text/JavaScript" src="jFBG/Submit.js"></script>
-		<script type="text/JavaScript" src="jFBG/Yggdrasil.js"></script>
-		<script type="text/JavaScript" src="jFBG/ItemDesplegable.js"></script>
-		<script type="text/JavaScript" src="jFBG/Desplegable.js"></script>
-		<script type="text/JavaScript" src="jFBG/Destino.js"></script>
-		<script type="text/JavaScript" src="jFBG/Boton.js"></script>
-		<script type="text/JavaScript" src="jFBG/Scrolling.js"></script>
-		<script type="text/JavaScript" src="jFBG/Ventana.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/AsinCronos.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Submit.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Yggdrasil.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/ItemDesplegable.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Desplegable.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Destino.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Boton.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Scrolling.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Ventana.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/PreventTextSelect.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/PreventTextSelect.js"></script>
 		<script>
         	function inicio(){
             	var ca = new AsinCronos("contenidos/foros.con.php");
@@ -41,6 +43,7 @@
 
             	function tratarElementos(){
                 	/**GENERAL PARA TODAS LAS SECCIONES*/
+                	
                 	/**Generamos el objeto Yggdrasil, que nos ayudara a estructurar el arbol de contenidos en funcion del tamaño de la ventana**/
             		arbol = new Yggdrasil(document.getElementById("yggdrasil") , document.getElementById("copa") , document.getElementById("tronco") , document.getElementById("raiz"));
 
@@ -51,7 +54,12 @@
     				d1d = new ItemDesplegable(document.getElementById("desplegable1D"),"D",1);
     				d2d = new ItemDesplegable(document.getElementById("desplegable2D"),"D",2);
     				d3d = new ItemDesplegable(document.getElementById("desplegable3D"),"D",3);
-    				
+
+                	/**Prevenimos la selección de texto*/
+                	var preventTextSelect = new PreventTextSelect();
+
+                	/**Prevenimos la selección de texto*/
+                	var preventTextSelect = new PreventTextSelect();
                 	
     				/**Genereamos el objeto Submit para registrarnos si este existiese.**/
     				if(document.getElementById("registrar") != null){
@@ -193,6 +201,9 @@
 			<div id='tronco'>
 				<?php 
 					if (login_check($conexion)){
+						//Registramos que el usuario esta activo
+						actividad($conexion);
+		
 						foros($conexion);
 					}
 					else {

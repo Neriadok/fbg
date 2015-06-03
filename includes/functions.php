@@ -45,6 +45,23 @@
 		session_regenerate_id();
 	}
 	
+	/**
+	 * FUNCIÓN DE EJECUCIÓN SETTER
+	 * Función que registra en la base de datos que el usuario está activo.
+	 * Esta información es util para indicar a otros usuarios si el usuario en cuestion está activo o no.
+	 * 
+	 * @param $conexion Mysqli - Conexion a base de datos.
+	 */
+	function actividad($conexion){
+		/** Indicamos en la base de datos que estamos teniendo actividad en la página */
+		if(isset($_SESSION['userId'])){
+			$sentencia = $conexion -> prepare("CALL proceso_actividad(?)");
+			$sentencia -> bind_param('i',$_SESSION['userId']);
+			$sentencia -> execute();
+			$sentencia -> close();
+		}
+	}
+	
 	
 	/**
 	 * FUNCIÓN DE EJECUCIÓN SETTER

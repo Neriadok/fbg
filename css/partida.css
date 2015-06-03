@@ -1,0 +1,184 @@
+@CHARSET "UTF-8";
+
+/**
+*#000030:Azul realmente -oscuro
+*#0C1D54:Azul Oscuro
+*#8FFFFF:Azul Enfático
+*#4057A3:Azul Cielo
+*#C1D0E3:Gris Nube
+*#F9FF45:Amarillo Brillante
+*#CBD126:Amarillo Oscuro
+*#AD661A:Marron Oscur
+*/
+
+/**FORMATO Y ASPECTO**/
+canvas{
+	cursor: url("../src/cursor.png"),url("../src/cursor.svg"),hand;
+}
+
+#contenidoPrincipal *{
+	position:relative;
+}
+
+#columnaInfo>*{
+	width:100%;
+}
+
+#datos{
+	margin-top:20px;
+	width:100%;
+}
+
+#datos > *{
+	width:100%;
+}
+
+#game{
+	margin: 0px auto;
+	top: 0px;
+	left: 0px;
+	color: white;
+	margin: 0px auto;
+	overflow: hidden;
+	height: 100%;
+	width: 100%;
+}
+
+#desplegable {
+	padding:0%;
+	background-color: rgba(12,29,84,0.85);
+}
+
+#matchAvatar {
+	position: relative;
+	top:20px;
+	height: 150px;
+	width: 150px;
+	border: 4px solid #F9FF45;
+	border-radius: 77px;
+	overflow: hidden;
+	z-index: 5;
+}
+
+#panel{
+	height: 220px;
+}
+
+#panelin{
+	position:relative;
+	padding-left: 1%;
+	padding-right: 1%;
+	height: 220px;
+	width: 28%;
+}
+
+#panelout{
+	width:auto;
+	margin: 30px;
+}
+
+#datosSeleccion{
+	position:relative;
+	padding-top: 5px;
+	padding-left: 1%;
+	padding-right: 1%;
+	height: 200px;
+	width: 38%;
+	margin-left: 30%;
+	margin-top: -220px;
+	text-align: center;
+	background-color: rgba(0,0,48,0.85);
+}
+
+#panelfase{
+	position:relative;
+	padding-top: 5px;
+	padding-left: 1%;
+	padding-right: 1%;
+	height: 220px;
+	width: 28%;
+	margin-left:70%;
+	margin-top: -210px;
+	text-align: left;
+}
+
+#cabecera{
+	width:100%;
+	height: 30px;
+}
+
+.selectorTropa{
+	width:85%;
+}
+
+.columnaUnidades{
+	width: 15%;
+}
+
+.halfWidth{
+	width: 50%;
+}
+
+.tropaContent{
+	width: auto;
+	height: auto;
+}
+
+.scrollingBox{
+	background-color: transparent;
+}
+
+.atributoComponente{
+	color:white;
+	font-weight:bold;
+	font-size:smaller;
+}
+
+.componente{
+	width:50px;
+}
+
+#tablaDatos{
+	margin-top:25px;
+}
+
+#finalizarFase, #actualizarSituacion{
+	width:100px;
+	height:60px;
+	margin:auto;
+	background-color:#4057A3;
+	color:#C1D0E3;
+	border-radius:15px;
+}
+
+#finalizarFase:hover, #actualizarSituacion:hover{
+	width:100px;
+	height:60px;
+	margin:auto;
+	background-color:#CBD126;
+	color:#000030;
+	font-weight:bold;
+	border-radius:15px;
+}
+
+
+.alyPairRow {
+	background-color: #D9EAFF;
+	color: #000030;
+}
+
+.alyInpairRow {
+	background-color: #9BB0C9;
+	color: #000030;
+}
+
+
+.enemyPairRow {
+	background-color: #FCFB81;
+	color: #000030;
+}
+
+.enemyInpairRow {
+	background-color: #D9D743;
+	color: #000030;
+}

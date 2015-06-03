@@ -2,6 +2,10 @@
 	include_once 'includes/db_connect.php';
 	include_once 'includes/functions.php';
 	include_once 'includes/default.inc.php';
+	include_once 'includes/portal.inc.php';
+	include_once 'includes/buzon.inc.php';
+	include_once 'includes/users.inc.php';
+	include_once 'includes/partidas.inc.php';
 	
 	sesion_segura();
 ?>
@@ -12,11 +16,15 @@
 		<title>FBG</title>
 		<link rel='shortcut icon' href='src/dragon.ico'/>
 		<link rel='stylesheet' type='text/css' href='css/default.css' />
+		<link rel='stylesheet' type='text/css' href='css/partidas.css' />
 		<script type="text/JavaScript" src="js/sha512.js"></script>
-		<script type="text/JavaScript" src="jFBG/AsinCronos.js"></script>
-		<script type="text/JavaScript" src="jFBG/Submit.js"></script>
-		<script type="text/JavaScript" src="jFBG/Yggdrasil.js"></script>
-		<script type="text/JavaScript" src="jFBG/ItemDesplegable.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/AsinCronos.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Submit.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Yggdrasil.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/ItemDesplegable.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Scrolling.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Ventana.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/PreventTextSelect.js"></script>
 		<script>
         	function inicio(){
             	var ca = new AsinCronos("contenidos/buzon.con.php");
@@ -43,6 +51,9 @@
     				d1d = new ItemDesplegable(document.getElementById("desplegable1D"),"D",1);
     				d2d = new ItemDesplegable(document.getElementById("desplegable2D"),"D",2);
     				d3d = new ItemDesplegable(document.getElementById("desplegable3D"),"D",3);
+
+                	/**Prevenimos la selección de texto*/
+                	var preventTextSelect = new PreventTextSelect();
 					
 	            	
 					/**Genereamos el objeto Submit para registrarnos si este existiese.**/
@@ -54,6 +65,24 @@
 					if(document.getElementById("loguear") != null){
 	            		var loguear = new Submit(1, "loguear", document.getElementById("logForm"), ca);
 					}
+
+    				/**Si existiesen elementos de clase scrollingBox, generariamos objetos Scrolling para un movimiento dinámico**/
+    				var scrollings = document.getElementsByClassName("scrollingBox");
+
+                	if(scrollings != null){
+                    	for(var i=0;i<scrollings.length;i++){
+                    		scrollings[i] = new Scrolling(scrollings[i]);
+                		}
+    				}
+
+    				/**Generamos los objetos ventana si los hubiese.**/
+                	var ventanas = document.getElementsByClassName("ventana");
+
+                	if(ventanas != null){
+                		for(var i=0;i<ventanas.length;i++){
+                			ventanas[i] = new Ventana(ventanas[i].id);
+    					}
+                	}
             	};
         	}
         </script>
@@ -71,15 +100,10 @@
 					
 					$urle=esc_url($_SERVER['PHP_SELF']);
 					if (login_check($conexion)){
+						//Registramos que el usuario esta activo
+						actividad($conexion);
 		
-						echo "
-							<div class='contenedor mid column'>Contenido vario</div>
-							<div class='contenedor left top box'>Perfil</div>
-							<div class='contenedor left bot box'>Partidas</div>
-							<div class='contenedor right top box'>Temas mas activos</div>
-							<div class='contenedor right bot box'>Foros</div>
-						";
-	
+						portal($conexion);
 					}
 					else {
 						defaultContent();

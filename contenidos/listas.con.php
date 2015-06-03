@@ -9,6 +9,9 @@
 	$urle=esc_url($_SERVER['PHP_SELF']);
 	
 	if (login_check($conexion)){
+		//Registramos que el usuario esta activo
+		actividad($conexion);
+		
 		$datos = json_decode(file_get_contents('php://input'),true);
 		
 		//Si se recibe un nombre de lista procedemos a crearla.

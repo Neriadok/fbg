@@ -15,14 +15,15 @@
 		<link rel='stylesheet' type='text/css' href='css/default.css' />
 		<link rel='stylesheet' type='text/css' href='css/perfil.css' />
 		<script type="text/JavaScript" src="js/sha512.js"></script>
-		<script type="text/JavaScript" src="jFBG/AsinCronos.js"></script>
-		<script type="text/JavaScript" src="jFBG/Submit.js"></script>
-		<script type="text/JavaScript" src="jFBG/Yggdrasil.js"></script>
-		<script type="text/JavaScript" src="jFBG/ItemDesplegable.js"></script>
-		<script type="text/JavaScript" src="jFBG/Scrolling.js"></script>
-		<script type="text/JavaScript" src="jFBG/Ventana.js"></script>
-		<script type="text/JavaScript" src="jFBG/Boton.js"></script>
-		<script type="text/JavaScript" src="jFBG/Alerta.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/AsinCronos.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Submit.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Yggdrasil.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/ItemDesplegable.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Scrolling.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Ventana.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Boton.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/Alerta.js"></script>
+		<script type="text/JavaScript" src="js/jFBG/PreventTextSelect.js"></script>
 		<script>
 	    	function inicio(){
             	var ca = new AsinCronos("contenidos/ranking.con.php");
@@ -50,6 +51,9 @@
 					d1d = new ItemDesplegable(document.getElementById("desplegable1D"),"D",1);
 					d2d = new ItemDesplegable(document.getElementById("desplegable2D"),"D",2);
 					d3d = new ItemDesplegable(document.getElementById("desplegable3D"),"D",3);
+
+                	/**Prevenimos la selección de texto*/
+                	var preventTextSelect = new PreventTextSelect();
 					
 	            	
 					/**Genereamos el objeto Submit para registrarnos si este existiese.**/
@@ -130,6 +134,15 @@
                     		delUsers[i] = new Submit(0, delUsers[i].id, document.getElementById(delUsers[i].id), ca);
     					}
                 	}
+                	
+                	/**Generamos los objetos Submit para eliminar un usuario.**/
+                	var desafiarUsers = document.getElementsByClassName("desafiarUser");
+
+                	if(desafiarUsers != null){
+                		for(var i=0;i<desafiarUsers.length;i++){
+                			desafiarUsers[i] = new Submit(0, desafiarUsers[i].id, document.getElementById(desafiarUsers[i].id+"Form"), ca);
+    					}
+                	}
 
                 	
 
@@ -182,6 +195,9 @@
 					
 					$urle=esc_url($_SERVER['PHP_SELF']);
 					if (login_check($conexion)){
+						//Registramos que el usuario esta activo
+						actividad($conexion);
+		
 						ranking($conexion);
 					}
 					else {

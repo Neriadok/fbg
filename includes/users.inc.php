@@ -40,7 +40,7 @@
 		echo "
 			<table class='tablaDatos'>
 				<tr>
-					<td colspan='8' class='alignCenter'>
+					<td colspan='4' class='alignCenter'>
 		";
 		
 		//Si no hay avatar mostramos el avatar por defecto.
@@ -55,7 +55,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan='8' class='perfilCell alignCenter
+					<td colspan='4' class='perfilCell alignCenter
 		";
 		
 		//Los colores cambian en función del tipo de usuario.
@@ -84,36 +84,34 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan='2' class='alignRight tdCabecera'>Renombre:</td>
-					<td colspan='6' class='alignLeft tdSimple'>$urenombre</td>
+					<td class='alignRight tdCabecera'>Renombre:</td>
+					<td colspan='3' class='alignLeft tdSimple'>$urenombre</td>
 				</tr>
 				<tr>
-					<td colspan='2' class='alignRight tdCabecera'>Fecha Alta:</td>
-					<td colspan='2' class='alignLeft tdSimple'>$uregdate</td>
-					<td colspan='2' class='alignRight tdCabecera'>Fecha Baja:</td>
-					<td colspan='2' class='alignLeft tdSimple'>$ubandate</td>
+					<td class='alignRight tdCabecera'>Fecha Alta:</td>
+					<td class='alignLeft tdSimple'>$uregdate</td>
+					<td class='alignRight tdCabecera'>Fecha Baja:</td>
+					<td class='alignLeft tdSimple'>$ubandate</td>
 				</tr>
 				<tr>
-					<td colspan='4' class='alignCenter tdCabecera'>Foros</td>
-					<td colspan='4' class='alignCenter tdCabecera'>Partidas</td>
+					<td colspan='2' class='alignCenter tdCabecera'>Foros</td>
+					<td colspan='2' class='alignCenter tdCabecera'>Partidas</td>
 				</tr>
 				<tr>
-					<td colspan='4' class='alignCenter tdSimple'>$ufirma</td>
-					<td colspan='4' class='alignCenter tdSimple'>$ugrito</td>
+					<td colspan='2' class='alignCenter tdSimple'>$ufirma</td>
+					<td colspan='2' class='alignCenter tdSimple'>$ugrito</td>
 				</tr>
 				<tr>
-					<td colspan='2' class='alignRight tdCabecera'>Mensajes:</td>
-					<td colspan='2' class='alignLeft tdSimple'>$umensajes</td>
+					<td class='alignRight tdCabecera'>Mensajes:</td>
+					<td class='alignLeft tdSimple'>$umensajes</td>
 					<td class='alignRight tdCabecera'>Partidas:</td>
-					<td colspan='3' class='alignLeft tdSimple'>$upartidas</td>
+					<td class='alignLeft tdSimple'>$upartidas</td>
 				</tr>
 				<tr>
-					<td colspan='2' class='alignRight tdCabecera'>Temas:</td>
-					<td colspan='2' class='alignLeft tdSimple'>$utemas</td>
+					<td class='alignRight tdCabecera'>Temas:</td>
+					<td class='alignLeft tdSimple'>$utemas</td>
 					<td class='alignRight tdCabecera'>Victorias:</td>
 					<td class='alignLeft tdSimple'>$uvictorias</td>
-					<td class='alignRight tdCabecera'>Derrotas:</td>
-					<td class='alignLeft tdSimple'>".($upartidas-$uvictorias)."</td>
 				</tr>
 			</table>	
 		";
@@ -257,9 +255,37 @@
 		if(!($_SESSION['userId'] == $uid)){
 			//Si no son sus opciones, el usuario vera las opciones de desafiar y de enviar un mensaje
 			echo "
-				<form class='submit desafiarUser' id='desafiarU$uid'>
-					<img src='src/botones/desafiar.png'/>
-				</form>
+				<div id='opDes".$uid."Boton' class='botonVentana'><img src='src/botones/desafiar.png'/></div>
+				<div id='opDes".$uid."' class='ventana oculto'>
+					<h2 id='opDes".$uid."Selector' class='ventanaSelector'>Desafiar a $unickname</h2>
+					<div class='ventanaContent'>
+						<form id='desafiarU".$uid."Form'>
+							<table>
+								<tr>
+									<td class='alignLeft'>Puntos máximos:</td>
+									<td>
+										<select name='puntos'>
+											<option value='500'>500</option>
+											<option value='1000'>1000</option>
+											<option value='1500'>1500</option>
+											<option value='2000'>2000</option>
+											<option value='2500'>2500</option>
+											<option value='3000'>3000</option>
+										</select>
+									</td>
+								</tr>
+								<tr>
+									<td class='' colspan='2'>
+										<div class='desafiarUser submit' id='desafiarU".$uid."'>
+											<img src='src/botones/desafiar.png'/>
+											<input name='desafiarUser' value='$uid'/>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</form>
+					</div>
+				</div>
 				
 				<div id='opMsg".$uid."Boton' class='botonVentana'><img src='src/botones/msg.png'/></div>
 				<div id='opMsg".$uid."' class='ventana oculto'>
@@ -448,16 +474,14 @@
 					echo "
 								</tr>
 								<tr>
-									<td class='alignRight esTDistica'>Renombre:</td>
-									<td class='alignLeft esTDistica enfasis'>$urenombre</td>
-									<td class='alignRight esTDistica'>Partidas:</td>
-									<td class='alignLeft esTDistica enfasis'>$upartidas</td>
+									<td class='alignRight esTDistica' colspan='2'>Renombre:</td>
+									<td class='alignLeft esTDistica enfasis' colspan='2'>$urenombre</td>
 								</tr>
 								<tr>
+									<td class='alignRight esTDistica'>Partidas:</td>
+									<td class='alignLeft esTDistica enfasis'>$upartidas</td>
 									<td class='alignRight esTDistica'>Victorias:</td>
 									<td class='alignLeft esTDistica enfasis'>$uvictorias</td>
-									<td class='alignRight esTDistica'>Derrotas:</td>
-									<td class='alignLeft esTDistica enfasis'>".($upartidas-$uvictorias)."</td>
 								</tr>
 							</table>
 						</div>
@@ -467,7 +491,7 @@
 				
 				
 				echo "
-					<div class='contenedor right column'>
+					<div class='contenedor right top box'>
 						<div class='userOptions botonsBar' id='userOptions$uId'>
 				";
 				if($uId == $_SESSION['userId']){
@@ -896,5 +920,90 @@
 			$sentencia -> execute();
 			$sentencia -> close();
 		}
+	}
+	
+	
+	/**
+	 * FUNCIÓN DE CONTENIDO
+	 * Función que muestra los amigos del usuario logueado. De forma opcional se pueden mostrar solo aquellos que esten conectados.
+	 * 
+	 * @param $conexion Mysqli - Conexion a base de datos.
+	 * @param $logged boolean - Si tiene valor true se buscaran solo aquellos que esten conectados.
+	 */
+	function amigos($conexion,$logged){
+		echo "
+			<p class='enfasis'>Amigos
+		";
+		
+		if($logged){
+			echo "Conectados";
+		}
+		
+		echo "
+			</p>
+			<div id='amigos' class='scrollingBox'>
+				<table id='amigosContent' class='scrollingBoxContent'>
+		";
+		$sentencia = $conexion -> prepare("CALL proceso_amigos(?)");
+		$sentencia -> bind_param('i', $_SESSION['userId']);
+		if($sentencia -> execute()){
+			$sentencia -> store_result();
+			$sentencia -> bind_result(
+				$usuarioId
+				,$amigoId
+				,$amigoNick
+				,$amigoRenombre
+				,$amigoAvatar
+				,$online
+			);
+			while($sentencia -> fetch()){
+				if(!$logged || ($logged && $online)){
+					echo "
+						<tr>
+							<td class='alignRight enfasis'>$amigoNick</td>
+							<td class='alignLeft'>
+					";
+					if($amigoAvatar != null){
+						echo "
+							<img class='microAvatar
+						";
+						if($online){
+							echo " borde";
+						}
+						echo "
+							' src='$amigoAvatar'/></a>
+						";
+					}
+					else{
+						echo "<img class='microAvatar
+						";
+						if($online){
+							echo " borde";
+						}
+						echo "
+							' src='src/avatares/default.jpg'/></a>";
+					}
+					echo "
+							</td>
+						</tr>
+						<tr>
+							<td class='alignRight'>Renombre:</td>
+							<td class='alignLeft'>$amigoRenombre</td>
+						</tr>
+					";
+				}
+			}
+		}
+		$sentencia -> close();
+		echo "
+				</table>
+			</div>
+			<div id='amigosMoving' class='scrollingBoxMoving'>
+				<div id='amigosMovingUp' class='scrollingBoxMovingUp'></div>
+				<div id='amigosMovingBar' class='scrollingBoxMovingBar'></div>
+				<div id='amigosMovingDown' class='scrollingBoxMovingDown'></div>
+			</div>
+			
+		";
 	}
 ?>

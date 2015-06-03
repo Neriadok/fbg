@@ -12,6 +12,9 @@
 	$urle=esc_url($_SERVER['PHP_SELF']);
 	
 	if (login_check($conexion)){
+		//Registramos que el usuario esta activo
+		actividad($conexion);
+		
 		//Si se envia un mensaje
 		if(isset($datos['enviarMsg'])){
 			//Filtrar $datos
@@ -106,9 +109,22 @@
 			}
 		}
 		
+		//Desafiar un usuario.
+		else if(isset($datos['desafiarUser'])){
+			//Filtramos los datos
+			$uId = preg_replace("/[^0-9]+/", "", $datos['desafiarUser']);
+			$pts = preg_replace("/[^0-9]+/", "", $datos['puntos']);
+			
+			//Lanzamos el desafio
+			desafiarUser($conexion, $uId, $pts);
+			
+			//Volvemos al ranking
+			ranking($conexion, $_SESSION['userId']);
+		}
+		
 		//Por defecto
 		else{
-			ranking($conexion,$_SESSION['userId']);
+			ranking($conexion, $_SESSION['userId']);
 		}
 	}
 	

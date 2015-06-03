@@ -74,7 +74,9 @@ function Boton(ca, elementoId, valor, tipo, sitioCarga){
 		/**Prevenimos eventos por defecto*/
 		e.preventDefault();
 		
-		document.getElementById(elementoId).style.borderColor="#F9FF45";
+		if(document.getElementById(elementoId) != null){
+			document.getElementById(elementoId).style.borderColor="#F9FF45";
+		}
 	};
 	
 	
@@ -89,7 +91,9 @@ function Boton(ca, elementoId, valor, tipo, sitioCarga){
 
 		cSoltar(e);	
 		
-		document.getElementById(elementoId).style.borderColor="#CBD126";
+		if(document.getElementById(elementoId) != null){
+			document.getElementById(elementoId).style.borderColor="#CBD126";
+		}
 	};
 	
 	
@@ -104,7 +108,9 @@ function Boton(ca, elementoId, valor, tipo, sitioCarga){
 		
 		pulsado=true;
 
-		document.getElementById(elementoId).style.boxShadow="3px 3px 3px grey";
+		if(document.getElementById(elementoId) != null){
+			document.getElementById(elementoId).style.boxShadow="3px 3px 3px grey";
+		}
 	};
 	
 	
@@ -117,7 +123,9 @@ function Boton(ca, elementoId, valor, tipo, sitioCarga){
 		if(pulsado){
 			pulsado = false;
 
-			document.getElementById(elementoId).style.boxShadow="none";
+			if(document.getElementById(elementoId) != null){
+				document.getElementById(elementoId).style.boxShadow="none";
+			}
 		}
 	};
 };

@@ -12,7 +12,6 @@
 		
 		echo "
 			<div id='bandejaEntrada' class='contenedor left top column'>
-				<div class='botonsBar'></div>
 				
 				<p class='enfasis'>CORREO</p>
 				<div id='inBox' class='scrollingBox'>
@@ -154,6 +153,7 @@
 						<td id='tipo$cid' class='Correo oculto'>$ctipo</td>
 						<td id='contenido$cid' class='Correo oculto'>$ccontenido</td>
 						<td id='contenidoDefecto$cid' class='Correo oculto'>$ccontenidoDefecto</td>
+						<td id='puntos$cid' class='Correo oculto'>$cpts</td>
 					</tr>
 				";
 			}
@@ -161,6 +161,120 @@
 			$sentencia -> close();
 			echo "
 				</table>
+			";
+		}
+		//Si no se ejecutara la sentencia (algo improbable) mostrariamos un error.
+		//Esto es principalmente por razones de depuración.
+		else{
+			echo "<p id='inBoxContent' class='scrollingBoxContent'>Error</p>";
+		}
+	}
+
+
+	/**
+	 * FUNCIÓN DE CONTENIDO
+	 * Función que muestra una version reducida del buzón en la que no se dan opciones.
+	 *
+	 * @param $conexion Mysqli - Conexion a Base de Datos
+	 * @param $uv Datetime - Fecha y hora de la ultima visita realizada al buzón.
+	 * @see masNuevo Función en el archivo functions.php
+	 */
+	function buzon_portalInbox($conexion,$uv){
+		$sentencia = $conexion -> prepare("CALL proceso_correoUsuario(?)");
+		$sentencia -> bind_param('i', $_SESSION['userId']);
+		if($sentencia -> execute()){
+			echo "
+				<div id='inBox' class='scrollingBox'>
+					<table id='inBoxContent' class='scrollingBoxContent'>
+			";
+			
+			$sentencia -> store_result();
+			$sentencia -> bind_result(
+					$cid
+					,$ctipo
+					,$cfechaEmision
+					,$cremitente
+					,$cremitenteId
+					,$ctipoCorreo
+					,$ccontenidoDefecto
+					,$cpts
+					,$ctopic
+					,$ccontenido
+				);
+
+			$i=0;
+			while($sentencia -> fetch()){
+				$i++;
+				if(masNuevo($conexion,$cfechaEmision,$uv)){
+					echo "
+						<tr class='
+					";
+					
+					//Diferenciamos las filas para mayor visibilidad
+					if($i%2==0){
+						echo " pairRow";
+					}
+					else{
+						echo " inpairRow";
+					}
+					
+					//Comprobamos los correos recibidos desde nuestra ultima visita.
+					
+					
+					echo "
+						'>
+						<td id='$cid' class='correo'>
+					";
+					
+					//En caso de tener asunto, lo mostramos.
+					if($ctopic != null){
+						echo "$ctipoCorreo: $ctopic";
+					}
+					else{
+						echo "$ctipoCorreo";
+					}
+					
+					echo "
+						</td>
+						<td>
+							<div id='contenidoCorreo".$cid."Boton' class='botonVentana'><img src='src/botones/msg.png'/></div>
+							<div id='contenidoCorreo".$cid."' class='ventana oculto'>
+								<h2 id='contenidoCorreo".$cid."Selector' class='ventanaSelector'>$ctipoCorreo: $ctopic</h2>
+									<div class='ventanaContent'>
+										<table>
+					";
+					if($cremitente != null){
+						echo "<tr><td class='enfasis'>Mensaje de $cremitente</td></tr>";
+					}
+					echo "
+					
+											<tr>
+												<td id='fecha$cid' class='fecha cursiva'>
+													Recibido en: " . date("d/m/Y", strtotime(str_replace('-','/', $cfechaEmision))) . "<br/>
+													A las: " . date("H:i:s", strtotime(str_replace('-','/', $cfechaEmision))) . "
+												</td>
+											</tr>
+											<tr><td id='contenidoDefecto$cid'>$ccontenidoDefecto</td></tr>
+											<tr><td id='contenido$cid' class='enfasis'>$ccontenido</td></tr>
+										</table>
+									</div>
+								</div>
+							</td>
+						</tr>
+					";
+				}
+			}
+			
+			$sentencia -> close();
+			echo "
+					</table>
+				</div>
+				<div id='inBoxMoving' class='scrollingBoxMoving'>
+					<div id='inBoxMovingUp' class='scrollingBoxMovingUp'></div>
+					<div id='inBoxMovingBar' class='scrollingBoxMovingBar'></div>
+					<div id='inBoxMovingDown' class='scrollingBoxMovingDown'></div>
+				</div>
+				
 			";
 		}
 		//Si no se ejecutara la sentencia (algo improbable) mostrariamos un error.
@@ -254,30 +368,30 @@
 			//En caso de no poder realizarse la operación mostramos un mensaje de error.
 			else{
 				echo "
-							<div class='contenedor mid top box error'>
-								<h2>ERROR</h2>
-								<p>
-									Ha ocurrido un error inesperado en la base de datos,
-									<br/>lamentamos las molestias.
-									<br/><a href='buzon.php' class='enfasis'>Volver al buzon</a>
-								</p>
-							</div>
-						";
+					<div class='contenedor mid top box error'>
+						<h2>ERROR</h2>
+						<p>
+							Ha ocurrido un error inesperado en la base de datos,
+							<br/>lamentamos las molestias.
+							<br/><a href='buzon.php' class='enfasis'>Volver al buzon</a>
+						</p>
+					</div>
+				";
 			}
 		}
 		
 		//En caso contrario mostramos un mensaje de error.
 		else{
 			echo "
-						<div class='contenedor mid top box error'>
-							<h2>ERROR</h2>
-							<p>
-								Ha ocurrido un error inesperado en la base de datos,
-								<br/>lamentamos las molestias.
-								<br/><a href='buzon.php' class='enfasis'>Volver al buzon</a>
-							</p>
-						</div>
-					";
+				<div class='contenedor mid top box error'>
+					<h2>ERROR</h2>
+					<p>
+						Ha ocurrido un error inesperado en la base de datos,
+						<br/>lamentamos las molestias.
+						<br/><a href='buzon.php' class='enfasis'>Volver al buzon</a>
+					</p>
+				</div>
+			";
 		}
 		$sentencia -> close();
 	}
